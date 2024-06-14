@@ -32,6 +32,15 @@ class DatabaseService
         }
     }
 
+    public function selectDatabase(string $dbName)
+    {
+        try {
+            $this->connection->exec("USE `$dbName`");
+        } catch (PDOException $e) {
+            throw new \RuntimeException('Database selection error: ' . $e->getMessage());
+        }
+    }
+    
     public function query(string $sql, array $parameters = [])
     {
         $statement = $this->connection->prepare($sql);
