@@ -3,14 +3,19 @@
 namespace App\Command;
 
 use App\Service\DatabaseService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class CreateDatabaseCommand extends Command
+#[AsCommand(
+    name: 'app:drop-database',
+    description: 'Add a short description for your command',
+)]
+class DropDatabaseCommand extends Command
 {
-    protected static $defaultName = 'app:create-database';
+    protected static $defaultName = 'app:drop-database';
     private $databaseService;
     private $databaseUrl;
 
@@ -24,7 +29,7 @@ class CreateDatabaseCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Creates the database.');
+            ->setDescription('Drops the database.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -35,9 +40,9 @@ class CreateDatabaseCommand extends Command
         $dbName = ltrim($dbopts['path'], '/');
 
         try {
-            $sql = sprintf('CREATE DATABASE IF NOT EXISTS `%s`;', $dbName);
+            $sql = sprintf('DROP DATABASE IF EXISTS `%s`;', $dbName);
             $this->databaseService->query($sql);
-            $io->success(sprintf('Database `%s` created successfully.', $dbName));
+            $io->success(sprintf('Database `%s` dropped successfully.', $dbName));
         } catch (\PDOException $e) {
             $io->error('Connection error: ' . $e->getMessage());
             return Command::FAILURE;

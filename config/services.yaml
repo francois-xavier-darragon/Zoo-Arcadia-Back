@@ -28,4 +28,8 @@ services:
     App\Command\CreateDatabaseCommand:
         arguments:
             $databaseUrl: '%env(resolve:DATABASE_URL)%'
-            $databaseService: '@App\Service\DatabaseService'        
+            $databaseService: '@App\Service\DatabaseService'
+    App\Command\DropDatabaseCommand:
+        arguments:
+            $databaseUrl: '%env(resolve:DATABASE_URL)%'
+            $databaseService: '@App\Service\DatabaseService'                
