@@ -9,13 +9,14 @@ use Doctrine\ORM\Mapping\FieldMapping;
 use PDO;
 use PDOException;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class UpdateDatabaseCommand extends Command
+class ManageDatabaseCommand extends Command
 {
-    protected static $defaultName = 'app:update-database';
+    protected static $defaultName = 'app:manage-database';
     private $entityManager;
     private $databaseService;
     private $databaseUrl;
@@ -31,42 +32,32 @@ class UpdateDatabaseCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Updates the database schema based on entity metadata.');
+            ->setDescription('Creates, drops, or updates the database.')
+            ->addArgument('action', InputArgument::REQUIRED, 'The action to perform: create, drop, or update');
     }
-    //TODO verifier la supression en cascade des clefs étrangère
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $action = $input->getArgument('action');
+
+        if (!in_array($action, ['create', 'drop', 'update'])) {
+            $io->error('Invalid action. Use "create", "drop", or "update".');
+            return Command::FAILURE;
+        }
 
         $dbopts = parse_url($this->databaseUrl);
         $dbName = ltrim($dbopts['path'], '/');
 
         try {
-            $this->databaseService->selectDatabase($dbName);
-            
-            $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
-           
-            foreach ($metadata as $meta) {
-                
-                $tableName = $meta->table['name'];
-    
-                // Check if table exists
-                $stmt = $this->databaseService->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
-                $tableExists = $stmt->rowCount() > 0;
-                
-                // Create or update table
-                if (!$tableExists) {
-                    $this->createTable($meta);
-                } else {
-                    $this->updateTable($meta);
-                }
-
-                // Perform relationship updates only if the table already exists
-              
+            if ($action === 'create') {
+                $this->createDatabase($dbName, $io);
+            } elseif ($action === 'drop') {
+                $this->dropDatabase($dbName, $io);
+            } elseif ($action === 'update') {
+                $this->updateDatabase($dbName, $io);
             }
-
-            $io->success('Database schema updated successfully.');
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             $io->error('Connection error: ' . $e->getMessage());
             return Command::FAILURE;
         } catch (\Exception $e) {
@@ -77,8 +68,48 @@ class UpdateDatabaseCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createTable($meta)
+    private function createDatabase(string $dbName, SymfonyStyle $io): void
     {
+        $sql = sprintf('CREATE DATABASE IF NOT EXISTS `%s`;', $dbName);
+        $this->databaseService->query($sql);
+        $io->success(sprintf('Database `%s` created successfully.', $dbName));
+    }
+
+    private function dropDatabase(string $dbName, SymfonyStyle $io): void
+    {
+        $sql = sprintf('DROP DATABASE IF EXISTS `%s`;', $dbName);
+        $this->databaseService->query($sql);
+        $io->success(sprintf('Database `%s` dropped successfully.', $dbName));
+    }
+
+    private function updateDatabase(string $dbName, SymfonyStyle $io): void
+    {
+        $this->databaseService->selectDatabase($dbName);
+
+        $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+
+        foreach ($metadata as $meta) {
+            $tableName = $meta->table['name'];
+
+            // Check if table exists
+            $stmt = $this->databaseService->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
+            $tableExists = $stmt->rowCount() > 0;
+
+            // Create or update table
+            if (!$tableExists) {
+                $this->createTable($meta);
+            } else {
+                $this->updateTable($meta);
+                $this->updateManyToOneColumn($meta);
+            }
+        }
+
+        $io->success('Database schema updated successfully.');
+    }
+
+    private function createTable($meta): void
+    {
+        
         $tableName = $meta->getTableName();
         
         // Create table
@@ -88,14 +119,16 @@ class UpdateDatabaseCommand extends Command
             $columns[] = $this->getColumnDefinition($fieldMapping);
         }
 
-        // Ensure the primary key column is the first column
+        // Ensure the id column is a primary key
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 
         $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
         $this->databaseService->query($sql);
+
+        $this->updateManyToOneColumn($meta);
     }
 
-    private function updateTable($meta)
+    private function updateTable($meta): void
     {
         $tableName = $meta->getTableName();
         
@@ -125,6 +158,46 @@ class UpdateDatabaseCommand extends Command
                 $this->databaseService->query($sql);
             }
         }
+
+        $this->updateManyToOneColumn($meta);
+    }
+
+    private function updateManyToOneColumn($meta): void
+    {
+        foreach ($meta->getAssociationMappings() as $associationMapping) {
+           
+            if ($associationMapping['type'] === ClassMetadata::MANY_TO_ONE) {
+                $columnName = $associationMapping['fieldName'];
+                
+                $targetEntityTableName = $this->entityManager->getClassMetadata($associationMapping['targetEntity'])->getTableName();
+              
+                try {
+                    // Check if the column already exists in the table
+                    if (!$this->columnExists($meta->getTableName(), $columnName)) {
+                        // Définir la colonne comme NOT NULL par défaut pour une relation ManyToOne
+                        $sql = sprintf('ALTER TABLE %s ADD %s_id INT NOT NULL, ADD CONSTRAINT FK_%s FOREIGN KEY (%s_id) REFERENCES %s(id)',
+                            $meta->getTableName(), $columnName,
+                            $columnName, $columnName, $targetEntityTableName
+                        );
+                   
+                        $this->databaseService->query($sql);
+                    }
+                } catch (PDOException $e) {
+                    // Handle connection or SQL query execution error
+                    // Log or display the error
+                    echo 'Error: ' . $e->getMessage();
+                }
+            }
+        }
+    }
+
+    private function columnExists(string $tableName, string $columnName): bool
+    {
+        $sql = sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName);
+        $stmt = $this->databaseService->query($sql);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return !empty($result);
     }
 
     private function getColumnDefinition(FieldMapping $fieldMapping): string
@@ -142,6 +215,7 @@ class UpdateDatabaseCommand extends Command
             'decimal' => sprintf('%s DECIMAL(10, 2) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'float' => sprintf('%s FLOAT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'array', 'simple_array', 'object' => sprintf('%s TEXT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
+            'json' => sprintf('%s JSON %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             default => throw new \InvalidArgumentException(sprintf('Unknown doctrine type "%s"', $fieldMapping->type)),
         };
     }

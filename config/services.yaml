@@ -25,16 +25,8 @@ services:
     App\Service\DatabaseService:
         arguments:
             $databaseUrl: '%env(resolve:DATABASE_URL)%'
-    App\Command\CreateDatabaseCommand:
-        arguments:
-            $databaseUrl: '%env(resolve:DATABASE_URL)%'
-            $databaseService: '@App\Service\DatabaseService'
-    App\Command\DropDatabaseCommand:
-        arguments:
-            $databaseUrl: '%env(resolve:DATABASE_URL)%'
-            $databaseService: '@App\Service\DatabaseService'
-    App\Command\UpdateDatabaseCommand:
+    App\Command\ManageDatabaseCommand:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $databaseService: '@App\Service\DatabaseService'
-            $databaseUrl: '%env(resolve:DATABASE_URL)%'                        
+            $databaseUrl: '%env(resolve:DATABASE_URL)%'                                 

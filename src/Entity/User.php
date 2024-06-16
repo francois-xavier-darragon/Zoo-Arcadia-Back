@@ -18,7 +18,7 @@ class User
 
     #[ORM\Column(length: 255)]
     private ?string $password = null;
-    
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
@@ -33,6 +33,17 @@ class User
 
     #[ORM\Column]
     private array $roles = [];
+
+    /**
+     * @var Collection<int, Notice>
+     */
+    #[ORM\OneToMany(targetEntity: Notice::class, mappedBy: 'user')]
+    private Collection $notices;
+
+    public function __construct()
+    {
+        $this->notices = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -111,4 +122,33 @@ class User
         return $this;
     }
 
+    /**
+     * @return Collection<int, Notice>
+     */
+    public function getNotices(): Collection
+    {
+        return $this->notices;
+    }
+
+    public function addNotice(Notice $notice): static
+    {
+        if (!$this->notices->contains($notice)) {
+            $this->notices->add($notice);
+            $notice->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNotice(Notice $notice): static
+    {
+        if ($this->notices->removeElement($notice)) {
+            // set the owning side to null (unless already changed)
+            if ($notice->getUser() === $this) {
+                $notice->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }
