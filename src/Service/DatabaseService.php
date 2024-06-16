@@ -48,4 +48,9 @@ class DatabaseService
 
         return $statement;
     }
+
+    public function getConnection(): PDO
+    {
+        return $this->connection;
+    }
 }

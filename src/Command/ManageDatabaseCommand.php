@@ -92,7 +92,7 @@ class ManageDatabaseCommand extends Command
             $tableName = $meta->table['name'];
 
             // Check if table exists
-            $stmt = $this->databaseService->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
+            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
             $tableExists = $stmt->rowCount() > 0;
 
             // Create or update table
@@ -139,7 +139,7 @@ class ManageDatabaseCommand extends Command
             $currentColumns[] = $columnName;
 
             // Check if column exists using DatabaseService
-            $stmt = $this->databaseService->query(sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName));
+            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName));
             $columnExists = $stmt->rowCount() > 0;
 
             if (!$columnExists) {
@@ -148,7 +148,7 @@ class ManageDatabaseCommand extends Command
             }
             
             // Get existing columns from the table
-            $stmt = $this->databaseService->query(sprintf("SHOW COLUMNS FROM %s", $tableName));
+            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW COLUMNS FROM %s", $tableName));
             $existingColumns = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
             // Find columns to drop
@@ -174,7 +174,7 @@ class ManageDatabaseCommand extends Command
                 try {
                     // Check if the column already exists in the table
                     if (!$this->columnExists($meta->getTableName(), $columnName)) {
-                        // Définir la colonne comme NOT NULL par défaut pour une relation ManyToOne
+                        // Set column as NOT NULL by default for a ManyToOne relationship
                         $sql = sprintf('ALTER TABLE %s ADD %s_id INT NOT NULL, ADD CONSTRAINT FK_%s FOREIGN KEY (%s_id) REFERENCES %s(id)',
                             $meta->getTableName(), $columnName,
                             $columnName, $columnName, $targetEntityTableName
@@ -183,8 +183,6 @@ class ManageDatabaseCommand extends Command
                         $this->databaseService->query($sql);
                     }
                 } catch (PDOException $e) {
-                    // Handle connection or SQL query execution error
-                    // Log or display the error
                     echo 'Error: ' . $e->getMessage();
                 }
             }
@@ -194,7 +192,7 @@ class ManageDatabaseCommand extends Command
     private function columnExists(string $tableName, string $columnName): bool
     {
         $sql = sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName);
-        $stmt = $this->databaseService->query($sql);
+        $stmt = $this->databaseService->getConnection()->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return !empty($result);

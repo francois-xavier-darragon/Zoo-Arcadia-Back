@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Service\GenericRepositoryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,33 +12,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+  
+    public function __construct(
+        private ManagerRegistry $registry,
+        private GenericRepositoryService $genericRepository,
+    )
     {
         parent::__construct($registry, User::class);
     }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // method to find a user by their identifier (ID)
+    public function findUserById(int $id): ?User
+    {
+        return $this->genericRepository->findOneBy(['id' => $id], User::class);
+    }
 
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    // Method to find a user by specific criteria
+    public function findOneUserBy(array $criteria): ?User
+    {
+        return $this->genericRepository->findOneBy($criteria, User::class);
+    }
+
+    // Method to find all users
+    public function findAllUsers(): array
+    {
+        return $this->genericRepository->findAll(User::class);
+    }
+
+    // Method to find users with paging and sorting
+    public function findUsersBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): array
+    {
+        return $this->genericRepository->findBy($criteria, User::class, $orderBy, $limit, $offset);
+    }
 }
