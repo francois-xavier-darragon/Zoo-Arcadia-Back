@@ -1,0 +1,25 @@
+@import "custom";
+@import "~bootstrap/scss/bootstrap";
+
+
+.sidebar {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    background-color: #343a40;
+    padding-top: 20px;
+}
+.sidebar .nav-link {
+    color: #fff;
+}
+.sidebar .nav-link:hover {
+    background-color: #495057;
+}
+
+.btn-gradiant {
+    background: linear-gradient(to right, $secondary, $primary);
+    color:white;
+    font-family: $font-family-headline-sans-serif;
+}
