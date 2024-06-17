@@ -100,7 +100,6 @@ class ManageDatabaseCommand extends Command
                 $this->createTable($meta);
             } else {
                 $this->updateTable($meta);
-                $this->updateManyToOneColumn($meta);
             }
         }
 
@@ -133,6 +132,7 @@ class ManageDatabaseCommand extends Command
         $tableName = $meta->getTableName();
         
         $currentColumns = [];
+        
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
             $columnName = $fieldMapping['columnName'];
@@ -143,20 +143,35 @@ class ManageDatabaseCommand extends Command
             $columnExists = $stmt->rowCount() > 0;
 
             if (!$columnExists) {
+              
                 $sql = sprintf('ALTER TABLE %s ADD %s', $tableName, $this->getColumnDefinition($fieldMapping));
                 $this->databaseService->query($sql);
-            }
+            // } else {
+            //      Column exists, check if it needs modification
+            //     $existingColumnInfo = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            // Get existing columns from the table
-            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW COLUMNS FROM %s", $tableName));
-            $existingColumns = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-            // Find columns to drop
-            $columnsToDrop = array_diff($existingColumns, $currentColumns);
-            foreach ($columnsToDrop as $columnToDrop) {
-                $sql = sprintf('ALTER TABLE %s DROP COLUMN %s', $tableName, $columnToDrop);
-                $this->databaseService->query($sql);
+                // Compare existing column with expected definition
+                // if ($this->columnNeedsUpdate($existingColumnInfo, $fieldMapping)) {
+                    
+                //     // Modify column definition
+                //     $sql = sprintf('ALTER TABLE %s MODIFY %s', $tableName, $this->getColumnDefinition($fieldMapping));
+                //     $this->databaseService->query($sql);
+                // }
             }
+         
+            // Get existing columns from the table
+            // $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW COLUMNS FROM %s", $tableName));
+            // $existingColumns = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            // // Find columns to drop
+            // $columnsToDrop = array_diff($existingColumns, $currentColumns);
+            // foreach ($columnsToDrop as $columnToDrop) {
+            //     if (!$this->isColumnUsedInForeignKey($tableName, $columnToDrop)) {
+            //         $sql = sprintf('ALTER TABLE %s DROP COLUMN %s', $tableName, $columnToDrop);
+            //         $this->databaseService->query($sql);
+            //     }
+            // }
+           
         }
 
         $this->updateManyToOneColumn($meta);
@@ -170,20 +185,20 @@ class ManageDatabaseCommand extends Command
                 $columnName = $associationMapping['fieldName'];
                 
                 $targetEntityTableName = $this->entityManager->getClassMetadata($associationMapping['targetEntity'])->getTableName();
+                $constraintName = sprintf('FK_%s_%s', $meta->getTableName(), $columnName);
               
-                try {
-                    // Check if the column already exists in the table
-                    if (!$this->columnExists($meta->getTableName(), $columnName)) {
+                if (!$this->columnExists($meta->getTableName(), $columnName . '_id')) {
+                    try {
                         // Set column as NOT NULL by default for a ManyToOne relationship
                         $sql = sprintf('ALTER TABLE %s ADD %s_id INT NOT NULL, ADD CONSTRAINT FK_%s FOREIGN KEY (%s_id) REFERENCES %s(id)',
                             $meta->getTableName(), $columnName,
-                            $columnName, $columnName, $targetEntityTableName
+                            $constraintName, $columnName, $targetEntityTableName
                         );
                    
                         $this->databaseService->query($sql);
+                    } catch (PDOException $e) {
+                        echo 'Error: ' . $e->getMessage();
                     }
-                } catch (PDOException $e) {
-                    echo 'Error: ' . $e->getMessage();
                 }
             }
         }
@@ -217,4 +232,5 @@ class ManageDatabaseCommand extends Command
             default => throw new \InvalidArgumentException(sprintf('Unknown doctrine type "%s"', $fieldMapping->type)),
         };
     }
+
 }
