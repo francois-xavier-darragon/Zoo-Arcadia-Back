@@ -36,6 +36,10 @@ class Animal
     #[ORM\JoinColumn(nullable: false)]
     private ?Breed $breed = null;
 
+    #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Habitat $habitat = null;
+
     public function __construct()
     {
         $this->veterinaryReports = new ArrayCollection();
@@ -108,6 +112,18 @@ class Animal
     public function setBreed(?Breed $breed): static
     {
         $this->breed = $breed;
+
+        return $this;
+    }
+
+    public function getHabitat(): ?Habitat
+    {
+        return $this->habitat;
+    }
+
+    public function setHabitat(?Habitat $habitat): static
+    {
+        $this->habitat = $habitat;
 
         return $this;
     }

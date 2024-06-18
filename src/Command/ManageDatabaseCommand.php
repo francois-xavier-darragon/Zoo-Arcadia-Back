@@ -87,28 +87,36 @@ class ManageDatabaseCommand extends Command
         $this->databaseService->selectDatabase($dbName);
 
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        
+        // Step 1: Create all tables without relations
+        $this->processTables($metadata, 'createTable');
 
+        // Step 2: Update all tables to add relations
+        $this->processTables($metadata, 'updateTable');
+
+        $io->success('Database schema updated successfully.');
+    }
+
+    private function processTables(array $metadata, string $method): void
+    {
         foreach ($metadata as $meta) {
-            $tableName = $meta->table['name'];
+            $tableName = $meta->getTableName();
 
             // Check if table exists
             $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
             $tableExists = $stmt->rowCount() > 0;
 
-            // Create or update table
-            if (!$tableExists) {
+            // Create or update table based on the method passed
+            if ($method === 'createTable' && !$tableExists) {
                 $this->createTable($meta);
-            } else {
+            } elseif ($method === 'updateTable' && $tableExists) {
                 $this->updateTable($meta);
             }
         }
-
-        $io->success('Database schema updated successfully.');
     }
 
     private function createTable($meta): void
     {
-        
         $tableName = $meta->getTableName();
         
         // Create table
@@ -120,60 +128,15 @@ class ManageDatabaseCommand extends Command
 
         // Ensure the id column is a primary key
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
-
+        
         $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
+        
         $this->databaseService->query($sql);
 
-        $this->updateManyToOneColumn($meta);
     }
 
     private function updateTable($meta): void
     {
-        $tableName = $meta->getTableName();
-        
-        $currentColumns = [];
-        
-        foreach ($meta->getFieldNames() as $fieldName) {
-            $fieldMapping = $meta->getFieldMapping($fieldName);
-            $columnName = $fieldMapping['columnName'];
-            $currentColumns[] = $columnName;
-
-            // Check if column exists using DatabaseService
-            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName));
-            $columnExists = $stmt->rowCount() > 0;
-
-            if (!$columnExists) {
-              
-                $sql = sprintf('ALTER TABLE %s ADD %s', $tableName, $this->getColumnDefinition($fieldMapping));
-                $this->databaseService->query($sql);
-            // } else {
-            //      Column exists, check if it needs modification
-            //     $existingColumnInfo = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-                // Compare existing column with expected definition
-                // if ($this->columnNeedsUpdate($existingColumnInfo, $fieldMapping)) {
-                    
-                //     // Modify column definition
-                //     $sql = sprintf('ALTER TABLE %s MODIFY %s', $tableName, $this->getColumnDefinition($fieldMapping));
-                //     $this->databaseService->query($sql);
-                // }
-            }
-         
-            // Get existing columns from the table
-            // $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW COLUMNS FROM %s", $tableName));
-            // $existingColumns = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-            // // Find columns to drop
-            // $columnsToDrop = array_diff($existingColumns, $currentColumns);
-            // foreach ($columnsToDrop as $columnToDrop) {
-            //     if (!$this->isColumnUsedInForeignKey($tableName, $columnToDrop)) {
-            //         $sql = sprintf('ALTER TABLE %s DROP COLUMN %s', $tableName, $columnToDrop);
-            //         $this->databaseService->query($sql);
-            //     }
-            // }
-           
-        }
-
         $this->updateManyToOneColumn($meta);
     }
 
