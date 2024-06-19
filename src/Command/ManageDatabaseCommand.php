@@ -154,19 +154,22 @@ class ManageDatabaseCommand extends Command
                 
                 $constraintName = sprintf('FK_%s_%s', $meta->getTableName(), $columnName);
               
-                if (!$this->existsTableOrColumn($meta->getTableName(), $columnName . '_id')) {
-                    try {
-                        // Set column as NOT NULL by default for a ManyToOne relationship
-                        $sql = sprintf('ALTER TABLE %s ADD %s_id INT NOT NULL, ADD CONSTRAINT FK_%s FOREIGN KEY (%s_id) REFERENCES %s(id)',
-                            $meta->getTableName(), $columnName,
-                            $constraintName, $columnName, $targetEntityTableName
-                        );
-                   
-                        $this->databaseService->query($sql);
-                    } catch (PDOException $e) {
-                        echo 'Error: ' . $e->getMessage();
-                    }
+                // Determine if the column should allow NULL
+                $nullable = $this->isAssociationNullable($associationMapping);
+
+                try {
+                    // Add the column and foreign key constraint
+                    $sql = sprintf('ALTER TABLE %s ADD %s_id INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s_id) REFERENCES %s(id)',
+                        $meta->getTableName(), $columnName,
+                        $nullable ? 'NULL' : 'NOT NULL',
+                        $constraintName, $columnName, $targetEntityTableName
+                    );
+    
+                    $this->databaseService->query($sql);
+                } catch (PDOException $e) {
+                    echo 'Error: ' . $e->getMessage();
                 }
+
             } elseif($associationMapping['type'] === ClassMetadata::MANY_TO_MANY) {
                 $this->updateManyToManyColumn($meta, $associationMapping);
             }
@@ -191,12 +194,14 @@ class ManageDatabaseCommand extends Command
             $sourceColumnName = strtolower($sourceTableName) . '_id';
             $targetColumnName = strtolower($targetTableName) . '_id';
 
+            $nullable = $this->isAssociationNullable($associationMapping);
+
             if (!$this->existsTableOrColumn($joinTableName)) {
-                $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName);
+                $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName, );
             } else {
                 $this->checkAndAddColumns($joinTableName, [
-                    ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName],
-                    ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName]
+                    ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName, 'nullable' => $nullable],
+                    ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName, 'nullable' => $nullable]
                 ]);
             }
         }
@@ -249,25 +254,49 @@ class ManageDatabaseCommand extends Command
         foreach ($columns as $column) {
             $columnName = $column['columnName'];
             $referencedTableName = $column['referencedTableName'];
+            $nullable = $column['nullable'];
 
             if (!$this->existsTableOrColumn($joinTableName, $columnName)) {
-                $this->addColumnToJoinTable($joinTableName, $columnName, $referencedTableName);
+                $this->addColumnToJoinTable($joinTableName, $columnName, $referencedTableName, $nullable);
             }
         }
     }
 
     // add join column
-    private function addColumnToJoinTable(string $joinTableName, string $columnName, string $referencedTableName): void
+    private function addColumnToJoinTable(string $joinTableName, string $columnName, string $referencedTableName, bool $nullable = false): void
     {
         try {
             $sql = sprintf(
-                'ALTER TABLE %s ADD %s INT NOT NULL, ADD CONSTRAINT FK_%s_%s FOREIGN KEY (%s) REFERENCES %s(id)',
-                $joinTableName, $columnName, $joinTableName, $columnName, $columnName, $referencedTableName
+                'ALTER TABLE %s ADD %s INT, ADD CONSTRAINT FK_%s_%s FOREIGN KEY (%s) REFERENCES %s(id)',
+                $joinTableName, $columnName,
+                $nullable ? 'NULL' : 'NOT NULL',
+                $joinTableName, $columnName, $columnName, $referencedTableName
             );
             $this->databaseService->query($sql);
         } catch (PDOException $e) {
             echo 'Error: ' . $e->getMessage();
         }
+    }
+
+    // Helper function to determine if association is nullable
+    private function isAssociationNullable($associationMapping): bool
+    {
+        // Check if the association mapping indicates the column should be nullable
+        if (is_array($associationMapping)) {
+            // Check if the association mapping indicates the column should be nullable
+            if (isset($associationMapping['joinColumns'][0]['nullable'])) {
+                return $associationMapping['joinColumns'][0]['nullable'];
+            }
+        } elseif (is_object($associationMapping)) {
+            // Assuming $associationMapping is an instance of OneToOneOwningSideMapping
+            // or similar class. Adjust based on actual class used.
+            if (isset($associationMapping->joinColumns[0]->nullable)) {
+                return $associationMapping->joinColumns[0]->nullable;
+            }
+        }
+        
+        // By default, assume it's nullable if not explicitly required
+        return true;
     }
 
     // retrieves the column type and its definition
