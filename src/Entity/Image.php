@@ -35,6 +35,9 @@ class Image
     #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'images')]
     private Collection $animals;
 
+    #[ORM\OneToOne(mappedBy: 'avatar', cascade: ['persist', 'remove'])]
+    private ?User $user = null;
+
     public function __construct()
     {
         $this->habitats = new ArrayCollection();
@@ -102,6 +105,28 @@ class Image
     public function removeAnimal(Animal $animal): static
     {
         $this->animals->removeElement($animal);
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($user === null && $this->user !== null) {
+            $this->user->setAvatar(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($user !== null && $user->getAvatar() !== $this) {
+            $user->setAvatar($this);
+        }
+
+        $this->user = $user;
 
         return $this;
     }

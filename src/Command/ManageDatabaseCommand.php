@@ -6,6 +6,7 @@ use App\Service\DatabaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\FieldMapping;
+use InvalidArgumentException;
 use PDO;
 use PDOException;
 use Symfony\Component\Console\Command\Command;
@@ -37,15 +38,14 @@ class ManageDatabaseCommand extends Command
             ->addArgument('action', InputArgument::REQUIRED, 'The action to perform: create, drop, or update');
     }
 
-    // command execution 
+    // command execution
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $action = $input->getArgument('action');
 
         if (!in_array($action, ['create', 'drop', 'update'])) {
-            $io->error('Invalid action. Use "create", "drop", or "update".');
-            return Command::FAILURE;
+            throw new InvalidArgumentException('Invalid action. Use "create", "drop", or "update".');
         }
 
         $dbopts = parse_url($this->databaseUrl);
@@ -59,15 +59,16 @@ class ManageDatabaseCommand extends Command
             } elseif ($action === 'update') {
                 $this->updateDatabase($dbName, $io);
             }
+
+            return Command::SUCCESS;
         } catch (\PDOException $e) {
             $io->error('Connection error: ' . $e->getMessage());
-            return Command::FAILURE;
         } catch (\Exception $e) {
             $io->error('Error: ' . $e->getMessage());
-            return Command::FAILURE;
+          
         }
 
-        return Command::SUCCESS;
+        return Command::FAILURE;
     }
 
     // create database
@@ -141,25 +142,19 @@ class ManageDatabaseCommand extends Command
 
     }
 
-    // updates table
+    // updates table and add relation ManyToOne, OneToOne or ManyToMany
     private function updateTable($meta): void
-    {
-        $this->updateManyToOneColumn($meta);
-        $this->updateManyToManyColumn($meta);
-    }
-
-    // add relation ManyToOne
-    private function updateManyToOneColumn($meta): void
     {
         foreach ($meta->getAssociationMappings() as $associationMapping) {
            
-            if ($associationMapping['type'] === ClassMetadata::MANY_TO_ONE) {
+            if ($associationMapping['type'] === ClassMetadata::MANY_TO_ONE || $associationMapping['type'] === ClassMetadata::ONE_TO_ONE) {
                 $columnName = $associationMapping['fieldName'];
                 
                 $targetEntityTableName = $this->entityManager->getClassMetadata($associationMapping['targetEntity'])->getTableName();
+                
                 $constraintName = sprintf('FK_%s_%s', $meta->getTableName(), $columnName);
               
-                if (!$this->columnExists($meta->getTableName(), $columnName . '_id')) {
+                if (!$this->existsTableOrColumn($meta->getTableName(), $columnName . '_id')) {
                     try {
                         // Set column as NOT NULL by default for a ManyToOne relationship
                         $sql = sprintf('ALTER TABLE %s ADD %s_id INT NOT NULL, ADD CONSTRAINT FK_%s FOREIGN KEY (%s_id) REFERENCES %s(id)',
@@ -172,86 +167,93 @@ class ManageDatabaseCommand extends Command
                         echo 'Error: ' . $e->getMessage();
                     }
                 }
+            } elseif($associationMapping['type'] === ClassMetadata::MANY_TO_MANY) {
+                $this->updateManyToManyColumn($meta, $associationMapping);
             }
         }
     }
 
     // add relation ManytoMany
-    private function updateManyToManyColumn($meta): void
+    private function updateManyToManyColumn($meta, $associationMapping): void
     {
         $createdTables = [];
 
-        foreach ($meta->getAssociationMappings() as $associationMapping) {
-            if ($associationMapping['type'] === ClassMetadata::MANY_TO_MANY) {
-                $sourceTableName = $meta->getTableName();
-                $targetEntityMeta = $this->entityManager->getClassMetadata($associationMapping['targetEntity']);
-                $targetTableName = $targetEntityMeta->getTableName();
+        $sourceTableName = $meta->getTableName();
+        $targetEntityMeta = $this->entityManager->getClassMetadata($associationMapping['targetEntity']);
+        $targetTableName = $targetEntityMeta->getTableName();
 
+        $sortedTables = [$sourceTableName, $targetTableName];
+        sort($sortedTables);
+        $joinTableName = implode('_', $sortedTables);
 
-                $sortedTables = [$sourceTableName, $targetTableName];
-                sort($sortedTables);
-                $joinTableName = implode('_', $sortedTables);
+        if (!in_array($joinTableName, $createdTables)) {
+            $createdTables[] = $joinTableName;
+            $sourceColumnName = strtolower($sourceTableName) . '_id';
+            $targetColumnName = strtolower($targetTableName) . '_id';
 
-                // Check if the join table has already been created
-                if (in_array($joinTableName, $createdTables)) {
-                    // Move to the next association if the table already exists
-                    continue; 
-                }
-
-                // Add the join table to the list of created tables
-                $createdTables[] = $joinTableName;
-                $sourceColumnName = strtolower($sourceTableName) . '_id';
-                $targetColumnName = strtolower($targetTableName) . '_id';
-
-                if (!$this->tableExists($joinTableName)) {
-                    try {
-                        
-                        // Create the join table if it does not exist
-                        $sql = sprintf(
-                            'CREATE TABLE %s (%s INT NOT NULL, %s INT NOT NULL, PRIMARY KEY(%s, %s))',
-                            $joinTableName,
-                            $sourceColumnName, $targetColumnName,
-                            $sourceColumnName, $targetColumnName
-                        );
-                        
-                        $this->databaseService->query($sql);
-                    } catch (PDOException $e) {
-                        echo 'Error creating table: ' . $e->getMessage();
-                         // Move to the next association
-                        continue; 
-                    }
-                } else {
-                    // Check and add columns if they don't exist
-                    if (!$this->columnExists($joinTableName, $sourceColumnName)) {
-                        $this->addColumnToJoinTable($joinTableName, $sourceColumnName, $sourceTableName);
-                    }
-    
-                    if (!$this->columnExists($joinTableName, $targetColumnName)) {
-                        $this->addColumnToJoinTable($joinTableName, $targetColumnName, $targetTableName);
-                    }
-                }
+            if (!$this->existsTableOrColumn($joinTableName)) {
+                $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName);
+            } else {
+                $this->checkAndAddColumns($joinTableName, [
+                    ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName],
+                    ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName]
+                ]);
             }
         }
     }
 
-    // check if the table exists
-    private function tableExists(string $tableName): bool
+    // check if table or column exists
+    private function exists(string $type, string $tableName, ?string $columnName = null): bool
     {
-        $sql = sprintf("SHOW TABLES LIKE '%s'", $tableName);
-        $stmt = $this->databaseService->getConnection()->query($sql);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $sql = match ($type) {
+            'table' => sprintf("SHOW TABLES LIKE '%s'", $tableName),
+            'column' => sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName),
+            default => throw new InvalidArgumentException('Invalid type specified. Use "table" or "column".'),
+        };
 
-        return !!$result;
-    }
-
-    // check if the column exists
-    private function columnExists(string $tableName, string $columnName): bool
-    {
-        $sql = sprintf("SHOW COLUMNS FROM %s LIKE '%s'", $tableName, $columnName);
         $stmt = $this->databaseService->getConnection()->query($sql);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return !empty($result);
+    }
+
+    // call the function exists
+    private function existsTableOrColumn(string $name, ?string $columnName = null): bool
+    {
+        if ($columnName !== null) {
+            return $this->exists('column', $name, $columnName);
+        } else {
+            return $this->exists('table', $name);
+        }
+    }
+
+    // create a join table
+    private function createJoinTable($joinTableName, $sourceColumnName, $targetColumnName)
+    {
+        try {
+            $sql = sprintf(
+                'CREATE TABLE %s (%s INT NOT NULL, %s INT NOT NULL, PRIMARY KEY(%s, %s))',
+                $joinTableName,
+                $sourceColumnName, $targetColumnName,
+                $sourceColumnName, $targetColumnName
+            );
+            $this->databaseService->query($sql);
+        } catch (PDOException $e) {
+            echo 'Error creating table: ' . $e->getMessage();
+        }
+    }
+
+    // check and add a column
+    private function checkAndAddColumns($joinTableName, $columns)
+    {
+        foreach ($columns as $column) {
+            $columnName = $column['columnName'];
+            $referencedTableName = $column['referencedTableName'];
+
+            if (!$this->existsTableOrColumn($joinTableName, $columnName)) {
+                $this->addColumnToJoinTable($joinTableName, $columnName, $referencedTableName);
+            }
+        }
     }
 
     // add join column

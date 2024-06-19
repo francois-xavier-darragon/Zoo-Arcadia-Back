@@ -47,6 +47,9 @@ class User
     #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'user')]
     private Collection $veterinaryReports;
 
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Image $avatar = null;
+
     public function __construct()
     {
         $this->notices = new ArrayCollection();
@@ -178,6 +181,18 @@ class User
                 $veterinaryReport->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Image
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Image $avatar): static
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }
