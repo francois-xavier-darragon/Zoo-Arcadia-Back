@@ -14,10 +14,10 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body>
+    <body class='bg-info'>
     {% include "include/_nav_top.html.twig" %}
     {% include "include/_nav_lateral.html.twig" %}
-        <div class="container">
+        <div class="container p-0">
             {% block body %}{% endblock %}
         </div> 
     </body>

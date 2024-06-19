@@ -1,6 +1,6 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
-
+@import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
 
 .sidebar {
     height: 100vh;
@@ -18,8 +18,32 @@
     background-color: #495057;
 }
 
+h3 {
+    font-size: 24px;
+}
+
+li, p {
+    font-size: 16px;
+}
+
+h1, h2, h3, h5, p, li {
+    font-family: $font-family-headline-sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+p {
+    color: white;
+}
+
 .btn-gradiant {
     background: linear-gradient(to right, $secondary, $primary);
     color:white;
     font-family: $font-family-headline-sans-serif;
+}
+
+.dataTables_wrapper {
+    position: relative
 }
