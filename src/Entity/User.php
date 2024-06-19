@@ -2,15 +2,19 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\SoftDeletableTrait;
+use App\Entity\Trait\TimestampableTrait;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
+    use TimestampableTrait;
+    use SoftDeletableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,9 +41,19 @@ class User
     #[ORM\OneToMany(targetEntity: Notice::class, mappedBy: 'user')]
     private Collection $notices;
 
+    /**
+     * @var Collection<int, VeterinaryReport>
+     */
+    #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'user')]
+    private Collection $veterinaryReports;
+
+    #[ORM\OneToOne(inversedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Image $avatar = null;
+
     public function __construct()
     {
         $this->notices = new ArrayCollection();
+        $this->veterinaryReports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -137,6 +151,48 @@ class User
                 $notice->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VeterinaryReport>
+     */
+    public function getVeterinaryReports(): Collection
+    {
+        return $this->veterinaryReports;
+    }
+
+    public function addVeterinaryReport(VeterinaryReport $veterinaryReport): static
+    {
+        if (!$this->veterinaryReports->contains($veterinaryReport)) {
+            $this->veterinaryReports->add($veterinaryReport);
+            $veterinaryReport->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVeterinaryReport(VeterinaryReport $veterinaryReport): static
+    {
+        if ($this->veterinaryReports->removeElement($veterinaryReport)) {
+            // set the owning side to null (unless already changed)
+            if ($veterinaryReport->getUser() === $this) {
+                $veterinaryReport->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAvatar(): ?Image
+    {
+        return $this->avatar;
+    }
+
+    public function setAvatar(?Image $avatar): static
+    {
+        $this->avatar = $avatar;
 
         return $this;
     }

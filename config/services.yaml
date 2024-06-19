@@ -29,4 +29,6 @@ services:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
             $databaseService: '@App\Service\DatabaseService'
-            $databaseUrl: '%env(resolve:DATABASE_URL)%'                                 
+            $databaseUrl: '%env(resolve:DATABASE_URL)%'
+    App\Command\MakeTraitCommand:
+        tags: [ 'console.command' ]        

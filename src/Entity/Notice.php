@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\SoftDeletableTrait;
+use App\Entity\Trait\TimestampableTrait;
 use App\Repository\NoticeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NoticeRepository::class)]
 class Notice
 {
+    use TimestampableTrait;
+    use SoftDeletableTrait;
+    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
