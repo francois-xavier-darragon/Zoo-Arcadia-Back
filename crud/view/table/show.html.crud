@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ENTITY_NAME }}{% endblock %}
+
+{% block body %}
+    <h1>{{ ENTITY_NAME }}</h1>
+
+    <table class="table">
+        <tbody>
+            {#<tr>
+                <th class="invisible">Id</th>
+                <td class="invisible">{{ {{ VARIABLE_NAME }}.id }}</td>
+            </tr>#}
+{{ INDEX_LIST_TR_TD }}
+        </tbody>
+    </table>
+
+    <a class="btn btn-secondary" href="{{ path('app_admin_{{ VARIABLE_NAME }}_index') }}" title="{{ 'form.detail.back_to_list_title'|trans }}">{{ 'form.detail.back_to_list'|trans|raw }}</a>
+    <a class="btn btn-success" href="{{ path('app_admin_{{ VARIABLE_NAME }}_edit', {'id': {{ VARIABLE_NAME }}.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">{{ 'form.detail.edit'|trans|raw }}</a>
+
+{#{% include '{{ VARIABLE_NAME }}/_delete_button.html.twig' %}
+{% if delete_btn is defined %}
+    {% include '_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'id_token' : {{ VARIABLE_NAME }}.id } %}
+{% endif %}#}
+
+{% endblock %}

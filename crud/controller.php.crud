@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Controller\Admin;
+
+use App\Entity\{{ ENTITY_NAME }};
+use App\Form\{{ ENTITY_NAME }}Type;
+use App\Repository\{{ ENTITY_NAME }}Repository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+#[Route('/admin/{{ VARIABLE_NAME }}s')]
+class {{ ENTITY_NAME }}Controller extends AbstractController
+{
+    #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
+    public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
+    {
+        return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
+            '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
+        ]);
+    }
+
+    #[Route('/new', name: 'app_admin_{{ VARIABLE_NAME }}_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, {{ ENTITY_NAME }}Repository $repository): Response
+    {
+        ${{ VARIABLE_NAME }} = new {{ ENTITY_NAME }}();
+        $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/{{ VARIABLE_NAME }}/edit.html.twig', [
+            '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+            'form' => $form,
+            'mode' => 'Ajouter',
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_admin_{{ VARIABLE_NAME }}_show', methods: ['GET'])]
+    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}): Response
+    {
+        return $this->render('admin/{{ VARIABLE_NAME }}/show.html.twig', [
+            '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository $repository): Response
+    {
+        $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/{{ VARIABLE_NAME }}/edit.html.twig', [
+            '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+            'form' => $form,
+            'mode'=> 'Modifier',
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'app_admin_{{ VARIABLE_NAME }}_delete', methods: ['POST'])]
+    public function delete(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository $repository): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.${{ VARIABLE_NAME }}->getId(), $request->request->get('_token'))) {
+        $repository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }});
+
+        } else {
+
+        }
+
+        return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
+        }
+}

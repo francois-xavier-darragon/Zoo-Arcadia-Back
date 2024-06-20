@@ -1,14 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User index{% endblock %}
-
 {% block body %}
 <div class='row mt-5 mb-5'>
     <div class='col-sm-12'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
             <h1>Liste des utilisateurs </h1>
-            
-            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_user_new') }}">Ajouter un nouvel utilisateur</a>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_user_new') }}">Ajouter un utilisateur</a>
         </div>
         <table class="table custom-table">
             <thead>
@@ -26,7 +23,7 @@
                     <td class="text-center">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.email }}</td>
                     <td class="text-end">
-                        <a type='button' class='text-dark me-2' title="Voir" href="{{ path('app_admin_user_show', {'id': user.id}) }}"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                        <a type='button' class='text-primary me-2' title="Voir" href="{{ path('app_admin_user_show', {'id': user.id}) }}"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
                             <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
                             <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
                             </svg>
@@ -42,10 +39,6 @@
                             </svg>
                         </a>
                     </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="10">no records found</td>
                 </tr>
             {% endfor %}
             </tbody>

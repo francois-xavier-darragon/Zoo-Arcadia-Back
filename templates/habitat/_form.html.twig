@@ -1,0 +1,29 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="mt-4 d-flex justify-content-between">
+        <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
+        {% if mode == 'Ajouter' %} 
+            <button class="btn btn-primary text-white me-3 mb-2" title="valider">Valider</button>
+        {% endif %}    
+        {% if mode == 'Modifier' %}
+            <div class = "d-flex">
+                <button class="btn btn-primary text-white me-3 mb-2" title="valider">Valider</button>
+                {# {% include 'habitat/_delete_button.html.twig' %} #}
+
+                {# <div class="modal-footer"> #}
+                    <button type="button" class="btn btn-danger text-white me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="{{ 'form.detail.delete_title'|trans }}">
+                        supprimer
+                    </button>
+                {# </div> #}
+            </div>
+        {% endif %}  
+    </div>
+{{ form_end(form) }}
+
+<div class="col-12 pt-2">
+{% if delete_btn is defined %}
+    {% include 'habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'id_token' : habitat.id } %}
+{% endif %}
+</div>
+
+

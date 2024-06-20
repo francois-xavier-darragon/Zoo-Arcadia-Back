@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class='row mt-5 mb-5'>
+    <div class='col-sm-12'> 
+        <div class= "col-sm-12 d-flex justify-content-between mb-5">
+            <h1>Habitat</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_habitat_new') }}" title="Ajouter un habitat">Ajouter un habitat</a>
+        </div>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                <th class="text-center">name</th>
+                <th class="text-center">description</th>
+                {# <th class="text-center">animals</th> #}
+                {# <th class="text-center">images</th> #}
+                <th class="text-end">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for habitat in habitats %}
+                <tr>
+                <td class="text-center">{{ habitat.name }}</td>
+                 <td class="text-center">{{ habitat.description }}</td>
+                {# <td class="text-center">{{ habitat.animals }}</td> #}
+                {# <td class="text-center">{{ habitat.images }}</td> #}
+                    <td class="text-end">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_habitat_show', {'id': habitat.id}) }}" title="{{ 'form.detail.show_title'|trans }}">
+                            {% include "_include/components/icons/show_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">
+                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-danger me-2' href="{{ path('app_admin_habitat_delete', {'id': habitat.id}) }}" title="{{ 'form.detail.delete_title'|trans }}">
+                            {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> 
+</div>
+{% endblock %}

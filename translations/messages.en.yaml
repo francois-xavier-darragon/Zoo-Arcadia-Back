@@ -1,0 +1,68 @@
+WebSee:
+  default:
+    no_records_found: 'No Records Found'
+    d_yes: 'Yes'
+    d_No: 'No'
+    button:
+      validate: 'Validate'
+      register: 'Register'
+      cancel: 'Cancel'
+      send: 'Send'
+      update: 'Update'
+      preview: 'Preview'
+      delete: 'Delete'
+      remove: 'Remove'
+      settings: 'Settings'
+      add: 'Add'
+      to_confirm: 'Confirm'
+      edit_item: 'Edit'
+      show_item: 'Show'
+      sign_in: 'Sign in'
+      sign_up: 'Sign up'
+      sign_out: 'Sign out'
+    delete_confirmation:
+      modal_confirmation:
+        body_text: 'Enter the word in color'
+        word_validation: 'I valid'
+        error_message: 'Error: The word you entered does not match.'
+  maxi_menu:
+    delete_confirmation:
+      modal_confirmation:
+        header_text: 'Warning! you will delete the menu'
+  header_charter:
+    delete_confirmation:
+      modal_confirmation:
+        header_text: 'Warning! you will delete the header'
+  footer_charter:
+    delete_confirmation:
+      modal_confirmation:
+        header_text: 'Warning! you will delete the footer'
+  loader_item:
+    list_loader:
+      title: "Files list"
+    delete_confirmation:
+      modal_confirmation:
+        header_text: 'Warning! you will delete this file loader'
+  slide_show:
+    button:
+      new_slidshow: 'New Slideshow'
+    title:
+      list_title: 'Slideshow List'
+      create_title: 'Create new Slideshow'
+      edit_title: 'Edit Slideshow'
+    delete_confirmation:
+      modal_confirmation:
+        header_text: 'Warning! you will delete this slideshow'
+    slider_image:
+      caption:
+        title_caption: 'Add a title for the legend'
+        text_cation: 'Add text for the caption'
+    table:
+      th_id: 'id'
+      th_theme_name: 'theme Name'
+      th_css_file: 'Css File'
+      th_js_file: 'Js File'
+      th_template_name: 'Txig Name'
+      th_settings: 'Settings'
+      th_is_activated: 'Activated'
+      th_actions: 'Actions'

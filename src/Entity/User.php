@@ -19,7 +19,6 @@ class User
     CONST ROLES = [
         'ROLE_ADMIN'=> 'Administrateur',
         'ROLE_VETERINARY' => 'Vétérinaire',
-        'ROLE_VISITOR' => 'visiteur',
         'ROLE_WORKER' => 'employé'
     ];
 
