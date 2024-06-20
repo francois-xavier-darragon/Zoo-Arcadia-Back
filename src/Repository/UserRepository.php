@@ -44,4 +44,14 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->genericRepository->findBy($criteria, User::class, $orderBy, $limit, $offset);
     }
+
+    public function saveUser(User $entity, bool $flush = false)
+    {
+        $this->genericRepository->save(User::class, $entity, $flush);
+    }
+
+    public function removeUser(User $entity, bool $flush = false)
+    {
+        $this->genericRepository->remove(User::class, $entity, $flush);
+    }
 }

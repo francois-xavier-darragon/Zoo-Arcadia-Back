@@ -2,6 +2,7 @@
 
 namespace App\Entity\Trait;
 
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -34,4 +35,5 @@ trait TimestampableTrait
     {
         $this->updatedAt = $updatedAt;
     }
+
 }

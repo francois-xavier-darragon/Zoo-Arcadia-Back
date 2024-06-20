@@ -4,12 +4,14 @@ namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use App\Service\DatabaseService;
 
 class GenericRepositoryService
 {
 
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private DatabaseService $databaseService
     )
     {}
 
@@ -97,9 +99,75 @@ class GenericRepositoryService
         return $query->getResult();
     }
 
-    // Méthode pour obtenir le nom de la table à partir du nom de classe de l'entité
+    // Method to get table name from entity class name
     private function getTableName(string $entityClass): string
     {
         return $this->entityManager->getClassMetadata($entityClass)->getTableName();
+    }
+
+    // Method to save to database
+    public function save(string $entityClass, $entity, bool $flush = false): void
+    {
+        $metaData = $this->entityManager->getClassMetadata($entityClass);
+        $tableName = $metaData->getTableName();
+        $columns = $metaData->getColumnNames();
+        
+        $values = [];
+    
+        foreach ($columns as $column) {
+            $fieldName = $metaData->getFieldName($column);
+            $getter = 'get' . ucfirst($fieldName);
+          
+            if (method_exists($entity, $getter)) {
+                $value = $entity->$getter();
+
+                if ($fieldName === 'id') {
+                    continue; 
+                }
+
+                if ($value instanceof \DateTimeImmutable && $value !== null) {
+                    $values[$column] = $value->format('Y-m-d H:i:s');
+                } elseif (is_array($value) || is_object($value)) {
+                    $values[$column] = json_encode($value);
+                } elseif ($value == null) {
+                    $values[$column] = null;    
+                } else {
+                    $values[$column] = $value; 
+                }
+            }
+        }
+       
+        $sqlValues = implode(', ', array_map(function($uniqueValue) {
+            return $uniqueValue === null ? 'NULL' : "'" . addslashes($uniqueValue) . "'";
+        }, $values));
+
+        $sql = "INSERT INTO $tableName (" . implode(', ', array_keys($values)) . ") VALUES ($sqlValues)";
+
+        if ($flush) { 
+            $this->databaseService->selectDatabase('arcadia');
+            $this->databaseService->query($sql);
+        }
+    }
+
+    // Method to delete in database
+    public function remove(string $entityClass, $entity, bool $flush = false): void
+    {
+        $metaData = $this->entityManager->getClassMetadata($entityClass);
+        $tableName = $metaData->getTableName();
+        $idColumn = $metaData->getSingleIdentifierColumnName();
+        $idGetter = 'get' . ucfirst($metaData->getFieldName($idColumn));
+        $id = $entity->$idGetter();
+
+        if ($id !== null) {
+            $sql = "DELETE FROM $tableName WHERE $idColumn = ?";
+
+            if ($flush) {
+                $this->databaseService->selectDatabase('arcadia'); 
+                $this->databaseService->query($sql, [$id]);
+            }
+
+        } else {
+            throw new \InvalidArgumentException("Cannot delete entity without valid ID.");
+        }
     }
 }

@@ -1,4 +1,7 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="mt-4 d-flex justify-content-between">
+        <a type='button' class="btn btn-gradiant me-3"  href="{{ path('app_admin_user_index') }}">Revenir à la liste</a>
+        <button class="btn btn-primary">{{ button_label|default('Valider') }}</button>
+    </div>
 {{ form_end(form) }}
