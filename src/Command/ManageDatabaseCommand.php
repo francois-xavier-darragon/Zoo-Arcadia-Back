@@ -157,17 +157,20 @@ class ManageDatabaseCommand extends Command
                 // Determine if the column should allow NULL
                 $nullable = $this->isAssociationNullable($associationMapping);
 
-                try {
-                    // Add the column and foreign key constraint
-                    $sql = sprintf('ALTER TABLE %s ADD %s_id INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s_id) REFERENCES %s(id)',
-                        $meta->getTableName(), $columnName,
-                        $nullable ? 'NULL' : 'NOT NULL',
-                        $constraintName, $columnName, $targetEntityTableName
-                    );
-    
-                    $this->databaseService->query($sql);
-                } catch (PDOException $e) {
-                    echo 'Error: ' . $e->getMessage();
+                // Check if the column exists
+                if (!$this->existsTableOrColumn($meta->getTableName(), $columnName)) {
+                    try {
+                        // Add the column and foreign key constraint
+                        $sql = sprintf('ALTER TABLE %s ADD %s_id INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s_id) REFERENCES %s(id)',
+                            $meta->getTableName(), $columnName,
+                            $nullable ? 'NULL' : 'NOT NULL',
+                            $constraintName, $columnName, $targetEntityTableName
+                        );
+        
+                        $this->databaseService->query($sql);
+                    } catch (PDOException $e) {
+                        echo 'Error: ' . $e->getMessage();
+                    }
                 }
 
             } elseif($associationMapping['type'] === ClassMetadata::MANY_TO_MANY) {
