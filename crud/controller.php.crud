@@ -46,6 +46,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     {
         return $this->render('admin/{{ VARIABLE_NAME }}/show.html.twig', [
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+            'delete_btn' => true
         ]);
     }
 

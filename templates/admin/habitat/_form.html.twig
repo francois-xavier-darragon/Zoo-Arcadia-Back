@@ -7,14 +7,10 @@
         {% endif %}    
         {% if mode == 'Modifier' %}
             <div class = "d-flex">
-                <button class="btn btn-primary text-white me-3 mb-2" title="valider">Valider</button>
-                {# {% include 'habitat/_delete_button.html.twig' %} #}
-
-                {# <div class="modal-footer"> #}
-                    <button type="button" class="btn btn-danger text-white me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="{{ 'form.detail.delete_title'|trans }}">
-                        supprimer
-                    </button>
-                {# </div> #}
+                <button class="btn btn-primary me-3 mb-2" title="valider">Valider</button>
+                <button type='button' class="btn btn-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                    Supprimer
+                </button>
             </div>
         {% endif %}  
     </div>

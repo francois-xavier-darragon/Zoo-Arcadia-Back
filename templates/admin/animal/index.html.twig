@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class='row mt-5 mb-5'>
+    <div class='col-sm-12'> 
+        <div class= "col-sm-12 d-flex justify-content-between mb-5">
+            <h1>Liste des Animals</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_animal_new') }}" title="Ajouter un animal">Ajouter un animal</a>
+        </div>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                <th class="text-start">firstName</th>
+                <th class="text-center">health</th>
+                <th class="text-center">veterinaryReports</th>
+                <th class="text-center">breed</th>
+                <th class="text-center">habitat</th>
+                <th class="text-center">images</th>
+                <th class="text-end">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for animal in animals %}
+                <tr>
+                <td class="text-start">{{ animal.firstName }}</td>
+                <td class="text-center">{{ animal.health }}</td>
+                <td class="text-center">{{ animal.veterinaryReports }}</td>
+                <td class="text-center">{{ animal.breed }}</td>
+                {# <td class="text-center">{{ animal.habitat }}</td>
+                <td class="text-center">{{ animal.images }}</td> #}
+                    <td class="text-end">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_animal_show', {'id': animal.id}) }}" title="{{ 'form.detail.show_title'|trans }}">
+                            {% include "_include/components/icons/show_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">
+                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-danger me-2' href="{{ path('app_admin_animal_delete', {'id': animal.id}) }}" title="{{ 'form.detail.delete_title'|trans }}">
+                            {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> 
+</div>
+{% endblock %}

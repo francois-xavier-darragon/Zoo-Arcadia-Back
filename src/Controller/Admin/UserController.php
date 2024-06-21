@@ -48,6 +48,7 @@ class UserController extends AbstractController
     {
         return $this->render('admin/user/show.html.twig', [
             'user' => $user,
+            'delete_btn' => true
         ]);
     }
 

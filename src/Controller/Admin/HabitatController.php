@@ -16,7 +16,7 @@ class HabitatController extends AbstractController
     #[Route('/', name: 'app_admin_habitat_index', methods: ['GET'])]
     public function index(HabitatRepository $habitatRepository): Response
     {
-        return $this->render('habitat/index.html.twig', [
+        return $this->render('admin/habitat/index.html.twig', [
             'habitats' => $habitatRepository->findAllHabitat(),
         ]);
     }
@@ -34,7 +34,7 @@ class HabitatController extends AbstractController
             return $this->redirectToRoute('app_admin_habitat_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('habitat/edit.html.twig', [
+        return $this->render('admin/habitat/edit.html.twig', [
             'habitat' => $habitat,
             'form' => $form,
             'mode' => 'Ajouter',
@@ -44,8 +44,9 @@ class HabitatController extends AbstractController
     #[Route('/{id}', name: 'app_admin_habitat_show', methods: ['GET'])]
     public function read(Habitat $habitat): Response
     {
-        return $this->render('habitat/show.html.twig', [
+        return $this->render('admin/habitat/show.html.twig', [
             'habitat' => $habitat,
+            'delete_btn' => true
         ]);
     }
 
@@ -61,7 +62,7 @@ class HabitatController extends AbstractController
             return $this->redirectToRoute('app_admin_habitat_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('habitat/edit.html.twig', [
+        return $this->render('admin/habitat/edit.html.twig', [
             'habitat' => $habitat,
             'form' => $form,
             'mode'=> 'Modifier',

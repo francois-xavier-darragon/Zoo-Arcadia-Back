@@ -84,14 +84,14 @@ class MakeCrudCommand extends Command
         $this->makeFormType();
 
         //creation des templates
-        $templatesDirectory = $this->projectDir.'/templates/'. $this->variable_name;
-        if (file_exists($templatesDirectory)) {
-            // Supprimer le répertoire même s'il contient des fichiers
-            array_map('unlink', glob($templatesDirectory . '/*.*'));
-            rmdir($templatesDirectory);
-        }
-        mkdir($templatesDirectory);
-        $this->makeTemplate('_delete_button', $input);
+        // $templatesDirectory = $this->projectDir.'/templates/admin'. $this->variable_name;
+        // if (file_exists($templatesDirectory)) {
+        //     // Supprimer le répertoire même s'il contient des fichiers
+        //     array_map('unlink', glob($templatesDirectory . '/*.*'));
+        //     rmdir($templatesDirectory);
+        // }
+        // mkdir($templatesDirectory);
+       
         $this->makeTemplate('_delete_modal', $input);
         $this->makeTemplate('_form', $input);
         $this->makeTemplate('index', $input);
@@ -195,20 +195,22 @@ class MakeCrudCommand extends Command
 
         $index_list_th = '';
         $index_list_td = '';
-        $index_list_tr_td = '';
+        $show_div = '';
         
 
         $index_list_th = implode("\n", array_map(function($property) {
             return '                <th class="text-center">'.$property.'</th>';
         }, $this->properties));
+
         $index_list_td= implode("\n", array_map(function($property) {
             return '                <td class="text-center">{{ '.$this->variable_name.'.'.$property.' }}</td>';
         }, $this->properties));
-        $index_list_tr_td = implode("\n", array_map(function($property) {
-            return '            <tr>
-                <th>'.$property.'</th>
-                <td>{{ '.$this->variable_name.'.'.$property.' }}</td>
-            </tr>';
+
+        $show_div = implode("\n", array_map(function($property) {
+            return '            <div class="row mb-2">
+                <div class="col-4 font-weight-bold">'.$property.'</div>
+                <div class="col-8">{{ '.$this->variable_name.'.'.$property.' }}</div>
+            </div>';
         }, $this->properties));
 
         
@@ -224,21 +226,23 @@ class MakeCrudCommand extends Command
                 '{{ VARIABLE_NAME }}',
                 '{{ INDEX_LIST_TH }}',
                 '{{ INDEX_LIST_TD }}',
-                '{{ INDEX_LIST_TR_TD }}'
+                '{{ SHOW_DIV }}'
             ],
             [$this->entity_name,
                 $this->variable_name,
                 $index_list_th,
                 $index_list_td,
-                $index_list_tr_td
+                $show_div
             ],$temp);
 
-        $templatesDirectory = $this->projectDir.'/templates/';
-        if (!file_exists($templatesDirectory)) {
-            mkdir($templatesDirectory.'');
-        }    
-
-        file_put_contents($this->projectDir.'/templates/admin/'.$this->variable_name.'/'.$name.'.html.twig',$temp);
+        $templatesDirectory = $this->projectDir.'/templates/admin/'.$this->variable_name.'/';
+        if (!is_dir($templatesDirectory)) {
+            if (!mkdir($templatesDirectory, 0777, true) && !is_dir($templatesDirectory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $templatesDirectory));
+            }
+        }   
+       
+        file_put_contents($templatesDirectory.$name.'.html.twig',$temp);
     }
 
 }

@@ -38,17 +38,20 @@ p {
     color: white;
 }
 
-.btn-gradiant {
-    background: linear-gradient(to right, $secondary, $primary);
+.btn-gradiant, .btn-primary, .btn-secondary, .btn-danger {
     color:white;
     font-family: $font-family-headline-sans-serif;
+}
+
+.btn-gradiant{
+    background: linear-gradient(to right, $secondary, $primary);
 }
 
 .dataTables_wrapper {
     position: relative
 }
 
-.custom-table {
+.custom-table, .custom-card {
     border: 3px solid $secondary;     
     box-shadow: 0 8px 10px $dark;
 }
