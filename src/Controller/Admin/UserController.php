@@ -5,20 +5,24 @@ namespace App\Controller\Admin;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-#[Route('/admin/user')]
+#[Route('/admin/users')]
 class UserController extends AbstractController
 {
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository): Response
+    public function index(UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $csrfToken = $csrfTokenManager->getToken('delete-token');
+
         return $this->render('admin/user/index.html.twig', [
-            'users' => $userRepository->findAllUsers(),
+            'users' => $userRepository->findAllUser(),
+            'csrfToken'     => $csrfToken->getValue(),
+            'delete_btn' => true
         ]);
     }
 
@@ -30,7 +34,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $roles = $form->get('roles')->getData();
+            $roles[] = $form->get('roles')->getData();
+            $user->setRoles($roles);
             $userRepository->saveUser($user, true);
             
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
@@ -48,6 +53,7 @@ class UserController extends AbstractController
     {
         return $this->render('admin/user/show.html.twig', [
             'user' => $user,
+            'delete_btn' => true
         ]);
     }
 
@@ -58,6 +64,8 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $roles[] = $form->get('roles')->getData();
+            $user->setRoles($roles);
             $userRepository->saveUser($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
@@ -66,17 +74,28 @@ class UserController extends AbstractController
         return $this->render('admin/user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
-            'mode' => 'Modifier'
+            'mode' => 'Modifier',
+            'delete_btn' => true
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, UserRepository $userRepository): Response
+    #[Route('/{id}/delete', name: 'app_admin_user_delete', methods: ['POST'])]
+    public function delete(Request $request, User $user, UserRepository $userRepository, ): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
-            $userRepository->removeUser($user, true);
+        if($user->getDeletedAt()){
+            return $this->redirectToRoute('app_admin_user_index');
         }
 
+        $submittedToken = $request->request->get('token');
+        
+        if ($this->isCsrfTokenValid('delete-user', $submittedToken)) {
+            $userRepository->removeUser($user, true);
+
+            $this->addFlash('success', 'Le utilisateur "'.$user->getLastName(). $user->getFirstName().'" a été supprimé avec succès.');
+            return $this->redirectToRoute('app_admin_user_index');
+        }
+
+        $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet utilisateur, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }

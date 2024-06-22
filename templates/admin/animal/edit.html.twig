@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row mt-5 mb-5 justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-center">
+                <div style="width: 100%;">
+                    {% if mode == 'Ajouter' %}
+                    <h1 class=" mb-4">{{mode}}</h1>
+                        {{ include('admin/animal/_form.html.twig') }}
+                    {% else %}   
+                    <h1 class=" mb-4">{{mode}}</h1>
+                        {{ include('admin/animal/_form.html.twig', {'button_label': "form.detail.update"|trans|raw , 'delete_btn': true }) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

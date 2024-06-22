@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Habitat{% endblock %}
+
+{% block body %}
+    <h1>Habitat</h1>
+
+    <table class="table">
+        <tbody>
+            {#<tr>
+                <th class="invisible">Id</th>
+                <td class="invisible">{{ habitat.id }}</td>
+            </tr>#}
+            <tr>
+                <th>name</th>
+                <td>{{ habitat.name }}</td>
+            </tr>
+            <tr>
+                <th>description</th>
+                <td>{{ habitat.description }}</td>
+            </tr>
+            {# <tr>
+                <th>animals</th>
+                <td>{{ habitat.animals }}</td>
+            </tr>
+            <tr>
+                <th>images</th>
+                <td>{{ habitat.images }}</td>
+            </tr> #}
+           
+        </tbody>
+    </table>
+
+    {# <a class="btn btn-secondary" href="{{ path('habitat_browse') }}" title="{{ 'form.detail.back_to_list_title'|trans }}">{{ 'form.detail.back_to_list'|trans|raw }}</a>
+    <a class="btn btn-success" href="{{ path('habitat_edit', {'id': habitat.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">{{ 'form.detail.edit'|trans|raw }}</a> #}
+
+
+{% if delete_btn is defined %}
+    {% include '/admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'id_token' : habitat.id } %}
+{% endif %}
+
+{% endblock %}

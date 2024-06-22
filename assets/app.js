@@ -8,5 +8,5 @@ import './bootstrap.js';
 import './styles/app.scss';
 
 // You can specify which plugins you need
-import { Tooltip, Toast, Popover } from 'bootstrap';
+import { Tooltip, Toast, Popover } from './bootstrap.js';
 console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');

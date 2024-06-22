@@ -1,0 +1,19 @@
+<div class="modal fade p-5" id="deleteModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Suppression d'un animal</h5>
+                <button type="button" class="btn text-danger" data-bs-dismiss="modal" aria-label="Close">
+                    {% include "_include/components/icons/close_icon_svg.html.twig" %}
+                </button>
+            </div>
+            <div class="modal-body">
+                Attention êtes-vous sur de vouloir supprimer l' animal : {{ animal.name }} ?
+            </div>
+            <div class="modal-footer-modal m-4">
+                <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
+                <a href="{{ path('app_admin_animal_delete',{'id' :animal.id}) }}" class="btn btn-danger" title="Supprimer">Supprimer</a>
+            </div>
+        </div>
+    </div>
+</div>

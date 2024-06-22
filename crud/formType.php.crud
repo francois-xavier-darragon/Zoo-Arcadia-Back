@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Form;
+
+use App\Entity\{{ ENTITY_NAME }};
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class {{ ENTITY_NAME }}Type extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            {{ BUILDER }}
+        ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => {{ ENTITY_NAME }}::class,
+        ]);
+    }
+}

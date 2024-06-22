@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,8 +15,8 @@
         {% endblock %}
     </head>
     <body class='bg-info'>
-    {% include "include/_nav_top.html.twig" %}
-    {% include "include/_nav_lateral.html.twig" %}
+    {% include "_include/navbar/_nav_top.html.twig" %}
+    {% include "_include/navbar/_nav_lateral.html.twig" %}
         <div class="container p-0">
             {% block body %}{% endblock %}
         </div> 

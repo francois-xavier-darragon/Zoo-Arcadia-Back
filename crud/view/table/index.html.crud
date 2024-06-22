@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class='row mt-5 mb-5'>
+    <div class='col-sm-12'> 
+        <div class= "col-sm-12 d-flex justify-content-between mb-5">
+            <h1>Liste des {{ ENTITY_NAME }}s</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_{{ VARIABLE_NAME }}_new') }}" title="Ajouter un {{ VARIABLE_NAME }}">Ajouter un {{ VARIABLE_NAME }}</a>
+        </div>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    {{ INDEX_LIST_TH }}
+                    <th class="text-end">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for {{ VARIABLE_NAME }} in {{ VARIABLE_NAME }}s %}
+                <tr>
+                    {{ INDEX_LIST_TD }}
+                    <td class="text-end">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_{{ VARIABLE_NAME }}_show', {'id': {{ VARIABLE_NAME }}.id}) }}" title="{{ 'form.detail.show_title'|trans }}">
+                            {% include "_include/components/icons/show_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_{{ VARIABLE_NAME }}_edit', {'id': {{ VARIABLE_NAME }}.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">
+                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-danger me-2' href="{{ path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}) }}" title="{{ 'form.detail.delete_title'|trans }}">
+                            {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> 
+</div>
+{% endblock %}

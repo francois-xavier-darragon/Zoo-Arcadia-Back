@@ -34,7 +34,7 @@ class UserRepository extends ServiceEntityRepository
     }
 
     // Method to find all users
-    public function findAllUsers(): array
+    public function findAllUser(): array
     {
         return $this->genericRepository->findAll(User::class);
     }
@@ -45,13 +45,16 @@ class UserRepository extends ServiceEntityRepository
         return $this->genericRepository->findBy($criteria, User::class, $orderBy, $limit, $offset);
     }
 
+    // Method to save a user
     public function saveUser(User $entity, bool $flush = false)
     {
         $this->genericRepository->save(User::class, $entity, $flush);
     }
 
+    // Method to delete a user
     public function removeUser(User $entity, bool $flush = false)
     {
         $this->genericRepository->remove(User::class, $entity, $flush);
     }
+
 }
