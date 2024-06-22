@@ -56,4 +56,5 @@ class UserRepository extends ServiceEntityRepository
     {
         $this->genericRepository->remove(User::class, $entity, $flush);
     }
+
 }

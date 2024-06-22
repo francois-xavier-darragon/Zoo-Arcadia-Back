@@ -10,9 +10,12 @@
             <div class="modal-body">
                 Attention êtes-vous sur de vouloir supprimer l'utilisateur : {{ user.lastname }} ?
             </div>
-            <div class="modal-footer-modal m-4">
+            <div class="modal-footer-modal d-flex m-4">
                 <button type="button" class="btn btn-gradiant btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
-                <a href="{{ path('app_admin_habitat_delete',{'id' :user.id}) }}" class="btn btn-danger" title="Supprimer">Supprimer</a>
+                <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete-user') }}">
+                    <button type="submit" class="btn btn-danger" title="Supprimer">Supprimer</button>
+                </form>
             </div>
         </div>
     </div>

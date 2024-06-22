@@ -9,15 +9,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 #[Route('/admin/{{ VARIABLE_NAME }}s')]
 class {{ ENTITY_NAME }}Controller extends AbstractController
 {
     #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
-    public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
+    public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
             '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
+            'csrfToken'     => $csrfToken->getValue(),
+            'delete_btn'    => true
         ]);
     }
 
@@ -66,19 +69,27 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
             'form' => $form,
             'mode'=> 'Modifier',
+            'delete_btn' => true
         ]);
     }
 
     #[Route('/{id}/delete', name: 'app_admin_{{ VARIABLE_NAME }}_delete', methods: ['POST'])]
     public function delete(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository $repository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.${{ VARIABLE_NAME }}->getId(), $request->request->get('_token'))) {
-        $repository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }});
-
-        } else {
-
+        if(${{ VARIABLE_NAME }}->getDeletedAt()){
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index');
         }
 
+        $submittedToken = $request->request->get('token');
+        
+        if ($this->isCsrfTokenValid('delete-{{ VARIABLE_NAME }}', $submittedToken)) {
+            $userRepository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+
+            $this->addFlash('success', 'Le utilisateur "'.${{ VARIABLE_NAME }}->getName().'" a été supprimé avec succès.');
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index');
+        }
+
+        $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet {{ VARIABLE_NAME }}, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
-        }
+    }
 }

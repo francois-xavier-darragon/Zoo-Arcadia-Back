@@ -10,9 +10,12 @@
             <div class="modal-body">
                 Attention êtes-vous sur de vouloir supprimer l' {{ VARIABLE_NAME }} : {{ {{ VARIABLE_NAME }}.name }} ?
             </div>
-            <div class="modal-footer-modal m-4">
+            <div class="modal-footer-modal d-flex m-4">
                 <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
-                <a href="{{ path('app_admin_{{ VARIABLE_NAME }}_delete',{'id' :{{ VARIABLE_NAME }}.id}) }}" class="btn btn-danger" title="Supprimer">Supprimer</a>
+                <form method="post" action="{{ path('app_admin_{{ VARIABLE_NAME }}delete', {'id': {{ VARIABLE_NAME }}.id}) }}">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete-{{ VARIABLE_NAME }}') }}">
+                    <button type="submit" class="btn btn-danger" title="Supprimer">Supprimer</button>
+                </form>
             </div>
         </div>
     </div>
