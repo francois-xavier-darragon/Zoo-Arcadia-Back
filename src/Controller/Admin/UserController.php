@@ -23,7 +23,8 @@ class UserController extends AbstractController
         return $this->render('admin/user/index.html.twig', [
             'users' => $userRepository->findAllUser(),
             'csrfToken'     => $csrfToken->getValue(),
-            'delete_btn'    => true
+            'delete_btn'    => true,
+            'allRoles'      => User::ROLES,
         ]);
     }
 
@@ -35,9 +36,10 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->setRoles($form->get('roles')->getdata());
+            $roles[]= $form->get('roles')->getdata();
+            $user->setRoles($roles);
             $user->setPassword($passwordHasher->hashPassword($user, bin2hex(random_bytes(25))));
-            $userRepository->saveUser($user, true);
+            $userRepository->save($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -52,9 +54,11 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
     public function read(User $user): Response
     {
+       
         return $this->render('admin/user/show.html.twig', [
-            'user' => $user,
-            'delete_btn' => true
+            'user'       => $user,
+            'delete_btn' => true,
+            'allRoles'   => User::ROLES,
         ]);
     }
 
@@ -80,9 +84,9 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
-            'user' => $user,
-            'form' => $form,
-            'mode'=> 'Modifier',
+            'user'       => $user,
+            'form'       => $form,
+            'mode'       => 'Modifier',
             'delete_btn' => true
         ]);
     }

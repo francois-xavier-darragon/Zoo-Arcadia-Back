@@ -24,7 +24,7 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Service\DatabaseService:
         arguments:
-            $databaseUrl: '%env(resolve:DATABASE_URL)%'                
+            $databaseUrl: '%env(resolve:DATABASE_URL)%'  
     App\Command\ManageDatabaseCommand:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'

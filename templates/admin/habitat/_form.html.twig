@@ -18,7 +18,7 @@
 
 <div class="col-12 pt-2">
 {% if delete_btn is defined %}
-    {% include 'habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'id_token' : habitat.id } %}
+    {% include 'admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'id_token' : habitat.id } %}
 {% endif %}
 </div>
 

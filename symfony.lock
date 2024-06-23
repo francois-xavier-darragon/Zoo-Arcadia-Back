@@ -35,6 +35,15 @@
             "migrations/.gitignore"
         ]
     },
+    "odolbeau/phone-number-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "8aaba28c06547e50377dd9dce4104b9e384731a5"
+        }
+    },
     "phpunit/phpunit": {
         "version": "9.6",
         "recipe": {

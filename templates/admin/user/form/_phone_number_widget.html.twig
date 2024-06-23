@@ -1,0 +1,10 @@
+{% block phone_number_widget %}
+    <div class="form-group ">
+        <label for="{{ id }}_country">Pays</label>
+        {{ form_widget(form.country, { 'attr': {'class': 'form-control form-control-solid country-select'} }) }}
+    </div>
+    <div class="form-group">
+        <label for="{{ id }}_number">Numéro</label>
+        {{ form_widget(form.number, { 'attr': {'class': 'form-control form-control-solid number-input', 'placeholder': '0609080706'} }) }}
+    </div>
+{% endblock %}

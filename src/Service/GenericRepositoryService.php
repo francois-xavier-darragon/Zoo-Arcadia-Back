@@ -53,8 +53,8 @@ class GenericRepositoryService
 
         // Creating the native query with the ResultSetMappingBuilder
         $query = $this->entityManager->createNativeQuery($sql, $rsm);
-
-        // Exécution de la requête et récupération du résultat
+        
+        // Executing the query and retrieving the result
         return $query->getResult();
     }
 
@@ -108,12 +108,14 @@ class GenericRepositoryService
     // Method to save to database
     public function save(string $entityClass, $entity, bool $flush = false): void
     {
+        $this->databaseService->selectDatabase('arcadia');
+
         $metaData = $this->entityManager->getClassMetadata($entityClass);
         $tableName = $metaData->getTableName();
         $columns = $metaData->getColumnNames();
-        
-        $values = [];
     
+        $values = [];
+        $idValue = null;
         foreach ($columns as $column) {
             $fieldName = $metaData->getFieldName($column);
             $getter = 'get' . ucfirst($fieldName);
@@ -122,7 +124,8 @@ class GenericRepositoryService
                 $value = $entity->$getter();
 
                 if ($fieldName === 'id') {
-                    continue; 
+                    $idValue = $value;
+                    continue;
                 }
 
                 if ($value instanceof \DateTimeImmutable && $value !== null) {
@@ -130,28 +133,55 @@ class GenericRepositoryService
                 } elseif (is_array($value) || is_object($value)) {
                     $values[$column] = json_encode($value);
                 } elseif ($value == null) {
-                    $values[$column] = null;    
+                    $values[$column] = null;
                 } else {
-                    $values[$column] = $value; 
+                    $values[$column] = $value;
                 }
             }
         }
-       
-        $sqlValues = implode(', ', array_map(function($uniqueValue) {
+
+        $connection = $this->databaseService->getConnection();
+
+    if ($idValue !== null) {
+        // Check if the entity already exists
+        $checkSql = "SELECT COUNT(*) FROM $tableName WHERE id = :id";
+        $stmt = $connection->prepare($checkSql);
+        $stmt->execute(['id' => $idValue]);
+        $exists = $stmt->fetchColumn();
+
+            if ($exists) {
+                // Update existing data
+                $updateValues = [];
+                foreach ($values as $column => $value) {
+                    $updateValues[] = "$column = :$column";
+                }
+
+                $updateSql = "UPDATE $tableName SET " . implode(', ', $updateValues) . " WHERE id = :id";
+                $stmt = $connection->prepare($updateSql);
+                $values['id'] = $idValue;
+                if ($flush) {
+                   $stmt->execute($values);
+                }
+            }
+
+        } else {
+            //Insert new data
+            $sqlValues = implode(', ', array_map(function($uniqueValue) {
             return $uniqueValue === null ? 'NULL' : "'" . addslashes($uniqueValue) . "'";
-        }, $values));
-
-        $sql = "INSERT INTO $tableName (" . implode(', ', array_keys($values)) . ") VALUES ($sqlValues)";
-
-        if ($flush) { 
-            $this->databaseService->selectDatabase('arcadia');
-            $this->databaseService->query($sql);
+            }, $values));
+    
+            $sql = "INSERT INTO $tableName (" . implode(', ', array_keys($values)) . ") VALUES ($sqlValues)";
+            if ($flush) {
+                $this->databaseService->query($sql);
+            }
         }
     }
 
     // Method to delete in database
     public function remove(string $entityClass, $entity, bool $flush = false): void
     {
+        $this->databaseService->selectDatabase('arcadia');
+        
         $metaData = $this->entityManager->getClassMetadata($entityClass);
         $tableName = $metaData->getTableName();
         $idColumn = $metaData->getSingleIdentifierColumnName();
@@ -162,7 +192,6 @@ class GenericRepositoryService
             $sql = "DELETE FROM $tableName WHERE $idColumn = ?";
 
             if ($flush) {
-                $this->databaseService->selectDatabase('arcadia'); 
                 $this->databaseService->query($sql, [$id]);
             }
 

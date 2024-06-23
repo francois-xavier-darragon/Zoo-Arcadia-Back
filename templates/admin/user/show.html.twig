@@ -8,7 +8,7 @@
         <div class="row m-4 ">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <img src="" class="card-img-top" alt="User Image">
+                    {# <img src="" class="card-img-top" alt="User Image"> #}
                     <div class="card-body text-start mb-2">
                         <a class="text-secondary" title="Editer" href="{{ path('app_admin_user_edit', {'id': user.id}) }}">
                             {% include "_include/components/icons/edit_icon_svg.html.twig" %}
@@ -22,66 +22,48 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-body">
-                                    <div class="row mb-2">
-                <div class="col-4 font-weight-bold">email</div>
-                <div class="col-8">{{ user.email }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">userIdentifier</div>
-                <div class="col-8">{{ user.userIdentifier }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">roles</div>
-                <div class="col-8">{{ user.roles }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">password</div>
-                <div class="col-8">{{ user.password }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">firstName</div>
-                <div class="col-8">{{ user.firstName }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">lastName</div>
-                <div class="col-8">{{ user.lastName }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">notices</div>
-                <div class="col-8">{{ user.notices }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">veterinaryReports</div>
-                <div class="col-8">{{ user.veterinaryReports }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">avatar</div>
-                <div class="col-8">{{ user.avatar }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">phone</div>
-                <div class="col-8">{{ user.phone }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">address</div>
-                <div class="col-8">{{ user.address }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">createdAt</div>
-                <div class="col-8">{{ user.createdAt }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">updatedAt</div>
-                <div class="col-8">{{ user.updatedAt }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">deletedAt</div>
-                <div class="col-8">{{ user.deletedAt }}</div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-4 font-weight-bold">deleted</div>
-                <div class="col-8">{{ user.deleted }}</div>
-            </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">firstName</div>
+                            <div class="col-8">{{ user.firstName }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">lastName</div>
+                            <div class="col-8">{{ user.lastName }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">roles</div>
+                            {% for role in user.roles %}
+                                {% if role == 'ROLE_ADMIN' %}
+                                    {% set roleName = allRoles[role] %}
+                                    <div class="col-8">{{ roleName }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">email</div>
+                            <div class="col-8">{{ user.email }}</div>
+                        </div>
+                        
+                        {# <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">notices</div>
+                            <div class="col-8">{{ user.notices }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">veterinaryReports</div>
+                            <div class="col-8">{{ user.veterinaryReports }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">avatar</div>
+                            <div class="col-8">{{ user.avatar }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">phone</div>
+                            <div class="col-8">{{ user.phone }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">address</div>
+                            <div class="col-8">{{ user.address }}</div>
+                        </div> #}
                     </div>
                 </div>
             </div>

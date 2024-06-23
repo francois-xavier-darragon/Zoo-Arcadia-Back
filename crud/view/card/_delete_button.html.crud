@@ -1,5 +1,0 @@
-<div class="modal-footer">
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" title="{{ 'form.detail.delete_title'|trans }}">
-        <i class="material-icons">delete_outline</i> 
-    </button>
-</div>

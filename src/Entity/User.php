@@ -55,10 +55,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Image $avatar = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $phone = null;
+    private ?int $phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $address = null;
+    #[ORM\Column(nullable: true)]
+    private ?array $address = null;
 
     /**
      * @var Collection<int, Notice>
@@ -258,27 +258,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getPhone(): ?int
     {
         return $this->phone;
     }
 
-    public function setPhone(?string $phone): static
+    public function setPhone(?int $phone): static
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAddress(): ?array
     {
         return $this->address;
     }
 
-    public function setAddress(?string $address): static
+    public function setAddress(?array $address): static
     {
         $this->address = $address;
 
         return $this;
     }
+
 }
