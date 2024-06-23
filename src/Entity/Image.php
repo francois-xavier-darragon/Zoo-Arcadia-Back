@@ -5,15 +5,21 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ImageRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
 {
     use TimestampableTrait;
     use SoftDeletableTrait;
+
+    #[Vich\UploadableField(mapping: 'user_avatar', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    private ?File $userAvatarFile = null;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -22,6 +28,9 @@ class Image
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $src = null;
 
     /**
      * @var Collection<int, Habitat>
@@ -35,13 +44,12 @@ class Image
     #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'images')]
     private Collection $animals;
 
-    #[ORM\OneToOne(mappedBy: 'avatar', cascade: ['persist', 'remove'])]
-    private ?User $user = null;
-
     public function __construct()
     {
         $this->habitats = new ArrayCollection();
         $this->animals = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -111,23 +119,24 @@ class Image
 
     public function getUser(): ?User
     {
-        return $this->user;
+        return $this->userAvatarFile;
     }
 
-    public function setUser(?User $user): static
+    public function setUserAvatarFile(?File $userAvatarFile): static
     {
+        $this->userAvatarFile = $userAvatarFile;
+
         // unset the owning side of the relation if necessary
-        if ($user === null && $this->user !== null) {
-            $this->user->setAvatar(null);
+        if ($userAvatarFile === null && $this->userAvatarFile !== null) {
+            $this->updatedAt = new DateTimeImmutable();
         }
 
         // set the owning side of the relation if necessary
-        if ($user !== null && $user->getAvatar() !== $this) {
-            $user->setAvatar($this);
-        }
-
-        $this->user = $user;
-
         return $this;
+    }
+
+    public function getUserAvatarFile(): ?File
+    {
+        return $this->userAvatarFile;
     }
 }
