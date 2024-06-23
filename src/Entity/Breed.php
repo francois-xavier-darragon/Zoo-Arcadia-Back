@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Trait\SoftDeletableTrait;
+use App\Entity\Trait\TimestampableTrait;
 use App\Repository\BreedRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: BreedRepository::class)]
 class Breed
 {
+    use TimestampableTrait;
+    use SoftDeletableTrait;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]

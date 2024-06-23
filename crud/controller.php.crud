@@ -17,6 +17,8 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
     public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $csrfToken = $csrfTokenManager->getToken('delete-token');
+        
         return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
             '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
             'csrfToken'     => $csrfToken->getValue(),

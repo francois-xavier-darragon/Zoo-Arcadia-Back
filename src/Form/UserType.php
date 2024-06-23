@@ -63,6 +63,8 @@ class UserType extends AbstractType
            
             'label' => 'Role de l\'utilasteur',
             'choices'=> array_flip(USER::ROLES),
+            // 'multiple' => false,
+            // 'expanded' => false,
             'label_attr' => [
                 'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
             ],
@@ -147,8 +149,6 @@ class UserType extends AbstractType
         //     ]
         // )
     ;
-         
-        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

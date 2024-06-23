@@ -5,8 +5,13 @@
         <div class="col-lg-8">
             <div class="d-flex justify-content-center">
                 <div style="width: 100%;">
-                    <h1 class=" mb-4">{{mode}} utilisateur</h1>
-                    {{ include('admin/user/_form.html.twig') }}
+                    {% if mode == 'Ajouter' %}
+                    <h1 class=" mb-4">{{mode}}</h1>
+                        {{ include('admin/user/_form.html.twig') }}
+                    {% else %}   
+                    <h1 class=" mb-4">{{mode}}</h1>
+                        {{ include('admin/user/_form.html.twig', {'delete_btn': true }) }}
+                    {% endif %}
                 </div>
             </div>
         </div>
