@@ -2,16 +2,16 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Suppression d'un utilisateur</h5>
+                <h5 class="modal-title" id="modal-title">Suppression d'un user</h5>
                 <button type="button" class="btn text-danger" data-bs-dismiss="modal" aria-label="Close">
-                     {% include "_include/components/icons/close_icon_svg.html.twig" %}
+                    {% include "_include/components/icons/close_icon_svg.html.twig" %}
                 </button>
             </div>
             <div class="modal-body">
-                Attention êtes-vous sur de vouloir supprimer l'utilisateur : {{ user.lastname }} ?
+                Attention êtes-vous sur de vouloir supprimer l' utilisateur : {{ user.LastName }} {{ user.FirstName }} ?
             </div>
             <div class="modal-footer-modal d-flex m-4">
-                <button type="button" class="btn btn-gradiant btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
+                <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
                 <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}">
                     <input type="hidden" name="token" value="{{ csrf_token('delete-user') }}">
                     <button type="submit" class="btn btn-danger" title="Supprimer">Supprimer</button>

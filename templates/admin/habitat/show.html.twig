@@ -31,10 +31,6 @@
         </tbody>
     </table>
 
-    {# <a class="btn btn-secondary" href="{{ path('habitat_browse') }}" title="{{ 'form.detail.back_to_list_title'|trans }}">{{ 'form.detail.back_to_list'|trans|raw }}</a>
-    <a class="btn btn-success" href="{{ path('habitat_edit', {'id': habitat.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">{{ 'form.detail.edit'|trans|raw }}</a> #}
-
-
 {% if delete_btn is defined %}
     {% include '/admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'id_token' : habitat.id } %}
 {% endif %}

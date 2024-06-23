@@ -1,22 +1,24 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <div class="col-12">
-        {% if mode == "Ajouter" %}
-            <button class="btn btn-success" title="{{ 'form.detail.validate_title'|trans }}">{{ (button_label|default("form.detail.validate"|trans))|raw }}</button>
+    <div class="mt-4 d-flex justify-content-between">
+        <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
+        {% if mode == 'Ajouter' %} 
+            <button class="btn btn-primary" title="Valider">Valider</button>
         {% elseif mode == "Modifier" %}
-            <button class="btn btn-success" title="{{ 'form.detail.update_title'|trans }}">{{ (button_label|default("form.detail.update"|trans))|raw }}</button>
-        {% endif %}
-        <a class="btn btn-secondary" href="{{ path('{{ VARIABLE_NAME }}_browse') }}" title="{{ 'form.detail.back_to_list_title'|trans }}">{{ 'form.detail.back_to_list'|trans|raw }}</a>
-        {% if mode == 'Modifier' %}
-            {% include '{{ VARIABLE_NAME }}/_delete_button.html.twig' %}
+            <button class="btn btn-primary" title="Valider">Valider</button>
+        {% else %}
+            <div class = "d-flex">
+                <button class="btn btn-secondary" href="{{ path('app_admin_{{ VARIABLE_NAME }}_index') }}" title="valider">Valider</button>
+                <button type='button' class="btn btn-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="supprimer">
+                    supprimer
+                </button>
+            </div>
         {% endif %}  
     </div>
 {{ form_end(form) }}
 
 <div class="col-12 pt-2">
-{% if delete_btn is defined %}
-    {% include '{{ VARIABLE_NAME }}/_delete_modal.html.twig' with {'path_form' : path('{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'id_token' : {{ VARIABLE_NAME }}.id } %}
-{% endif %}
+    {% if delete_btn is defined %}
+        {% include 'admin/{{ VARIABLE_NAME }}/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'id_token' : {{ VARIABLE_NAME }}.id } %}
+    {% endif %}
 </div>
-
-

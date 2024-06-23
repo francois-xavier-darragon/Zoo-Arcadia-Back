@@ -12,7 +12,6 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
-  
     public function __construct(
         private ManagerRegistry $registry,
         private GenericRepositoryService $genericRepository,
@@ -21,26 +20,26 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    // method to find a user by their identifier (ID)
+    // method to find a User by their identifier (ID)
     public function findUserById(int $id): ?User
     {
         return $this->genericRepository->findOneBy(['id' => $id], User::class);
     }
 
-    // Method to find a user by specific criteria
+    // Method to find a User by specific criteria
     public function findOneUserBy(array $criteria): ?User
     {
         return $this->genericRepository->findOneBy($criteria, User::class);
     }
 
-    // Method to find all users
+    // Method to find all User
     public function findAllUser(): array
     {
         return $this->genericRepository->findAll(User::class);
     }
 
-    // Method to find users with paging and sorting
-    public function findUsersBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): array
+    // Method to find User with paging and sorting
+    public function findUserBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): array
     {
         return $this->genericRepository->findBy($criteria, User::class, $orderBy, $limit, $offset);
     }
@@ -57,4 +56,12 @@ class UserRepository extends ServiceEntityRepository
         $this->genericRepository->remove(User::class, $entity, $flush);
     }
 
+    public function save(User $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }

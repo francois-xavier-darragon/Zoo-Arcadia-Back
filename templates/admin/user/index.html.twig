@@ -1,37 +1,43 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
 <div class='row mt-5 mb-5'>
     <div class='col-sm-12'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
-            <h1>Liste des utilisateurs </h1>
-            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_user_new') }}">Ajouter un utilisateur</a>
+            <h1>Liste des Users</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_user_new') }}" title="Ajouter un user">Ajouter un utilisateur</a>
         </div>
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th class="text-start">FirstName</th>
-                    <th class="text-center">LastName</th>
-                    <th class="text-center">Email</th>
+                    <th class="text-start">email</th>
+                    <th class="text-center">roles</th>
+                    <th class="text-center">firstName</th>
+                    <th class="text-center">lastName</th>
                     <th class="text-end">actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for user in users %}
                 <tr>
-                    <td class="text-start">{{ user.firstName }}</td>
+                    <td class="text-start">{{ user.email }}</td>
+                    {% for role in user.roles %}
+                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER'  %}
+                            {% set roleName = allRoles[role] %}
+                            <td class="text-center">{{ roleName }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td class="text-center">{{ user.firstName }}</td>
                     <td class="text-center">{{ user.lastName }}</td>
-                    <td class="text-center">{{ user.email }}</td>
                     <td class="text-end">
-                        <a type='button' class='text-primary me-2' title="Voir" href="{{ path('app_admin_user_show', {'id': user.id}) }}"> 
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_user_show', {'id': user.id}) }}" title="voir">
                             {% include "_include/components/icons/show_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class='text-secondary me-2' title="éditer" href="{{ path('app_admin_user_edit', {'id': user.id}) }}">
-                              {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
+                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
                         </a>
-                        <butto type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_token('delete-user') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_token('delete-user') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
                              {% include "_include/components/icons/delete_icon_svg.html.twig" %}
-                        </butto>
+                        </a>
                     </td>
                 </tr>
 
@@ -43,5 +49,4 @@
         </table>
     </div> 
 </div>
-
 {% endblock %}

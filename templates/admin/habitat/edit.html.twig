@@ -7,10 +7,10 @@
                 <div style="width: 100%;">
                     {% if mode == 'Ajouter' %}
                     <h1 class=" mb-4">{{mode}} un Habitat </h1>
-                        {{ include('habitat/_form.html.twig') }}
+                        {{ include('admin/habitat/_form.html.twig') }}
                     {% else %}   
                     <h1 class=" mb-4">{{mode}} un Habitat</h1>
-                        {{ include('habitat/_form.html.twig', { 'delete_btn': true }) }}
+                        {{ include('admin/habitat/_form.html.twig', { 'delete_btn': true }) }}
                     {% endif %}
                 </div>
             </div>

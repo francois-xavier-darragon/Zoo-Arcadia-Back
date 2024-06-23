@@ -5,10 +5,24 @@
         <div class="col-lg-8">
             <div class="d-flex justify-content-center">
                 <div style="width: 100%;">
-                    <h1 class=" mb-4">{{mode}} utilisateur</h1>
-                    {{ include('admin/user/_form.html.twig') }}
+                    {% if mode == 'Ajouter' %}
+                    <h1 class=" mb-4">{{mode}}</h1>
+                        {{ include('admin/user/form/_form.html.twig') }}
+                    {% else %} 
+                        <div class="d-flex mb-4">
+                            <h1 class="me-4">{{mode}}</h1>
+                            <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-user') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                                {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                            </a>
+                        </div>  
+                        {{ include('admin/user/form/_form.html.twig', {'delete_btn': true }) }}
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+
+    {% if delete_btn is defined %}
+        {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'id_token' : user.id } %}
+    {% endif %}
 {% endblock %}

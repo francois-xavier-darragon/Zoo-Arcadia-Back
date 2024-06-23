@@ -24,13 +24,13 @@
                 {# <td class="text-center">{{ habitat.animals }}</td> #}
                 {# <td class="text-center">{{ habitat.images }}</td> #}
                     <td class="text-end">
-                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_habitat_show', {'id': habitat.id}) }}" title="{{ 'form.detail.show_title'|trans }}">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_habitat_show', {'id': habitat.id}) }}" title="voir">
                             {% include "_include/components/icons/show_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}" title="editer">
                             {% include "_include/components/icons/edit_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class='text-danger me-2' href="{{ path('app_admin_habitat_delete', {'id': habitat.id}) }}" title="{{ 'form.detail.delete_title'|trans }}">
+                        <a type='button' class='text-danger me-2' href="{{ path('app_admin_habitat_delete', {'id': habitat.id}) }}" title="supprimer">
                             {% include "_include/components/icons/delete_icon_svg.html.twig" %}
                         </a>
                     </td>

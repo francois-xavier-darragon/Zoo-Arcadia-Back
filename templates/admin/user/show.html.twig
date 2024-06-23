@@ -3,11 +3,12 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
-     <div class="container mt-5 custom-card">
+  
+ <div class="container mt-5 custom-card">
         <div class="row m-4 ">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <img src="" class="card-img-top" alt="User Image">
+                    {# <img src="" class="card-img-top" alt="User Image"> #}
                     <div class="card-body text-start mb-2">
                         <a class="text-secondary" title="Editer" href="{{ path('app_admin_user_edit', {'id': user.id}) }}">
                             {% include "_include/components/icons/edit_icon_svg.html.twig" %}
@@ -21,18 +22,48 @@
             <div class="col-md-6">
                 <div class="card mb-4">
                     <div class="card-body">
-                       <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">Nom</div>
-                            <div class="col-8">{{ user.lastName }}</div>
-                        </div>
                         <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">Prénom</div>
+                            <div class="col-4 font-weight-bold">firstName</div>
                             <div class="col-8">{{ user.firstName }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">Email</div>
+                            <div class="col-4 font-weight-bold">lastName</div>
+                            <div class="col-8">{{ user.lastName }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">roles</div>
+                            {% for role in user.roles %}
+                                {% if role == 'ROLE_ADMIN' %}
+                                    {% set roleName = allRoles[role] %}
+                                    <div class="col-8">{{ roleName }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">email</div>
                             <div class="col-8">{{ user.email }}</div>
                         </div>
+                        
+                        {# <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">notices</div>
+                            <div class="col-8">{{ user.notices }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">veterinaryReports</div>
+                            <div class="col-8">{{ user.veterinaryReports }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">avatar</div>
+                            <div class="col-8">{{ user.avatar }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">phone</div>
+                            <div class="col-8">{{ user.phone }}</div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-4 font-weight-bold">address</div>
+                            <div class="col-8">{{ user.address }}</div>
+                        </div> #}
                     </div>
                 </div>
             </div>
@@ -42,5 +73,5 @@
     {% if delete_btn is defined %}
         {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'id_token' : user.id } %}
     {% endif %}
-   
+
 {% endblock %}
