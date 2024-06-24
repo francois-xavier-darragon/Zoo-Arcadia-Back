@@ -39,9 +39,7 @@ class Image
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mimeType = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $src = null;
-
+    
     /**
      * @var Collection<int, Habitat>
      */
@@ -180,15 +178,4 @@ class Image
         return $this;
     }
 
-    public function getSrc(): ?string
-    {
-        return $this->src;
-    }
-
-    public function setSrc(?string $src): self
-    {
-        $this->src = $src;
-
-        return $this;
-    }
 }
