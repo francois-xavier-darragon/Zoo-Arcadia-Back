@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class='row mt-5 mb-5'>
+    <div class='col-sm-12'> 
+        <div class= "col-sm-12 d-flex justify-content-between mb-5">
+            <h1>Liste des Images</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_image_new') }}" title="Ajouter un image">Ajouter un image</a>
+        </div>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                                    <th class="text-center">name</th>
+                <th class="text-center">habitats</th>
+                <th class="text-center">animals</th>
+                <th class="text-center">userAvatarFile</th>
+                <th class="text-center">mimeType</th>
+                <th class="text-center">originalName</th>
+                <th class="text-center">size</th>
+                <th class="text-center">src</th>
+                <th class="text-center">createdAt</th>
+                <th class="text-center">updatedAt</th>
+                <th class="text-center">deletedAt</th>
+                <th class="text-center">deleted</th>
+                    <th class="text-end">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for image in images %}
+                <tr>
+                                    <td class="text-center">{{ image.name }}</td>
+                <td class="text-center">{{ image.habitats }}</td>
+                <td class="text-center">{{ image.animals }}</td>
+                <td class="text-center">{{ image.userAvatarFile }}</td>
+                <td class="text-center">{{ image.mimeType }}</td>
+                <td class="text-center">{{ image.originalName }}</td>
+                <td class="text-center">{{ image.size }}</td>
+                <td class="text-center">{{ image.src }}</td>
+                <td class="text-center">{{ image.createdAt }}</td>
+                <td class="text-center">{{ image.updatedAt }}</td>
+                <td class="text-center">{{ image.deletedAt }}</td>
+                <td class="text-center">{{ image.deleted }}</td>
+                    <td class="text-end">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_image_show', {'id': image.id}) }}" title="voir">
+                            {% include "_include/components/icons/show_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_image_edit', {'id': image.id}) }}" title="éditer">
+                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        </a>
+                        <button type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_token('delete-image') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                             {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                        </button>
+                    </td>
+                </tr>
+
+                {% if delete_btn is defined %}
+                    {% include '/admin/image/_delete_modal.html.twig' with {'path_form' : path('app_admin_image_delete', {'id': image.id}), 'id_token' : image.id } %}
+                {% endif %}
+                
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> 
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="mt-4 d-flex justify-content-between">
+        <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
+        {% if mode == 'Ajouter' %} 
+            <button class="btn btn-primary" title="Valider">Valider</button>
+        {% elseif mode == "Modifier" %}
+            <button class="btn btn-primary" title="Valider">Valider</button>
+        {% else %}
+            <div class = "d-flex">
+                <button class="btn btn-secondary" href="{{ path('app_admin_image_index') }}" title="valider">Valider</button>
+                <button type='button' class="btn btn-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="supprimer">
+                    supprimer
+                </button>
+            </div>
+        {% endif %}  
+    </div>
+{{ form_end(form) }}
+
+<div class="col-12 pt-2">
+    {% if delete_btn is defined %}
+        {% include 'admin/image/_delete_modal.html.twig' with {'path_form' : path('app_admin_image_delete', {'id': image.id}), 'id_token' : image.id } %}
+    {% endif %}
+</div>

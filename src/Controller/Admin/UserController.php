@@ -3,7 +3,9 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Entity\Image;
 use App\Form\UserType;
+use App\Repository\ImageRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +41,7 @@ class UserController extends AbstractController
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
             $user->setPassword($passwordHasher->hashPassword($user, bin2hex(random_bytes(25))));
-            $userRepository->save($user, true);
+            $userRepository->saveUser($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -63,7 +65,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, ImageRepository $imageRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -71,6 +73,15 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             if($user->getPassword()){
+                $image = $form->get('avatar')->getData();
+                if ($image instanceof Image) {
+                    $name = $image->getName(); 
+                    if($name === null) {
+                        $image->setDeletedAt(new \DateTimeImmutable());
+                        $imageRepository->saveImage($image, true);
+                        $user->setAvatar(null);
+                    }
+                }
 
                 $roles[]= $form->get('roles')->getdata();
                 $user->setRoles($roles);

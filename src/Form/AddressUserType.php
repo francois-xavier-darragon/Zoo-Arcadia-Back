@@ -12,42 +12,46 @@ class AddressUserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-        ->add('street', TextType::class, [
-            'label' => 'N° et Rue',
-            'label_attr' => [
-                'class' => 'col-lg-4 col-form-label fs-6'
-            ],
-            'attr' => [
-                'class' => 'form-control form-control-solid',
-            ]
-        ])
-        ->add('complement', TextType::class, [
-            'label' => 'Complément',
-            'label_attr' => [
-                'class' => 'col-lg-4 col-form-label fs-6'
-            ],
-            'attr' => [
-                'class' => 'form-control form-control-solid',
-            ]
-        ])
-        ->add('zip', TextType::class, [
-            'label' => 'Code postal',
-            'label_attr' => [
-                'class' => 'col-lg-4 col-form-label fs-6'
-            ],
-            'attr' => [
-                'class' => 'form-control form-control-solid',
-            ]
-        ])
-        ->add('city', TextType::class, [
-            'label' => 'Ville',
-            'label_attr' => [
-                'class' => 'col-lg-4 col-form-label fs-6'
-            ],
-            'attr' => [
-                'class' => 'form-control form-control-solid',
-            ]
-        ])
+            ->add('street', TextType::class, [
+                'required' => false,
+                'label' => 'N° et Rue',
+                'label_attr' => [
+                    'class' => 'col-lg-4 col-form-label fs-6'
+                ],
+                'attr' => [
+                    'class' => 'form-control form-control-solid',
+                ]
+            ])
+            ->add('complement', TextType::class, [
+                'required' => false,
+                'label' => 'Complément',
+                'label_attr' => [
+                    'class' => 'col-lg-4 col-form-label fs-6'
+                ],
+                'attr' => [
+                    'class' => 'form-control form-control-solid',
+                ]
+            ])
+            ->add('zip', TextType::class, [
+                'required' => false,
+                'label' => 'Code postal',
+                'label_attr' => [
+                    'class' => 'col-lg-4 col-form-label fs-6'
+                ],
+                'attr' => [
+                    'class' => 'form-control form-control-solid',
+                ]
+            ])
+            ->add('city', TextType::class, [
+                'required' => false,
+                'label' => 'Ville',
+                'label_attr' => [
+                    'class' => 'col-lg-4 col-form-label fs-6'
+                ],
+                'attr' => [
+                    'class' => 'form-control form-control-solid',
+                ]
+            ])
     ;
         
     }

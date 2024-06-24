@@ -12,13 +12,14 @@ use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 class Image
 {
     use TimestampableTrait;
     use SoftDeletableTrait;
 
-    #[Vich\UploadableField(mapping: 'user_avatar', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    #[Vich\UploadableField(mapping: 'user_avatar_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $userAvatarFile = null;
     
     #[ORM\Id]
@@ -28,6 +29,15 @@ class Image
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $originalName = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $size = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $mimeType = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $src = null;
@@ -117,7 +127,7 @@ class Image
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUserAvatarFile(): ?File
     {
         return $this->userAvatarFile;
     }
@@ -131,12 +141,54 @@ class Image
             $this->updatedAt = new DateTimeImmutable();
         }
 
-        // set the owning side of the relation if necessary
         return $this;
     }
 
-    public function getUserAvatarFile(): ?File
+    public function getMimeType(): ?string
     {
-        return $this->userAvatarFile;
+        return $this->mimeType;
+    }
+
+    public function setMimeType(?string $mimeType): self
+    {
+        $this->mimeType = $mimeType;
+
+        return $this;
+    }
+
+    public function getOriginalName(): ?string
+    {
+        return $this->originalName;
+    }
+
+    public function setOriginalName(?string $originalName): self
+    {
+        $this->originalName = $originalName;
+
+        return $this;
+    }
+
+    public function getSize(): ?int
+    {
+        return $this->size;
+    }
+
+    public function setSize(?int $size): self
+    {
+        $this->size = $size;
+
+        return $this;
+    }
+
+    public function getSrc(): ?string
+    {
+        return $this->src;
+    }
+
+    public function setSrc(?string $src): self
+    {
+        $this->src = $src;
+
+        return $this;
     }
 }
