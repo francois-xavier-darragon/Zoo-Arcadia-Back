@@ -21,6 +21,9 @@ class Image
 
     #[Vich\UploadableField(mapping: 'user_avatar_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $userAvatarFile = null;
+
+    #[Vich\UploadableField(mapping: 'animal_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    private ?File $animalFile = null;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -174,6 +177,23 @@ class Image
     public function setSize(?int $size): self
     {
         $this->size = $size;
+
+        return $this;
+    }
+
+    public function getAnimalFile(): ?File
+    {
+        return $this->animalFile;
+    }
+
+    public function setAnimalFile(?File $animalFile): static
+    {
+        $this->animalFile = $animalFile;
+
+        // unset the owning side of the relation if necessary
+        if ($animalFile === null && $this->animalFile !== null) {
+            $this->updatedAt = new DateTimeImmutable();
+        }
 
         return $this;
     }

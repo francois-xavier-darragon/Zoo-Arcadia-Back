@@ -74,6 +74,7 @@ class ManageDatabaseCommand extends Command
     // create database
     private function createDatabase(string $dbName, SymfonyStyle $io): void
     {
+       
         $sql = sprintf('CREATE DATABASE IF NOT EXISTS `%s`;', $dbName);
         $this->databaseService->query($sql);
         $io->success(sprintf('Database `%s` created successfully.', $dbName));
@@ -106,9 +107,14 @@ class ManageDatabaseCommand extends Command
     // creation or update process
     private function processTables(array $metadata, string $method): void
     {
+    
         foreach ($metadata as $meta) {
             $tableName = $meta->getTableName();
 
+            if($tableName === 'file'){
+                continue;
+            }
+          
             // Check if table exists
             $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
             $tableExists = $stmt->rowCount() > 0;
@@ -120,19 +126,20 @@ class ManageDatabaseCommand extends Command
                 $this->updateTable($meta);
             }
         }
+        
     }
 
     // create table
     private function createTable($meta): void
     {
         $tableName = $meta->getTableName();
-    
+        
         $columns = [];
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
             $columns[] = $this->getColumnDefinition($fieldMapping);
         }
-
+     
         // Ensure the id column is a primary key
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
         
@@ -159,6 +166,7 @@ class ManageDatabaseCommand extends Command
 
                 // Check if the column exists
                 if (!$this->existsTableOrColumn($meta->getTableName(), $columnName)) {
+                    
                     try {
                         // Add the column and foreign key constraint
                         $sql = sprintf('ALTER TABLE %s ADD %s_id INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s_id) REFERENCES %s(id)',
@@ -229,9 +237,9 @@ class ManageDatabaseCommand extends Command
     private function existsTableOrColumn(string $name, ?string $columnName = null): bool
     {
         if ($columnName !== null) {
-            return $this->exists('column', $name, $columnName);
+           return $this->exists('column', $name, $columnName);
         } else {
-            return $this->exists('table', $name);
+           return $this->exists('table', $name);
         }
     }
 
@@ -319,9 +327,7 @@ class ManageDatabaseCommand extends Command
             'float' => sprintf('%s FLOAT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'array', 'simple_array', 'object' => sprintf('%s TEXT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'json' => sprintf('%s JSON %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
-            'phone_number' => sprintf('%s VARCHAR(255) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             default => throw new \InvalidArgumentException(sprintf('Unknown doctrine type "%s"', $fieldMapping->type)),
         };
     }
-
 }
