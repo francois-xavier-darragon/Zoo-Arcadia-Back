@@ -91,42 +91,104 @@ class ManageDatabaseCommand extends Command
     // updating the database
     private function updateDatabase(string $dbName, SymfonyStyle $io): void
     {
-        $this->databaseService->selectDatabase($dbName);
-
+        $database = $this->databaseService->selectDatabase($dbName);
+        
+        $checkVerifcation = $this->checkVerification($database);
+        
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
         
         // Step 1: Create all tables without relations
-        $this->processTables($metadata, 'createTable');
+        $this->processTables($metadata, 'createTable', $checkVerifcation ,$io);
 
         // Step 2: Update all tables to add relations
-        $this->processTables($metadata, 'updateTable');
+        $this->processTables($metadata, 'updateTable', $checkVerifcation, $io);
 
         $io->success('Database schema updated successfully.');
     }
 
-    // creation or update process
-    private function processTables(array $metadata, string $method): void
+    // method which checks existing tables and columns in the database
+    private function checkVerification($database)
     {
-    
+        $tables = [];
+        $tableColumns = [];
+
+        try {
+           
+            $sqlTables = "SHOW TABLES FROM $database";
+            $stmtTables = $this->databaseService->getConnection()->query($sqlTables);
+            $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
+            
+            foreach ($tables as $table) {
+                $isCombinedTable = false;
+
+                // check if there are join tables
+                foreach ($tables as $otherTable) {
+                    if ($table !== $otherTable && strpos($table, $otherTable) !== false) {
+                        $isCombinedTable = true;
+                       
+                    }
+                }
+
+                // Table to exclude list
+                if($table == "doctrine_migration_versions" || $isCombinedTable){
+                    continue;
+                }
+
+                $tableColumns[$table] = [];
+                
+                // Retrieving the columns of each table
+                $sqlColumns = "SHOW COLUMNS FROM $table";
+                $stmtColumns = $this->databaseService->getConnection()->query($sqlColumns);
+                $columns = $stmtColumns->fetchAll(PDO::FETCH_COLUMN);
+                
+                // Add the columns to the list of columns for this table
+                $tableColumns[$table] = $columns;
+            }
+            
+        } catch (PDOException $e) {
+            // Handling connection or PDO request errors
+            echo "Erreur PDO : " . $e->getMessage();
+        }
+
+        return $tableColumns;
+    }
+
+    // creation or update process
+    private function processTables(array $metadata, string $method, array $checkVerifcation): void
+    {
+        $entityColumns = [];
+        $tablesToSkip = ['file', 'messenger_messages'];
+
+        // Step 1: Collect column names for each table, skipping specified tables
         foreach ($metadata as $meta) {
             $tableName = $meta->getTableName();
 
-            if($tableName === 'file'){
+            if (in_array($tableName, $tablesToSkip)) {
                 continue;
             }
-          
-            // Check if table exists
-            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
-            $tableExists = $stmt->rowCount() > 0;
+            
+            // Store column names for each table
+            $entityColumns[$tableName] = array_values($meta->getColumnNames());
+        }
 
-            // Create or update table based on the method passed
-            if ($method === 'createTable' && !$tableExists) {
-                $this->createTable($meta);
-            } elseif ($method === 'updateTable' && $tableExists) {
-                $this->updateTable($meta);
+        // Step 2: Process each table for creating or updating based on the method and verification
+        foreach ($metadata as $meta) {
+            $tableName = $meta->getTableName();
+
+            if (in_array($tableName, $tablesToSkip)) {
+                continue;
+            }
+
+            // Check if the number of tables to process matches the verification array
+            if(count($entityColumns) != count($checkVerifcation)) {
+                if ($method === 'createTable') {
+                    $this->createTable($meta);
+                } elseif ($method === 'updateTable'){
+                    $this->updateTable($meta);
+                }
             }
         }
-        
+
     }
 
     // create table
