@@ -2,6 +2,24 @@
 @import "~bootstrap/scss/bootstrap";
 @import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
 
+.bloc-login{
+    position: fixed;
+    bottom: 200px;
+    right: 200px;
+    margin: 10px;
+    width: 500px;
+}
+
+.bg-image{
+    height: 100%;
+    margin: 0;
+    background-image: url('/public/images/lion-bg.jpg'); 
+    background-size: cover; 
+    background-position: center 30%;
+    background-repeat: no-repeat; 
+    position: relative;
+}
+
 .sidebar {
     height: 100vh;
     position: fixed;
@@ -11,9 +29,11 @@
     background-color: #343a40;
     padding-top: 20px;
 }
+
 .sidebar .nav-link {
     color: #fff;
 }
+
 .sidebar .nav-link:hover {
     background-color: #495057;
 }
