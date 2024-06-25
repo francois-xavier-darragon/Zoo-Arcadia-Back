@@ -5,10 +5,9 @@ namespace App\Form;
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class AvatarType extends AbstractType
@@ -16,34 +15,34 @@ class AvatarType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add("userAvatarFile", VichImageType::class, [
-                "required" => false,
-                "label" => "Avatar",
-                "help" => "Fichiers autorisés: PNG, JPG, JPEG. Dimensions: 500x500. Taille max: 8MB.",
-                "attr" => [
-                    "accept" => ".png, .jpg, .jpeg",
-                    "class"  => "p-0",
+            ->add("userAvatarFile", 
+            VichImageType::class,
+            [
+                'required'   => true,
+                'label'      => false,
+                'help'       => 'Ce fichier doit obligatoirement être au format JPG, JPEG, PNG.<br>L\'image doit respecter les dimensions suivantes : 500px X 500px.',
+                'help_attr'  => [
+                    'class' => 'my-2 fst-italic',
                 ],
-                "label_attr" => [
-                    "class" => "d-block",
-                ],
-                "constraints" => [
-                    new Assert\Image([
-                        "minWidth" => 500,
-                        "maxWidth" => 500,
-                        "minHeight" => 500,
-                        "maxHeight" => 500,
-                        "maxSizeMessage" => "L'image doit respecter les dimensions suivantes : 500x500.",
-                        "mimeTypes" => [
-                            "image/jpeg",
-                            "image/png",
+                'help_html'  => true,
+                'constraints' => [
+                    new ImageConstraint([
+                        'minWidth' => '500',
+                        'maxWidth' => '500',
+                        'minHeight' => '500',
+                        'maxHeight' => '500',
+                        'maxSizeMessage' => 'L\'image doit respecter les dimensions suivantes : 500px X 500px.',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/png'
                         ],
-                        "mimeTypesMessage" => "Veuillez joindre un fichier au format JPG, JPEG, PNG.",
-                    ]),
+                        'mimeTypesMessage' => 'Veuillez joindre un fichier au format JPG, JPEG, PNG.',
+                    ])
                 ],
-                "allow_delete" => true,
-                "download_uri" => false,
-                "image_uri" => false,
+                // VichUploader config
+                'allow_delete'    => false,
+                'download_uri'    => false,
+                'image_uri'       => false,
             ])
             ->add(
                 'removeUserAvatarFile',

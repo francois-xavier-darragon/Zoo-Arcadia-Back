@@ -1,0 +1,8 @@
+<div class="d-flex">
+	{% if iconType == 'info' %}
+		 {% include "_include/_components/_icons/_info_icon_svg.html.twig" %}
+	{% endif %}
+	<div class="align-self-center">
+		{{ text|raw }}
+	</div>
+</div>

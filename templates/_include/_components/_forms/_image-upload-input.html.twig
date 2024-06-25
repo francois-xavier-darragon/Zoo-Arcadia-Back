@@ -1,0 +1,39 @@
+{% set currentImg = currentImg|default %}
+
+<div class="row mb-6">
+	{{ form_label(input)|raw }}
+
+	<div class="col-lg-4">
+		<!--begin::Image input-->
+		<div class="image-input image-input-outline {% if not currentImg %}image-input-emptys{% endif %}"
+			 data-kt-image-input="true"
+			 style="width: 125px; height: 125px; background-image: url({{ currentImg ? currentImg : asset('images/500x500.png') }});">
+			<label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Changer l'image">
+				{{form_widget(inputFile)}}
+                {% include "_include/_components/_icons/_edit_image_icon_svg.html.twig" %}
+			</label>
+		</div>
+
+		<div class="form-text text-gray-700">
+			{% include '_include/_components/_forms/_help.html.twig' with {'iconType': 'info', 'text': form_help(inputFile)|raw} %}
+			<span class="d-block text-danger mt-4">
+				{{ form_errors(inputFile)|raw }}
+			</span>
+		</div>
+		<!--end::Image input-->
+		{{ form_errors(input) }}
+		<div class="form-text text-muted">{{ form_help(input)|raw }}</div>
+	</div>
+	{# <div class="col-lg-6">
+		<div class="form-text text-gray-700">{{ fileName|default('Aucun fichier sélectionné') }}</div>
+		{{ form_label(input.alt)|raw }}
+		{{ form_widget(input.alt) }}
+		{{ form_errors(input.alt) }}
+		<div class="form-text text-gray-700">
+			{% include '_include/_components/_forms/_help.html.twig' with {'iconType': 'info', 'text': form_help(input.alt)|raw} %}
+			<span class="d-block text-danger mt-4">
+				{{ form_errors(input.alt)|raw }}
+			</span>
+		</div>
+	</div> #}
+</div>
