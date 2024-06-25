@@ -56,4 +56,21 @@ p {
     box-shadow: 0 8px 30px $dark;
 }
 
+.defaut-img {
+    width: 122px;
+}
+
+.custom-file-input {
+    visibility: hidden;
+    position: absolute;
+}
+
+.custom-file-label {
+    cursor: pointer;
+}
+
+.custom-file-label::after {
+    content: 'Choisir un fichier';
+}
+
 
