@@ -6,10 +6,7 @@
     {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
         input: form.avatar,
         inputFile: form.avatar.userAvatarFile,
-        currentImg: user.avatar 
-            ? vich_uploader_asset(user.avatar, 'userAvatarFile') 
-            : asset('images/500x500.png'),
-             fileName: user.avatar ? user.avatar.originalName : null
+       
     } %}
 
     {{form_row(form.firstname)}}

@@ -1,4 +1,4 @@
-{% set currentImg = currentImg|default %}
+{# {% set currentImg = currentImg|default %}
 
 <div class="row mb-6">
 	{{ form_label(input)|raw }}
@@ -24,7 +24,7 @@
 		{{ form_errors(input) }}
 		<div class="form-text text-muted">{{ form_help(input)|raw }}</div>
 	</div>
-	{# <div class="col-lg-6">
+	<div class="col-lg-6">
 		<div class="form-text text-gray-700">{{ fileName|default('Aucun fichier sélectionné') }}</div>
 		{{ form_label(input.alt)|raw }}
 		{{ form_widget(input.alt) }}
@@ -35,5 +35,33 @@
 				{{ form_errors(input.alt)|raw }}
 			</span>
 		</div>
-	</div> #}
+	</div>
+</div> #}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Ajouter une image</h5>
+
+        {# Champ de fichier avec une icône d'upload #}
+        <div class="mb-3">
+            {{ form_widget(inputFile, { 'attr': {'class': 'form-control-file', 'style': 'display: none;'} }) }}
+            <label for="upload-button" class="btn btn-primary">
+			 Choisir un fichier
+                {# <i class="fas fa-cloud-upload-alt"></i> #}
+            </label>
+        </div>
+
+        <div id="selected-file-name"></div>
+{# 
+        <script>
+            document.getElementById('upload-button').addEventListener('click', function() {
+                document.getElementById('{{ form.file.vars.id }}').click(); // Clic simulé sur le champ de fichier
+            });
+
+            document.getElementById('{{ form.file.vars.id }}').addEventListener('change', function() {
+                document.getElementById('selected-file-name').textContent = this.files[0].name; // Affiche le nom du fichier sélectionné
+            });
+        </script> #}
+
+    </div>
 </div>

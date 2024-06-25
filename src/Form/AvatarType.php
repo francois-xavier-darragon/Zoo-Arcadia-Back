@@ -43,6 +43,7 @@ class AvatarType extends AbstractType
                 'allow_delete'    => false,
                 'download_uri'    => false,
                 'image_uri'       => false,
+                
             ])
             ->add(
                 'removeUserAvatarFile',
