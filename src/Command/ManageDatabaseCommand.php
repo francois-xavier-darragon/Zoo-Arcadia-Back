@@ -74,6 +74,7 @@ class ManageDatabaseCommand extends Command
     // create database
     private function createDatabase(string $dbName, SymfonyStyle $io): void
     {
+       
         $sql = sprintf('CREATE DATABASE IF NOT EXISTS `%s`;', $dbName);
         $this->databaseService->query($sql);
         $io->success(sprintf('Database `%s` created successfully.', $dbName));
@@ -90,49 +91,129 @@ class ManageDatabaseCommand extends Command
     // updating the database
     private function updateDatabase(string $dbName, SymfonyStyle $io): void
     {
-        $this->databaseService->selectDatabase($dbName);
-
+        $database = $this->databaseService->selectDatabase($dbName);
+        
+        $checkVerifcation = $this->checkVerification($database);
+        
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
         
         // Step 1: Create all tables without relations
-        $this->processTables($metadata, 'createTable');
+        $this->processTables($metadata, 'createTable', $checkVerifcation ,$io);
 
         // Step 2: Update all tables to add relations
-        $this->processTables($metadata, 'updateTable');
+        $this->processTables($metadata, 'updateTable', $checkVerifcation, $io);
 
         $io->success('Database schema updated successfully.');
     }
 
-    // creation or update process
-    private function processTables(array $metadata, string $method): void
+    // method which checks existing tables and columns in the database
+    private function checkVerification($database)
     {
+        $tables = [];
+        $tableColumns = [];
+
+        try {
+           
+            $sqlTables = "SHOW TABLES FROM $database";
+            $stmtTables = $this->databaseService->getConnection()->query($sqlTables);
+            $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
+            
+            foreach ($tables as $table) {
+                $isCombinedTable = false;
+
+                // check if there are join tables
+                foreach ($tables as $otherTable) {
+                    if ($table !== $otherTable && strpos($table, $otherTable) !== false) {
+                        $isCombinedTable = true;
+                       
+                    }
+                }
+
+                // Table to exclude list
+                if($table == "doctrine_migration_versions" || $isCombinedTable){
+                    continue;
+                }
+
+                $tableColumns[$table] = [];
+                
+                // Retrieving the columns of each table
+                $sqlColumns = "SHOW COLUMNS FROM $table";
+                $stmtColumns = $this->databaseService->getConnection()->query($sqlColumns);
+                $columns = $stmtColumns->fetchAll(PDO::FETCH_COLUMN);
+                
+                // Add the columns to the list of columns for this table
+                $tableColumns[$table] = $columns;
+            }
+            
+        } catch (PDOException $e) {
+            // Handling connection or PDO request errors
+            echo "Erreur PDO : " . $e->getMessage();
+        }
+
+        return $tableColumns;
+    }
+
+    // creation or update process
+    private function processTables(array $metadata, string $method, array $checkVerifcation): void
+    {
+        $entityColumns = [];
+        $tablesToSkip = ['file', 'messenger_messages'];
+
+        // Step 1: Collect column names for each table, skipping specified tables
         foreach ($metadata as $meta) {
             $tableName = $meta->getTableName();
 
-            // Check if table exists
-            $stmt = $this->databaseService->getConnection()->query(sprintf("SHOW TABLES LIKE '%s'", $tableName));
-            $tableExists = $stmt->rowCount() > 0;
-
-            // Create or update table based on the method passed
-            if ($method === 'createTable' && !$tableExists) {
-                $this->createTable($meta);
-            } elseif ($method === 'updateTable' && $tableExists) {
-                $this->updateTable($meta);
+            if (in_array($tableName, $tablesToSkip)) {
+                continue;
             }
+            
+            // Store column names for each table
+            $entityColumns[$tableName] = array_values($meta->getColumnNames());
         }
+
+        // Step 2: Process each table for creating or updating based on the method and verification
+        foreach ($metadata as $meta) {
+            $tableName = $meta->getTableName();
+
+            if (in_array($tableName, $tablesToSkip)) {
+                continue;
+            }
+
+
+            $countNumberByTableEntityColumns = [];
+            foreach($entityColumns as $key => $table) {
+                $countNumberByTableEntityColumns[$key] = count($table);
+            }
+            $countNumberByTableCheckVerifcation = [];
+            foreach($checkVerifcation as $key => $table) {
+                $countNumberByTableCheckVerifcation[$key] = count($table);
+            }
+
+         //TODO à modifier car les nouvelles colonnes ne sont pas ajouté
+            // Check if the number of tables to process matches the verification array
+            // if(count($entityColumns) != count($checkVerifcation)) {
+                
+                if ($method === 'createTable') {
+                    $this->createTable($meta);
+                } elseif ($method === 'updateTable'){
+                    $this->updateTable($meta);
+                }
+            // }
+        }
+
     }
 
     // create table
     private function createTable($meta): void
     {
         $tableName = $meta->getTableName();
-    
+        
         $columns = [];
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
             $columns[] = $this->getColumnDefinition($fieldMapping);
         }
-
+     
         // Ensure the id column is a primary key
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
         
@@ -159,6 +240,7 @@ class ManageDatabaseCommand extends Command
 
                 // Check if the column exists
                 if (!$this->existsTableOrColumn($meta->getTableName(), $columnName)) {
+                    
                     try {
                         // Add the column and foreign key constraint
                         $sql = sprintf('ALTER TABLE %s ADD %s_id INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s_id) REFERENCES %s(id)',
@@ -229,9 +311,9 @@ class ManageDatabaseCommand extends Command
     private function existsTableOrColumn(string $name, ?string $columnName = null): bool
     {
         if ($columnName !== null) {
-            return $this->exists('column', $name, $columnName);
+           return $this->exists('column', $name, $columnName);
         } else {
-            return $this->exists('table', $name);
+           return $this->exists('table', $name);
         }
     }
 
@@ -319,9 +401,7 @@ class ManageDatabaseCommand extends Command
             'float' => sprintf('%s FLOAT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'array', 'simple_array', 'object' => sprintf('%s TEXT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'json' => sprintf('%s JSON %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
-            'phone_number' => sprintf('%s VARCHAR(255) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             default => throw new \InvalidArgumentException(sprintf('Unknown doctrine type "%s"', $fieldMapping->type)),
         };
     }
-
 }

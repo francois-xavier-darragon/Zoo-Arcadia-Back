@@ -21,16 +21,10 @@ class Animal
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $firstName = null;
+    private ?string $name = null;
 
     #[ORM\Column(length: 50)]
     private ?string $health = null;
-
-    /**
-     * @var Collection<int, VeterinaryReport>
-     */
-    #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'animal')]
-    private Collection $veterinaryReports;
 
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
@@ -39,6 +33,12 @@ class Animal
     #[ORM\ManyToOne(inversedBy: 'animals')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Habitat $habitat = null;
+    
+    /**
+     * @var Collection<int, VeterinaryReport>
+     */
+    #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'animal')]
+    private Collection $veterinaryReports;
 
     /**
      * @var Collection<int, Image>
@@ -57,14 +57,14 @@ class Animal
         return $this->id;
     }
 
-    public function getFirstName(): ?string
+    public function getname(): ?string
     {
-        return $this->firstName;
+        return $this->name;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setname(string $name): static
     {
-        $this->firstName = $firstName;
+        $this->name = $name;
 
         return $this;
     }

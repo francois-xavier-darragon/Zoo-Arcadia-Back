@@ -108,6 +108,13 @@ class GenericRepositoryService
     // Method to save to database
     public function save(string $entityClass, $entity, bool $flush = false): void
     {
+        
+        if ($this->hasUploadableFields($entity)) {
+            $this->saveOrm($entity, $flush);
+
+            return;
+        }
+
         $this->databaseService->selectDatabase('arcadia');
 
         $metaData = $this->entityManager->getClassMetadata($entityClass);
@@ -197,6 +204,49 @@ class GenericRepositoryService
 
         } else {
             throw new \InvalidArgumentException("Cannot delete entity without valid ID.");
+        }
+    }
+
+    private function hasUploadableFields($entity): bool
+    {
+        $reflectionClass = new \ReflectionClass($entity);
+        
+        foreach ($reflectionClass->getProperties() as $property) {
+            foreach ($property->getAttributes() as $attribute) {
+                if (in_array($attribute->getName(), [
+                    'Vich\UploaderBundle\Mapping\Annotation\UploadableField',
+                    'Symfony\Component\Validator\Constraints\File',
+                    'Symfony\Component\Validator\Constraints\Image'
+                ])) {
+                    return true;
+                }
+            }
+
+            $this->getRelatedEntity($entity, $property->getName());
+
+            return true;
+        }
+         return false;
+    }
+
+    private function getRelatedEntity($entity, $propertyName)
+    {
+        
+        $getter = 'get' . ucfirst($propertyName);
+      
+        if (method_exists($entity, $getter)) {
+            return $entity->$getter();
+        } else {
+            return false;
+        }
+    
+    }
+    public function saveOrm($entity, $flush): void
+    {
+        $this->entityManager->persist($entity);
+
+        if ($flush) {
+            $this->entityManager->flush();
         }
     }
 }
