@@ -179,14 +179,26 @@ class ManageDatabaseCommand extends Command
                 continue;
             }
 
+
+            $countNumberByTableEntityColumns = [];
+            foreach($entityColumns as $key => $table) {
+                $countNumberByTableEntityColumns[$key] = count($table);
+            }
+            $countNumberByTableCheckVerifcation = [];
+            foreach($checkVerifcation as $key => $table) {
+                $countNumberByTableCheckVerifcation[$key] = count($table);
+            }
+
+         //TODO à modifier car les nouvelles colonnes ne sont pas ajouté
             // Check if the number of tables to process matches the verification array
-            if(count($entityColumns) != count($checkVerifcation)) {
+            // if(count($entityColumns) != count($checkVerifcation)) {
+                
                 if ($method === 'createTable') {
                     $this->createTable($meta);
                 } elseif ($method === 'updateTable'){
                     $this->updateTable($meta);
                 }
-            }
+            // }
         }
 
     }
