@@ -13,7 +13,7 @@
             <div class="modal-footer-modal d-flex m-4">
                 <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
                 <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}">
-                    <input type="hidden" name="token" value="{{ csrf_token('delete-user') }}">
+                    <input type="hidden" name="token" value="{{ csrfTokens[user.id] }}">
                     <button type="submit" class="btn btn-danger" title="Supprimer">Supprimer</button>
                 </form>
             </div>
