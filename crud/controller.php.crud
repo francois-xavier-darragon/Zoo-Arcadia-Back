@@ -17,11 +17,16 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
     public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $csrfToken = $csrfTokenManager->getToken('delete-token');
-        
+        $users = $userRepository->findAll{{ VARIABLE_NAME }}();
+        $csrfTokens = [];
+
+        foreach (${{ VARIABLE_NAME }}s as ${{ VARIABLE_NAME }}) {
+            $csrfTokens[$user->getId()] = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
+        }
+
         return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
             '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
-            'csrfToken'     => $csrfToken->getValue(),
+            'csrf_Tokens'    => $csrfTokens,
             'delete_btn'    => true
         ]);
     }
@@ -49,7 +54,10 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     #[Route('/{id}', name: 'app_admin_{{ VARIABLE_NAME }}_show', methods: ['GET'])]
     public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}): Response
     {
+        $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
+
         return $this->render('admin/{{ VARIABLE_NAME }}/show.html.twig', [
+            'csrf_token'  => $csrfToken,
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
             'delete_btn' => true
         ]);
@@ -58,6 +66,8 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository $repository): Response
     {
+        $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
+
         $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
         $form->handleRequest($request);
 
@@ -68,6 +78,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
         }
 
         return $this->render('admin/{{ VARIABLE_NAME }}/edit.html.twig', [
+            'csrf_token'  => $csrfToken,
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
             'form' => $form,
             'mode'=> 'Modifier',
@@ -84,7 +95,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
 
         $submittedToken = $request->request->get('token');
         
-        if ($this->isCsrfTokenValid('delete-{{ VARIABLE_NAME }}', $submittedToken)) {
+        if ($this->isCsrfTokenValid('delete-{{ VARIABLE_NAME }}'.${{ VARIABLE_NAME }}->getId(), $submittedToken)) {
             $userRepository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
 
             $this->addFlash('success', 'Le utilisateur "'.${{ VARIABLE_NAME }}->getName().'" a été supprimé avec succès.');

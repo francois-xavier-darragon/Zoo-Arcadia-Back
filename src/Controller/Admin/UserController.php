@@ -29,7 +29,7 @@ class UserController extends AbstractController
 
         return $this->render('admin/user/index.html.twig', [
             'users'         => $users,
-            'csrfTokens'    => $csrfTokens,
+            'csrf_Tokens'    => $csrfTokens,
             'delete_btn'    => true,
             'allRoles'      => User::ROLES,
         ]);
@@ -61,18 +61,21 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
     public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-       
+        $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
+        
         return $this->render('admin/user/show.html.twig', [
-            // 'csrfTokens' => $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue(),
-            'user'       => $user,
-            'delete_btn' => true,
-            'allRoles'   => User::ROLES,
+            'csrf_token'  => $csrfToken,
+            'user'        => $user,
+            'delete_btn'  => true,
+            'allRoles'    => User::ROLES,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, ImageRepository $imageRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, ImageRepository $imageRepository, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
+      
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -81,7 +84,7 @@ class UserController extends AbstractController
             if($user->getPassword()){
                 $image = $form->get('avatar')->getData();
                 if ($image instanceof Image) {
-                    $name = $image->getName(); 
+                    $name = $image->getName();
                     if($name === null) {
                         $image->setDeletedAt(new \DateTimeImmutable());
                         $imageRepository->saveImage($image, true);
@@ -101,10 +104,11 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
-            'user'       => $user,
-            'form'       => $form,
-            'mode'       => 'Modifier',
-            'delete_btn' => true
+            'csrf_token'  => $csrfToken,
+            'user'        => $user,
+            'form'        => $form,
+            'mode'        => 'Modifier',
+            'delete_btn'  => true
         ]);
     }
 
@@ -116,8 +120,8 @@ class UserController extends AbstractController
         }
 
         $submittedToken = $request->request->get('token');
-        
-        if ($this->isCsrfTokenValid('delete-user', $submittedToken)) {
+     
+        if ($this->isCsrfTokenValid('delete-user' .$user->getId(), $submittedToken)) {
             $userRepository->removeUser($user, true);
 
             $this->addFlash('success', 'Le utilisateur "'.$user->getLastName().'" a été supprimé avec succès.');

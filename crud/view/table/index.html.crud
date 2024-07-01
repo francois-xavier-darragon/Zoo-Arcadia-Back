@@ -24,14 +24,14 @@
                         <a type='button' class='text-secondary me-2' href="{{ path('app_admin_{{ VARIABLE_NAME }}_edit', {'id': {{ VARIABLE_NAME }}.id}) }}" title="éditer">
                             {% include "_include/components/icons/edit_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrfTokens[{{ VARIABLE_NAME }}.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[{{ VARIABLE_NAME }}.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
                              {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </td>
                 </tr>
 
                 {% if delete_btn is defined %}
-                    {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_token': csrfTokens[{{ VARIABLE_NAME }}.id], '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
+                    {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_tokens': csrf_tokens[{{ VARIABLE_NAME }}.id], '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
                 {% endif %}
             {% endfor %}
             </tbody>

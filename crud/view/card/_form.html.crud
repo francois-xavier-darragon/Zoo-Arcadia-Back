@@ -19,6 +19,6 @@
 
 <div class="col-12 pt-2">
     {% if delete_btn is defined %}
-        {% include 'admin/{{ VARIABLE_NAME }}/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'id_token' : {{ VARIABLE_NAME }}.id } %}
+        {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_token': csrf_token, '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
     {% endif %}
 </div>

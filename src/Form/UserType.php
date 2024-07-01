@@ -23,7 +23,7 @@ class UserType extends AbstractType
         $builder
             ->add('avatar', AvatarType::class ,[
                 'required' => false,
-                'label' => 'Avatar',
+                'label' => false,
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
                 ],
