@@ -59,10 +59,11 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
-    public function read(User $user): Response
+    public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
        
         return $this->render('admin/user/show.html.twig', [
+            // 'csrfTokens' => $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue(),
             'user'       => $user,
             'delete_btn' => true,
             'allRoles'   => User::ROLES,
