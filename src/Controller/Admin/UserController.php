@@ -20,11 +20,16 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $csrfToken = $csrfTokenManager->getToken('delete-token');
+        $users = $userRepository->findAllUser();
+        $csrfTokens = [];
+
+        foreach ($users as $user) {
+            $csrfTokens[$user->getId()] = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
+        }
 
         return $this->render('admin/user/index.html.twig', [
-            'users' => $userRepository->findAllUser(),
-            'csrfToken'     => $csrfToken->getValue(),
+            'users'         => $users,
+            'csrfTokens'    => $csrfTokens,
             'delete_btn'    => true,
             'allRoles'      => User::ROLES,
         ]);
@@ -40,7 +45,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
-            $user->setPassword($passwordHasher->hashPassword($user, bin2hex(random_bytes(25))));
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getdata()));
             $userRepository->saveUser($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
