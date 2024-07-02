@@ -8,7 +8,7 @@
             <button class="btn btn-primary" title="Valider">Valider</button>
         {% else %}
             <div class = "d-flex">
-                <button class="btn btn-secondary" href="{{ path('app_admin_{{ VARIABLE_NAME }}_index') }}" title="valider">Valider</button>
+                <button class="btn btn-secondary" href="{{ path('app_admin_service_index') }}" title="valider">Valider</button>
                 <button type='button' class="btn btn-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="supprimer">
                     supprimer
                 </button>
@@ -19,6 +19,6 @@
 
 <div class="col-12 pt-2">
     {% if delete_btn is defined %}
-        {% include '/admin/{{ VARIABLE_NAME }}/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_token': csrf_token, '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
+        {% include '/admin/service/_delete_modal.html.twig' with {'path_form' : path('app_admin_service_delete', {'id': service.id}), 'csrf_token': csrf_token, 'service': service } %}
     {% endif %}
 </div>

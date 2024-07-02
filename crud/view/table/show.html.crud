@@ -8,7 +8,7 @@
         <div class="row m-4 ">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <img src="" class="card-img-top" alt="User Image">
+                    <img src="" class="card-img-top" alt="{{ VARIABLE_NAME }} Image">
                     <div class="card-body text-start mb-2">
                         <a class="text-secondary" title="Editer" href="{{ path('app_admin_{{ VARIABLE_NAME }}_edit', {'id': {{ VARIABLE_NAME }}.id}) }}">
                             {% include "_include/components/icons/edit_icon_svg.html.twig" %}
@@ -30,7 +30,7 @@
     </div>
 
     {% if delete_btn is defined %}
-        {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_token': csrfToken, '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
+        {% include '/admin/{{ VARIABLE_NAME }}/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_token': csrfToken, '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
     {% endif %}
 
 {% endblock %}

@@ -17,11 +17,11 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
     public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $users = $userRepository->findAll{{ VARIABLE_NAME }}();
+        ${{ VARIABLE_NAME }}s = ${{ VARIABLE_NAME }}Repository->findAll{{ VARIABLE_NAME }}();
         $csrfTokens = [];
 
         foreach (${{ VARIABLE_NAME }}s as ${{ VARIABLE_NAME }}) {
-            $csrfTokens[$user->getId()] = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
+            $csrfTokens[${{ VARIABLE_NAME }}->getId()] = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
         }
 
         return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
@@ -32,14 +32,14 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_{{ VARIABLE_NAME }}_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, {{ ENTITY_NAME }}Repository $repository): Response
+    public function new(Request $request, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
     {
         ${{ VARIABLE_NAME }} = new {{ ENTITY_NAME }}();
         $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+            ${{ VARIABLE_NAME }}Repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
 
             return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -64,15 +64,15 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository $repository): Response
+    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
     {
-        $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
+        $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
         $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+            ${{ VARIABLE_NAME }}Repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
 
             return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -87,7 +87,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'app_admin_{{ VARIABLE_NAME }}_delete', methods: ['POST'])]
-    public function delete(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository $repository): Response
+    public function delete(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
     {
         if(${{ VARIABLE_NAME }}->getDeletedAt()){
             return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index');
@@ -96,7 +96,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
         $submittedToken = $request->request->get('token');
         
         if ($this->isCsrfTokenValid('delete-{{ VARIABLE_NAME }}'.${{ VARIABLE_NAME }}->getId(), $submittedToken)) {
-            $userRepository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+            ${{ VARIABLE_NAME }}Repository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
 
             $this->addFlash('success', 'Le utilisateur "'.${{ VARIABLE_NAME }}->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index');

@@ -31,7 +31,7 @@
                 </tr>
 
                 {% if delete_btn is defined %}
-                    {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_tokens': csrf_tokens[{{ VARIABLE_NAME }}.id], '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
+                    {% include '/admin/{{ VARIABLE_NAME }}/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_tokens': csrf_tokens[{{ VARIABLE_NAME }}.id], '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
                 {% endif %}
             {% endfor %}
             </tbody>
