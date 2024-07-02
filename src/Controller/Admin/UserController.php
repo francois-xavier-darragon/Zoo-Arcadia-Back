@@ -29,7 +29,7 @@ class UserController extends AbstractController
 
         return $this->render('admin/user/index.html.twig', [
             'users'         => $users,
-            'csrf_Tokens'    => $csrfTokens,
+            'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
             'allRoles'      => User::ROLES,
         ]);

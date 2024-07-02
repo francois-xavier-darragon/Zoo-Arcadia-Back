@@ -2,19 +2,19 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modal-title">Suppression d'un service</h5>
+                <h5 class="modal-title" id="modal-title">Suppression d'une race</h5>
                 <button type="button" class="btn text-danger" data-bs-dismiss="modal" aria-label="Close">
                     {% include "_include/components/icons/close_icon_svg.html.twig" %}
                 </button>
             </div>
             <div class="modal-body">
-                Attention êtes-vous sur de vouloir supprimer le service : {{ service.name }} ?
+                Attention êtes-vous sur de vouloir supprimer la race : {{ breed.name }} ?
             </div>
             <div class="modal-footer-modal d-flex m-4">
                 <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
-                <form method="post" action="{{ path('app_admin_service_delete', {'id': service.id}) }}">
+                <form method="post" action="{{ path('app_admin_breed_delete', {'id': breed.id}) }}">
                     {% if csrf_tokens is defined %}
-                        <input type="hidden" name="token" value="{{ csrf_tokens[service.id] }}">
+                        <input type="hidden" name="token" value="{{ csrf_tokens[breed.id] }}">
                     {% elseif csrf_token is defined %}
                         <input type="hidden" name="token" value="{{ csrf_token }}">
                     {% endif %}

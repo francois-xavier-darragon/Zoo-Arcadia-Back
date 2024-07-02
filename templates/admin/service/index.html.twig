@@ -3,30 +3,22 @@
 <div class='row mt-5 mb-5'>
     <div class='col-sm-12'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
-            <h1>Liste des Services</h1>
+            <h1>Services</h1>
             <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_service_new') }}" title="Ajouter un service">Ajouter un service</a>
         </div>
         <table class="table custom-table">
             <thead>
                 <tr>
-                                    <th class="text-center">name</th>
-                <th class="text-center">description</th>
-                <th class="text-center">createdAt</th>
-                <th class="text-center">updatedAt</th>
-                <th class="text-center">deletedAt</th>
-                <th class="text-center">deleted</th>
+                    <th class="text-start">name</th>
+                    <th class="text-center">description</th>
                     <th class="text-end">actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for service in services %}
                 <tr>
-                                    <td class="text-center">{{ service.name }}</td>
+                <td class="text-start">{{ service.name }}</td>
                 <td class="text-center">{{ service.description }}</td>
-                <td class="text-center">{{ service.createdAt }}</td>
-                <td class="text-center">{{ service.updatedAt }}</td>
-                <td class="text-center">{{ service.deletedAt }}</td>
-                <td class="text-center">{{ service.deleted }}</td>
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_service_show', {'id': service.id}) }}" title="voir">
                             {% include "_include/components/icons/show_icon_svg.html.twig" %}

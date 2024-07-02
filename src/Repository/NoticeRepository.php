@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Notice;
+use App\Service\GenericRepositoryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -11,33 +12,47 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class NoticeRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(
+        private ManagerRegistry $registry,
+        private GenericRepositoryService $genericRepository,
+    )
     {
         parent::__construct($registry, Notice::class);
     }
 
-    //    /**
-    //     * @return Notice[] Returns an array of Notice objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('n')
-    //            ->andWhere('n.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('n.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // method to find a Notice by their identifier (ID)
+    public function findNoticeById(int $id): ?Notice
+    {
+        return $this->genericRepository->findOneBy(['id' => $id], Notice::class);
+    }
 
-    //    public function findOneBySomeField($value): ?Notice
-    //    {
-    //        return $this->createQueryBuilder('n')
-    //            ->andWhere('n.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    // Method to find a Notice by specific criteria
+    public function findOneNoticeBy(array $criteria): ?Notice
+    {
+        return $this->genericRepository->findOneBy($criteria, Notice::class);
+    }
+
+    // Method to find all Notice
+    public function findAllNotice(): array
+    {
+        return $this->genericRepository->findAll(Notice::class);
+    }
+
+    // Method to find Notice with paging and sorting
+    public function findNoticeBy(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): array
+    {
+        return $this->genericRepository->findBy($criteria, Notice::class, $orderBy, $limit, $offset);
+    }
+
+    // Method to save a user
+    public function saveNotice(Notice $entity, bool $flush = false)
+    {
+        $this->genericRepository->save(Notice::class, $entity, $flush);
+    }
+
+    // Method to delete a user
+    public function removeNotice(Notice $entity, bool $flush = false)
+    {
+        $this->genericRepository->remove(Notice::class, $entity, $flush);
+    }
 }

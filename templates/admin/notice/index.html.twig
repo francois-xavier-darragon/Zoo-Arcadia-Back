@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class='row mt-5 mb-5'>
+    <div class='col-sm-12'> 
+        <div class= "col-sm-12 d-flex justify-content-between mb-5">
+            <h1>Avis</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_notice_new') }}" title="Ajouter un notice">Ajouter un avis</a>
+        </div>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                <th class="text-start">nickname</th>
+                <th class="text-center">utilisateur</th>
+                <th class="text-center">commentaire</th>
+                <th class="text-center">visible</th>
+                <th class="text-end">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for notice in notices %}
+                <tr>
+                    <td class="text-center">{{ notice.nickname }}</td>
+                    <td class="text-center">{{ notice.user }}</td>
+                    <td class="text-center">{{ notice.comment }}</td>
+                    <td class="text-center">{{ notice.visible }}</td>
+                    <td class="text-end">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_notice_show', {'id': notice.id}) }}" title="voir">
+                            {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_notice_edit', {'id': notice.id}) }}" title="éditer">
+                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[notice.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                        </a>
+                    </td>
+                </tr>
+
+                {% if delete_btn is defined %}
+                    {% include '/admin/notice/_delete_modal.html.twig' with {'path_form' : path('app_admin_notice_delete', {'id': notice.id}), 'csrf_tokens': csrf_tokens[notice.id], 'notice': notice } %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> 
+</div>
+{% endblock %}

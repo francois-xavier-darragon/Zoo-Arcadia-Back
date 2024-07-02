@@ -13,8 +13,8 @@
             <div class="modal-footer-modal d-flex m-4">
                 <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
                 <form method="post" action="{{ path('app_admin_user_delete', {'id': user.id}) }}">
-                    {% if csrf_Tokens is defined %}
-                        <input type="hidden" name="token" value="{{ csrf_Tokens[user.id] }}">
+                    {% if csrf_tokens is defined %}
+                        <input type="hidden" name="token" value="{{ csrf_tokens }}">
                     {% elseif csrf_token is defined %}
                         <input type="hidden" name="token" value="{{ csrf_token }}">
                     {% endif %}

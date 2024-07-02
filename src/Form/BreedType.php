@@ -2,14 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\Service;
+use App\Entity\Breed;
+use Doctrine\DBAL\Types\TextType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ServiceType extends AbstractType
+class BreedType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -24,22 +23,14 @@ class ServiceType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Rapport vétérinaire',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ])  
+            ->add('animals')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Service::class,
+            'data_class' => Breed::class,
         ]);
     }
 }

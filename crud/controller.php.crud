@@ -52,7 +52,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_{{ VARIABLE_NAME }}_show', methods: ['GET'])]
-    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}): Response
+    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
@@ -64,7 +64,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
+    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
