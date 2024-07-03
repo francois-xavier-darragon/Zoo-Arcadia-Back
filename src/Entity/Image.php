@@ -55,9 +55,6 @@ class Image
     #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'images')]
     private Collection $animals;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $src = null;
-
     public function __construct()
     {
         $this->habitats = new ArrayCollection();
@@ -200,17 +197,4 @@ class Image
 
         return $this;
     }
-
-    public function getSrc(): ?string
-    {
-        return $this->src;
-    }
-
-    public function setSrc(?string $src): static
-    {
-        $this->src = $src;
-
-        return $this;
-    }
-
 }

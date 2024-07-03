@@ -29,11 +29,14 @@ class UserController extends AbstractController
             $csrfTokens[$user->getId()] = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
         }
 
+        $csrfToken = $csrfTokenManager->getToken('delete-user')->getValue();
+    
         return $this->render('admin/user/index.html.twig', [
-            'users'         => $users,
+            'users'          => $users,
             'csrf_tokens'    => $csrfTokens,
-            'delete_btn'    => true,
-            'allRoles'      => User::ROLES,
+            'csrf_token'     => $csrfToken,
+            'delete_btn'     => true,
+            'allRoles'       => User::ROLES,
             'uploaderHelper' => $uploaderHelper
         ]);
     }
@@ -65,20 +68,21 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
-    public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
         
         return $this->render('admin/user/show.html.twig', [
-            'csrf_token'  => $csrfToken,
-            'user'        => $user,
-            'delete_btn'  => true,
-            'allRoles'    => User::ROLES,
+            'uploaderHelper' => $uploaderHelper,
+            'csrf_token'     => $csrfToken,
+            'user'           => $user,
+            'delete_btn'     => true,
+            'allRoles'       => User::ROLES,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, ImageRepository $imageRepository, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager,  UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
@@ -100,9 +104,9 @@ class UserController extends AbstractController
             'uploaderHelper' => $uploaderHelper,
             'csrf_token'     => $csrfToken,
             'user'           => $user,
+            'delete_btn'     => true,
             'form'           => $form,
             'mode'           => 'Modifier',
-            'delete_btn'     => true
         ]);
     }
 

@@ -19,7 +19,6 @@
             </thead>
             <tbody>
             {% for user in users %}
-            
                 <tr>
                     <td class="text-start">
                         <img src="{{ uploaderHelper.asset(user.avatar, 'userAvatarFile')}}" alt="Avatar de l'utilisateur" width="50" height="50">
@@ -40,18 +39,25 @@
                         <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
                             {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class="text-danger me-3 mb-2" data-token="{{ csrf_tokens[user.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                        <a type='button' class="text-danger me-3 mb-2" data-token="{{ csrf_tokens[user.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}" title="Supprimer">
                              {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </td>
                 </tr>
-
-                {% if delete_btn is defined %}
-                    {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'csrf_tokens': csrf_tokens[user.id], 'user': user } %}
-                {% endif %}
+            {% if delete_btn is defined %}
+                {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'csrf_tokens': csrf_tokens[user.id], 'user': user } %}
+            {% endif %}
             {% endfor %}
             </tbody>
         </table>
     </div> 
 </div>
+{# 
+{% if delete_btn is defined %}
+    {% for id, csrf_token in csrf_tokens  %}
+        {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': id}), 'csrf_token': csrf_token, 'user': user } %}
+    {% endfor %}
+{% endif %} #}
+
+
 {% endblock %}

@@ -7,14 +7,17 @@
 
 <div>
 {{ form_start(form) }}
+
     <div>
          {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
             input: form.avatar,
             inputFile: form.avatar.userAvatarFile,
             removeFile: form.avatar.removeUserAvatarFile,
             label: form.avatar,
+            editButtonId: 'edit-avatar-button',
             removeButtonId: 'remove-avatar-button',
-            uploaderHelper : uploaderHelper
+            uploaderHelper : uploaderHelper,
+            baliseImg : 'balise-img'
         } %}
 
         {{ form_row(form.firstname) }}

@@ -11,8 +11,8 @@
                     {% else %} 
                         <div class="d-flex mb-4">
                             <h1 class="me-4">{{mode}}</h1>
-                            <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-user') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
-                                {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                            <a type='button' class="text-danger pt-2" data-token="{{ csrf_token }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}" title="Supprimer">
+                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                             </a>
                         </div>  
                         {{ include('admin/user/form/_form.html.twig', {'delete_btn': true, 'uploaderHelper': uploaderHelper }) }}
@@ -30,9 +30,30 @@
 
 
 {% block javascripts %}
+{{ parent() }}
+
+{% if user.id is null %}
+     <script> 
+     document.addEventListener('DOMContentLoaded', function() {
+            const btnTrashToHide = document.getElementById('remove-avatar-button');
+            if (btnTrashToHide) {
+                btnTrashToHide.classList.add('d-none');
+            }
+        });
+     </script>
+{% endif %}
 
 {% if user.id is not null %}
     <script>
+        let btnEditToHide
+        let btnTrashToHide = document.getElementById('remove-avatar-button');
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            btnEditToHide = document.getElementById('edit-avatar-button');
+            if (btnEditToHide) {
+                btnEditToHide.classList.add('d-none');
+            }
+        });
 
         const removeButton = document.getElementById('remove-avatar-button');
         removeButton.addEventListener("click", function() {
@@ -50,8 +71,10 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    document.querySelector('.image-card img').src = '{{ asset('images/default/default-avatar.png') }}'; // Remplacez par le chemin de votre image par défaut
+                    document.querySelector('.image-card img').src = "{{ asset('images/default/default.png') }}";
                     document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
+                    btnEditToHide.classList.remove('d-none');
+                    btnTrashToHide.classList.add('d-none');
                 } else {
                     alert(data.message);
                 }
@@ -61,6 +84,20 @@
                 alert('An error occurred while trying to remove the avatar.');
             });
         });
+
+        const newAvatar = document.getElementById('edit-avatar-button');
+
+        newAvatar.addEventListener('change', function(event) {
+            console.log(event)
+            const file = event.target.files[0];
+            
+            if (file) {
+                const imageUrl = URL.createObjectURL(file);
+                document.querySelector('.image-card img').src = imageUrl;
+            }
+        });
+
     </script>
 {% endif %}
+
 {% endblock %}
