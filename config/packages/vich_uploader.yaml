@@ -9,14 +9,6 @@ vich_uploader:
             uri_prefix: /uploads/images/users/avatars
             upload_destination: '%kernel.project_dir%/public/uploads/images/users/avatars'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
-
-            inject_on_load: false
-            delete_on_update: true
-            delete_on_remove: true
-
         animal_file:
             uri_prefix: /uploads/images/animals
             upload_destination: '%kernel.project_dir%/public/uploads/images/animals'
-            inject_on_load: false
-            delete_on_update: true
-            delete_on_remove: true    

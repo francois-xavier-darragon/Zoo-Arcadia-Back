@@ -1,12 +1,20 @@
 
+{% if uploaderHelper is defined %}
+    {% set uploaderHelper = uploaderHelper.asset(user.avatar, 'userAvatarFile') %}
+{% else %}
+    {% set uploaderHelper = asset('images/default/default.png') %}
+{% endif %}
+
 <div>
 {{ form_start(form) }}
-
     <div>
          {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
             input: form.avatar,
             inputFile: form.avatar.userAvatarFile,
+            removeFile: form.avatar.removeUserAvatarFile,
             label: form.avatar,
+            removeButtonId: 'remove-avatar-button',
+            uploaderHelper : uploaderHelper
         } %}
 
         {{ form_row(form.firstname) }}

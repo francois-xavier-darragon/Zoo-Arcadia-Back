@@ -9,7 +9,8 @@
         <table class="table custom-table">
             <thead>
                 <tr>
-                    <th class="text-start">nom</th>
+                    <th class="text-start">avatar</th>
+                    <th class="text-center">nom</th>
                     <th class="text-center">prénom</th>
                     <th class="text-center">roles</th>
                     <th class="text-center">email</th>
@@ -18,7 +19,11 @@
             </thead>
             <tbody>
             {% for user in users %}
+            
                 <tr>
+                    <td class="text-start">
+                        <img src="{{ uploaderHelper.asset(user.avatar, 'userAvatarFile')}}" alt="Avatar de l'utilisateur" width="50" height="50">
+                    </td>
                     <td class="text-start">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.firstName }}</td>
                     {% for role in user.roles %}

@@ -15,7 +15,7 @@
                                 {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                             </a>
                         </div>  
-                        {{ include('admin/user/form/_form.html.twig', {'delete_btn': true }) }}
+                        {{ include('admin/user/form/_form.html.twig', {'delete_btn': true, 'uploaderHelper': uploaderHelper }) }}
                     {% endif %}
                 </div>
             </div>
@@ -25,4 +25,42 @@
     {% if delete_btn is defined %}
         {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'csrf_token': csrf_token, 'user': user } %}
     {% endif %}
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+{% if user.id is not null %}
+    <script>
+
+        const removeButton = document.getElementById('remove-avatar-button');
+        removeButton.addEventListener("click", function() {
+           const userId = {{ user.id }}; 
+           const url = `{{ path('app_admin_user_remove_avatar', { 'user': user.id }) }}`; 
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({ userId: userId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    document.querySelector('.image-card img').src = '{{ asset('images/default/default-avatar.png') }}'; // Remplacez par le chemin de votre image par défaut
+                    document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while trying to remove the avatar.');
+            });
+        });
+    </script>
+{% endif %}
 {% endblock %}
