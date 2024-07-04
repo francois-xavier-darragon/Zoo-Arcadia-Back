@@ -31,42 +31,37 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="{{ asset('js/image/image-management.js') }}" ></script>
 
 {% if user.id is null %}
      <script> 
-     document.addEventListener('DOMContentLoaded', function() {
-            const btnTrashToHide = document.getElementById('remove-avatar-button');
-            if (btnTrashToHide) {
-                btnTrashToHide.classList.add('d-none');
-            }
-        });
+        const btnTrashToHide = document.getElementById('remove-avatar-button');
+        btnDnone(btnTrashToHide)
+        const newAvatar = document.getElementById('edit-avatar-button');
+        newImage(newAvatar)   
      </script>
 {% endif %}
 
 {% if user.id is not null %}
     <script>
-        let btnEditToHide
+        let btnEditToHide = document.getElementById('edit-avatar-button');
         let btnTrashToHide = document.getElementById('remove-avatar-button');
     
         const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
 
         if(userAvatar != null) {
-            document.addEventListener('DOMContentLoaded', function() {
-                btnEditToHide = document.getElementById('edit-avatar-button');
-                if (btnEditToHide) {
-                    btnEditToHide.classList.add('d-none');
-                }
-            });
+            btnDnone(btnEditToHide)  
         } else{
-             document.addEventListener('DOMContentLoaded', function() {
-                btnTrashToHide.classList.add('d-none');
-            });
+            btnDnone(btnTrashToHide)  
         }
         
         const removeButton = document.getElementById('remove-avatar-button');
+        const userId = {{ user.id }}; 
+        const url = `{{ path('app_admin_user_remove_avatar', { 'user': user.id }) }}`; 
+        const path = "{{ asset('images/default/default.png') }}";
+
+        
         removeButton.addEventListener("click", function() {
-           const userId = {{ user.id }}; 
-           const url = `{{ path('app_admin_user_remove_avatar', { 'user': user.id }) }}`; 
 
             fetch(url, {
                 method: 'POST',
@@ -79,7 +74,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    document.querySelector('.image-card img').src = "{{ asset('images/default/default.png') }}";
+                    document.querySelector('.image-card img').src = path
                     document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
                     btnEditToHide.classList.remove('d-none');
                     btnTrashToHide.classList.add('d-none');
@@ -95,17 +90,8 @@
         });
 
         const newAvatar = document.getElementById('edit-avatar-button');
-
-        newAvatar.addEventListener('change', function(event) {
-            console.log(event)
-            const file = event.target.files[0];
-            
-            if (file) {
-                const imageUrl = URL.createObjectURL(file);
-                document.querySelector('.image-card img').src = imageUrl;
-            }
-        });
-
+        newImage(newAvatar)
+      
     </script>
 {% endif %}
 

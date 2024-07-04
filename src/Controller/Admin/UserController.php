@@ -139,7 +139,7 @@ class UserController extends AbstractController
             $image = $imageRepository->findOneById($user->getAvatar());
             $user->setAvatar(null);
             $userRepository->saveUser($user, true);
-            $imageRepository->remove($image, true);
+            $imageRepository->removeImage($image, true);
             return new JsonResponse(['status' => 'success'], 200);
         }
         return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);
