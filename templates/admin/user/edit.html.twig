@@ -48,13 +48,21 @@
         let btnEditToHide
         let btnTrashToHide = document.getElementById('remove-avatar-button');
     
-        document.addEventListener('DOMContentLoaded', function() {
-            btnEditToHide = document.getElementById('edit-avatar-button');
-            if (btnEditToHide) {
-                btnEditToHide.classList.add('d-none');
-            }
-        });
+        const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
 
+        if(userAvatar != null) {
+            document.addEventListener('DOMContentLoaded', function() {
+                btnEditToHide = document.getElementById('edit-avatar-button');
+                if (btnEditToHide) {
+                    btnEditToHide.classList.add('d-none');
+                }
+            });
+        } else{
+             document.addEventListener('DOMContentLoaded', function() {
+                btnTrashToHide.classList.add('d-none');
+            });
+        }
+        
         const removeButton = document.getElementById('remove-avatar-button');
         removeButton.addEventListener("click", function() {
            const userId = {{ user.id }}; 
@@ -76,6 +84,7 @@
                     btnEditToHide.classList.remove('d-none');
                     btnTrashToHide.classList.add('d-none');
                 } else {
+                    
                     alert(data.message);
                 }
             })

@@ -3,7 +3,7 @@
         <div class="d-flex align-items-center text-white">
             {% if app.user %}
                 <div class="mb-3">
-                    <img src="{{ uploaderHelper.asset(app.user.avatar, 'userAvatarFile')}}" alt="User Avatar" width="40" height="40" class="rounded-circle me-3">
+                    <img src="{{ app.user.avatar ? uploaderHelper.asset(app.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="User Avatar" width="40" height="40" class="rounded-circle me-3">
                 </div>
                 <div class="mb-3">
                     <span class="me-3">{{ app.user.userIdentifier }}</span> <a class="btn btn-gradiant" href="{{ path('app_logout') }}">Déconnexion</a>

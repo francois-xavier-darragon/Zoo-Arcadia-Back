@@ -17,7 +17,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 class Image
 {
     use TimestampableTrait;
-    use SoftDeletableTrait;
 
     #[Vich\UploadableField(mapping: 'user_avatar_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $userAvatarFile = null;

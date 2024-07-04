@@ -42,7 +42,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, UploaderHelper $uploaderHelper): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -61,6 +61,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
+            'uploaderHelper' => $uploaderHelper,
             'user' => $user,
             'form' => $form,
             'mode' => 'Ajouter',
@@ -136,10 +137,9 @@ class UserController extends AbstractController
         $image = $user->getAvatar();
         if ($image) {
             $image = $imageRepository->findOneById($user->getAvatar());
-            $image->setDeletedAt(new \DateTimeImmutable());
             $user->setAvatar(null);
             $userRepository->saveUser($user, true);
-            $imageRepository->saveImage($image, true);
+            $imageRepository->remove($image, true);
             return new JsonResponse(['status' => 'success'], 200);
         }
         return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);

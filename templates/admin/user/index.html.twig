@@ -21,7 +21,7 @@
             {% for user in users %}
                 <tr>
                     <td class="text-start">
-                        <img src="{{ uploaderHelper.asset(user.avatar, 'userAvatarFile')}}" alt="Avatar de l'utilisateur" width="50" height="50">
+                        <img src="{{ user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="50" height="50">
                     </td>
                     <td class="text-start">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.firstName }}</td>

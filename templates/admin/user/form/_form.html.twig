@@ -1,9 +1,6 @@
 
-{% if uploaderHelper is defined %}
-    {% set uploaderHelper = uploaderHelper.asset(user.avatar, 'userAvatarFile') %}
-{% else %}
-    {% set uploaderHelper = asset('images/default/default.png') %}
-{% endif %}
+
+{% set uploaderHelper = user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png')%}
 
 <div>
 {{ form_start(form) }}
