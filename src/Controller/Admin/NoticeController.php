@@ -10,12 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/notices')]
 class NoticeController extends AbstractController
 {
     #[Route('/', name: 'app_admin_notice_index', methods: ['GET'])]
-    public function index(NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function index(NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
         $notices = $noticeRepository->findAllnotice();
         $csrfTokens = [];
@@ -27,12 +28,13 @@ class NoticeController extends AbstractController
         return $this->render('admin/notice/index.html.twig', [
             'notices' => $noticeRepository->findAllNotice(),
             'csrf_tokens'    => $csrfTokens,
-            'delete_btn'    => true
+            'delete_btn'    => true,
+            'uploaderHelper' => $uploaderHelper
         ]);
     }
 
     #[Route('/new', name: 'app_admin_notice_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, NoticeRepository $noticeRepository): Response
+    public function new(Request $request, NoticeRepository $noticeRepository, UploaderHelper $uploaderHelper): Response
     {
         $notice = new Notice();
         $form = $this->createForm(NoticeType::class, $notice);
@@ -48,23 +50,25 @@ class NoticeController extends AbstractController
             'notice' => $notice,
             'form' => $form,
             'mode' => 'Ajouter',
+            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
     #[Route('/{id}', name: 'app_admin_notice_show', methods: ['GET'])]
-    public function read(Notice $notice, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function read(Notice $notice, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-notice' . $notice->getId())->getValue();
 
         return $this->render('admin/notice/show.html.twig', [
             'csrf_token'  => $csrfToken,
             'notice' => $notice,
-            'delete_btn' => true
+            'delete_btn' => true,
+            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_notice_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Notice $notice, NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function edit(Request $request, Notice $notice, NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-notice' . $notice->getId())->getValue();
 
@@ -82,7 +86,8 @@ class NoticeController extends AbstractController
             'notice' => $notice,
             'form' => $form,
             'mode'=> 'Modifier',
-            'delete_btn' => true
+            'delete_btn' => true,
+            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 

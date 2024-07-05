@@ -14,6 +14,7 @@ class NoticeType extends AbstractType
         $builder
             ->add('nickname')
             ->add('comment')
+            ->add('user')
         ;
     }
 

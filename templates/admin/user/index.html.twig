@@ -44,20 +44,14 @@
                         </a>
                     </td>
                 </tr>
-            {% if delete_btn is defined %}
-                {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'csrf_tokens': csrf_tokens[user.id], 'user': user } %}
-            {% endif %}
+
+                {% if delete_btn is defined %}
+                    {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'csrf_tokens': csrf_tokens[user.id], 'user': user } %}
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
     </div> 
 </div>
-{# 
-{% if delete_btn is defined %}
-    {% for id, csrf_token in csrf_tokens  %}
-        {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': id}), 'csrf_token': csrf_token, 'user': user } %}
-    {% endfor %}
-{% endif %} #}
-
 
 {% endblock %}

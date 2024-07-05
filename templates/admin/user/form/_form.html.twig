@@ -1,10 +1,7 @@
-
-
 {% set uploaderHelper = user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png')%}
 
 <div>
 {{ form_start(form) }}
-
     <div>
          {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
             input: form.avatar,

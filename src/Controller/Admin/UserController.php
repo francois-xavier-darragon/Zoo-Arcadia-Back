@@ -61,7 +61,6 @@ class UserController extends AbstractController
 
         return $this->render('admin/user/edit.html.twig', [
             'uploaderHelper' => $uploaderHelper,
-            // 'url' => $url,
             'user' => $user,
             'form' => $form,
             'mode' => 'Ajouter',
@@ -144,5 +143,4 @@ class UserController extends AbstractController
         }
         return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);
     }
-
 }
