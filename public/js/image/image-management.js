@@ -17,9 +17,8 @@ function newImage(newImage){
     });
 }
 
-function removeExistingImage(removeButton, id, url, path, btnToHide) {
+function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
     removeButton.addEventListener("click", function() {
-
         fetch(url, {
             method: 'POST',
             headers: {
@@ -32,11 +31,10 @@ function removeExistingImage(removeButton, id, url, path, btnToHide) {
         .then(data => {
             if (data.status === 'success') {
                 document.querySelector('.image-card img').src = path
-                document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
+                existingImg
                 btnToHide.classList.remove('d-none');
                 removeButton.classList.add('d-none');
             } else {
-                
                 alert(data.message);
             }
         })

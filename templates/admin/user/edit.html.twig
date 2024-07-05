@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+
+
+
+
     <div class="row mt-5 mb-5 justify-content-center">
         <div class="col-lg-8">
             <div class="d-flex justify-content-center">
@@ -32,21 +36,15 @@
 {% block javascripts %}
 {{ parent() }}
 <script src="{{ asset('js/image/image-management.js') }}" ></script>
+<script> 
+    const userId = {{ user.id ? user.id|json_encode() : 'null'}}
+    const btnTrashToHide = document.getElementById('remove-avatar-button');
+    const btnEditToHide = document.getElementById('edit-avatar-button');
 
-{% if user.id is null %}
-     <script> 
-        const btnTrashToHide = document.getElementById('remove-avatar-button');
+    if(userId === null) {
         btnDnone(btnTrashToHide)
-        const newAvatar = document.getElementById('edit-avatar-button');
-        newImage(newAvatar)   
-     </script>
-{% endif %}
-
-{% if user.id is not null %}
-    <script>
-        let btnEditToHide = document.getElementById('edit-avatar-button');
-        let btnTrashToHide = document.getElementById('remove-avatar-button');
-    
+        newImage(btnEditToHide) 
+    } else {
         const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
 
         if(userAvatar != null) {
@@ -54,45 +52,16 @@
         } else{
             btnDnone(btnTrashToHide)  
         }
-        
-        const removeButton = document.getElementById('remove-avatar-button');
-        const userId = {{ user.id }}; 
-        const url = `{{ path('app_admin_user_remove_avatar', { 'user': user.id }) }}`; 
-        const path = "{{ asset('images/default/default.png') }}";
 
-        
-        removeButton.addEventListener("click", function() {
+        {% if user.id is not null %}
+            const path = "{{ asset('images/default/default.png') }}";
+            const existingImg = document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
+            const url = "{{ path('app_admin_user_remove_avatar', { 'user': user.id }) }}";
+            removeExistingImage(btnTrashToHide, userId, url, path, btnEditToHide, existingImg)
+        {% endif %}
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({ userId: userId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    document.querySelector('.image-card img').src = path
-                    document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
-                    btnEditToHide.classList.remove('d-none');
-                    btnTrashToHide.classList.add('d-none');
-                } else {
-                    
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while trying to remove the avatar.');
-            });
-        });
-
-        const newAvatar = document.getElementById('edit-avatar-button');
-        newImage(newAvatar)
-      
-    </script>
-{% endif %}
+        newImage(btnEditToHide);
+    } 
+</script>
 
 {% endblock %}

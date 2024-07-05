@@ -48,7 +48,6 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        
         if ($form->isSubmitted() && $form->isValid()) {
             
             $roles[]= $form->get('roles')->getdata();
@@ -62,6 +61,7 @@ class UserController extends AbstractController
 
         return $this->render('admin/user/edit.html.twig', [
             'uploaderHelper' => $uploaderHelper,
+            // 'url' => $url,
             'user' => $user,
             'form' => $form,
             'mode' => 'Ajouter',
