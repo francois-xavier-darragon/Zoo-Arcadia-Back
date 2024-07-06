@@ -14,25 +14,25 @@ class ServiceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
-                'required' => true,
-                'label' => 'Nom',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ])
-            ->add('description', TextareaType::class, [
-                'label' => 'Rapport vétérinaire',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ])  
+        ->add('name', TextType::class, [
+            'required' => true,
+            'label' => 'Nom',
+            'label_attr' => [
+                'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+            ],
+            'attr' => [
+                'class' => 'form-control form-control-solid',
+            ]
+        ])
+        ->add('description', TextareaType::class, [
+            'label' => 'Rapport vétérinaire',
+            'label_attr' => [
+                'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+            ],
+            'attr' => [
+                'class' => 'form-control form-control-solid',
+            ]
+        ])
         ;
     }
 

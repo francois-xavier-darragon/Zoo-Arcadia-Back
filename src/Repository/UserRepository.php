@@ -48,6 +48,9 @@ class UserRepository extends ServiceEntityRepository
     public function saveUser(User $entity, bool $flush = false)
     {
         $this->genericRepository->save(User::class, $entity, $flush);
+        // $this->getEntityManager()->persist($entity);
+
+		// if($flush) $this->getEntityManager()->flush();
     }
 
     // Method to delete a user

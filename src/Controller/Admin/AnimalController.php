@@ -7,6 +7,7 @@ use App\Form\AnimalType;
 use App\Repository\AnimalRepository;
 use App\Repository\ImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -112,17 +113,17 @@ class AnimalController extends AbstractController
         return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{user}/remove-animal-image', name: 'app_admin_user_remove_avatar', methods: ['POST'])]
-    public function removeAnimalImage(Animal $animal, AnimalRepository $userRepository, ImageRepository $imageRepository): JsonResponse
-    {
-        // $image = $animal->getImages();
-        // if ($image) {
-        //     $image = $imageRepository->findOneById($animal->getAvatar());
-        //     $animal->addImage(null);
-        //     $userRepository->saveAnimal($animal, true);
-        //     $imageRepository->removeImage($image, true);
-        //     return new JsonResponse(['status' => 'success'], 200);
-        // }
-        // return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);
-    }
+    // #[Route('/{user}/remove-animal-image', name: 'app_admin_user_remove_avatar', methods: ['POST'])]
+    // public function removeAnimalImage(Animal $animal, AnimalRepository $userRepository, ImageRepository $imageRepository): JsonResponse
+    // {
+    //     $image = $animal->getImages();
+    //     if ($image) {
+    //         $image = $imageRepository->findOneById($animal->getAvatar());
+    //         $animal->addImage(null);
+    //         $userRepository->saveAnimal($animal, true);
+    //         $imageRepository->removeImage($image, true);
+    //         return new JsonResponse(['status' => 'success'], 200);
+    //     }
+    //     return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);
+    // }
 }

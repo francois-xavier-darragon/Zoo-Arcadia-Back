@@ -20,7 +20,10 @@
         {{ form_row(form.email) }}
         {{ form_row(form.address) }}
         {{ form_row(form.phone) }}
-        {{ form_row(form.password) }}
+        
+        {% if mode == 'Ajouter' %}
+             {{ form_row(form.password) }}
+        {% endif %}
     </div>
 
     <div class="mt-4 d-flex justify-content-between">

@@ -20,7 +20,7 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 class UserController extends AbstractController
 {
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
-    public function index(UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function index(UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $users = $userRepository->findAllUser();
         $csrfTokens = [];
@@ -37,15 +37,14 @@ class UserController extends AbstractController
             'csrf_token'     => $csrfToken,
             'delete_btn'     => true,
             'allRoles'       => User::ROLES,
-            'uploaderHelper' => $uploaderHelper
         ]);
     }
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, UploaderHelper $uploaderHelper): Response
+    public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['is_new' => true,]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -60,7 +59,6 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
-            'uploaderHelper' => $uploaderHelper,
             'user' => $user,
             'form' => $form,
             'mode' => 'Ajouter',
@@ -68,12 +66,11 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
-    public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
         
         return $this->render('admin/user/show.html.twig', [
-            'uploaderHelper' => $uploaderHelper,
             'csrf_token'     => $csrfToken,
             'user'           => $user,
             'delete_btn'     => true,
@@ -82,18 +79,17 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, ['is_new' => false,]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+           
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
-            $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
 
             $userRepository->saveUser($user, true);
 
@@ -101,7 +97,6 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
-            'uploaderHelper' => $uploaderHelper,
             'csrf_token'     => $csrfToken,
             'user'           => $user,
             'delete_btn'     => true,

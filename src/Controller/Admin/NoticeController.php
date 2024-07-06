@@ -50,7 +50,7 @@ class NoticeController extends AbstractController
             'notice' => $notice,
             'form' => $form,
             'mode' => 'Ajouter',
-            'uploaderHelper' => $uploaderHelper,
+            // 'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
@@ -63,7 +63,7 @@ class NoticeController extends AbstractController
             'csrf_token'  => $csrfToken,
             'notice' => $notice,
             'delete_btn' => true,
-            'uploaderHelper' => $uploaderHelper,
+            // 'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
