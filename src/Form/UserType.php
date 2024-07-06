@@ -97,44 +97,10 @@ class UserType extends AbstractType
                 ]
             );
 
-            if($options['is_new'] === true) {
-                $builder->add('password', RepeatedType::class, [
-                    'type' => PasswordType::class,
-                    'invalid_message' => 'Les mots de passe doivent correspondre.',
-                    'required' => true,
-                    'help' => 'Laissez vide pour ne pas modifier votre mot de passe.',
-                    'help_attr' => [
-                        'class' => 'my-2'
-                    ],
-                    'help_html' => true,
-                    'first_options'  => [
-                        'label' => 'Mot de passe',
-                        'label_attr' => [
-                            'class' => 'col-lg-4 col-form-label fw-semibold fs-6',
-                        ],
-                        'attr' => [
-                            'class' => 'form-control form-control-lg form-control-solid password-control',
-                            'autocomplete' => 'new-password',
-                        ],
-                        'help' => 'Laissez vide pour ne pas modifier votre mot de passe.',
-                        'help_attr' => [
-                            'class' => 'my-2 fst-italic text-mute'
-                        ]
-                    ],
-                    'second_options' => [
-                        'label' => 'Confirmer',
-                        'label_attr' => [
-                            'class' => 'col-lg-4 col-form-label fw-semibold fs-6',
-                        ],
-                        'attr' => [
-                            'class' => 'form-control form-control-lg form-control-solid',
-                            'autocomplete' => 'new-password',
-                        ],
-                        'help' => 'Laissez vide pour ne pas modifier votre mot de passe.',
-                        'help_attr' => [
-                            'class' => 'my-2 fst-italic text-mute'
-                        ]
-                    ],
+        if($options['is_new'] === true) {
+            $builder->add('plainpassword', ManagePasswordType::class,
+                [
+                    'mapped' =>false,
                 ]
             );
         }
