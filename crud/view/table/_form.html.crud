@@ -3,7 +3,7 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
     <div class="mt-4 d-flex justify-content-between">
-        <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
+        <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_{{ VARIABLE_NAME }}_index') }}">Revenir à la liste</a>
         {% if mode == 'Ajouter' %} 
             <button class="btn btn-primary" title="Valider">Valider</button>
         {% elseif mode == "Modifier" %}

@@ -44,7 +44,10 @@ class UserController extends AbstractController
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user, ['is_new' => true,]);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_new'  => true,
+            'is_edit' => false
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -83,11 +86,20 @@ class UserController extends AbstractController
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
-        $form = $this->createForm(UserType::class, $user, ['is_new' => false,]);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_new' => false,
+            'is_edit' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-           
+
+            $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile();
+
+            if($avatarFile === null) {
+               $user->setAvatar(null);
+            }
+
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
 

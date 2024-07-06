@@ -1,3 +1,4 @@
+
 function btnDnone(btnToHide) {
     document.addEventListener('DOMContentLoaded', function() {
         if (btnToHide) {
@@ -6,8 +7,8 @@ function btnDnone(btnToHide) {
     });
 }
 
-function newImage(newImage){
-    newImage.addEventListener('change', function(event) {
+function newImage(btnEdit){
+    btnEdit.addEventListener('change', function(event) {
         const file = event.target.files[0];
         
         if (file) {
@@ -44,4 +45,5 @@ function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg
         });
     });
 
+    
 }

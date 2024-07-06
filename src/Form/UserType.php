@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\AddressUserType;
 use App\Form\AvatarType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -98,11 +99,32 @@ class UserType extends AbstractType
             );
 
         if($options['is_new'] === true) {
-            $builder->add('plainpassword', ManagePasswordType::class,
-                [
-                    'mapped' =>false,
-                ]
-            );
+            $builder
+                ->add('plainpassword',
+                    ManagePasswordType::class,
+                    [
+                        'mapped' =>false,
+                    ]
+                );
+        }
+
+        if($options['is_edit'] === true) {
+            $builder
+                // ->add('changepassword',
+                //     ButtonType::class,
+                //     [
+                //     'label' => 'Modifier le mot de passe',
+                //     'attr' => [
+                //         'class' => 'btn btn-primary',
+                //         'onclick' => 'togglePasswordFields()',
+                //     ],
+                // ])
+                ->add('plainpassword',
+                    ManagePasswordType::class,
+                    [
+                        'mapped' =>false,
+                    ]
+                );
         }
     }
 
@@ -110,7 +132,8 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
-            'is_new' => false,
+            'is_new'     => false,
+            'is_edit'    => false
         ]);
     }
 }

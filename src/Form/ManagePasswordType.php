@@ -18,7 +18,7 @@ class ManagePasswordType extends AbstractType
         $builder->add('password', RepeatedType::class, [
             'type' => PasswordType::class,
             'invalid_message' => 'Les mots de passe doivent correspondre.',
-            'required' => true,
+            'required' => false,
             'help_attr' => [
                 'class' => 'my-2'
             ],
