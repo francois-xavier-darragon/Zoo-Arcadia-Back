@@ -2,19 +2,29 @@
 
 {{ form_start(form) }}
 
-    {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
-        input: form.image,
-        inputFile: form.image.animalFile,
-        removeFile: form.image.animalFile,
-        label: form.image,
-        editButtonId: 'edit-image-button',
-        removeButtonId: 'remove-image-button',
-        uploaderHelper : uploaderHelper,
-        baliseImg : 'balise-img'
-    } %}
+<div>
+    <div class="row">
+        <div class="col-2">
+             {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
+                input: form.image,
+                inputFile: form.image.animalFile,
+                removeFile: form.image.animalFile,
+                label: form.image,
+                editButtonId: 'edit-image-button',
+                removeButtonId: 'remove-image-button',
+                uploaderHelper : uploaderHelper,
+                baliseImg : 'balise-img'
+            } %} 
+        </div>  
+        <div class="col-10">
+            <div class="d-flex flex-wrap align-items-center" id="image-fields-list"></div>
+        </div>
+    </div>
+    
+    <button id="add-image-btn" type="button" class="btn btn-secondary mt-4 mb-3 me-3">Ajouter une image</button>
+</div>
 
-    {{ form_row(form.name) }}
-    {{ form_row(form.health) }}
+
 
     <button id="addBreedBtn" type="button" class="btn btn-secondary mt-4 mb-3 me-3" onclick="addBreed()">Ajouter une nouvelle race</button>
     <div id="addBreedField" style="display: none;">
@@ -27,11 +37,13 @@
             {{ form_row(form.breed) }}
         </div>
     {% endif %}
-    
-    {{ form_row(form.veterinaryReports) }}
-    {{ form_row(form.habitat) }}
 
-    
+    {{ form_row(form.habitat) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.health) }}
+
+    {{ form_row(form.veterinaryReports) }}
+   
     <div class="mt-4 d-flex justify-content-between">
     <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
 
@@ -48,6 +60,7 @@
         </div>
     {% endif %}  
 </div>
+
 {{ form_end(form) }}
 
 <div class="col-12 pt-2">

@@ -11,7 +11,7 @@
                     {% else %}   
                     <div class="d-flex mb-4">
                         <h1 class="me-4">{{mode}}</h1>
-                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-{{ VARIABLE_NAME }}') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-{{ VARIABLE_NAME }}') }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ {{ VARIABLE_NAME }}.id }}" title="Supprimer">
                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </div>

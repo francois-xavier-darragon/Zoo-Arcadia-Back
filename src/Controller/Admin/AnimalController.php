@@ -6,17 +6,20 @@ use App\Entity\Animal;
 use App\Entity\Breed;
 use App\Entity\Image;
 use App\Entity\VeterinaryReport;
+use App\Form\AnimalFileType;
 use App\Form\AnimalType;
 use App\Repository\AnimalRepository;
 use App\Repository\BreedRepository;
 use App\Repository\ImageRepository;
 use App\Repository\VeterinaryReportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/animals')]
 class AnimalController extends AbstractController
@@ -24,7 +27,7 @@ class AnimalController extends AbstractController
     #[Route('/', name: 'app_admin_animal_index', methods: ['GET'])]
     public function index(AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $animals = $animalRepository->findAllanimal(['deleted_At'=> null]);
+        $animals = $animalRepository->findAllanimal();
         $csrfTokens = [];
 
         foreach ($animals as $animal) {
@@ -57,17 +60,18 @@ class AnimalController extends AbstractController
 
             if($newImage != null){
                 $image = new Image;
+                $newImage = $form->get('image')->getData()->getAnimalFile();
                 $image->setAnimalFile($newImage);
                
                 $imageRepository->saveImage($image, true);
                 $animal->addImage($image);
             }
 
-            $newBreed = $form->get('addbreed')->getData();
+            $formBreddData = $form->get('addbreed')->getData();
 
-            if($newBreed != null){
+            if($formBreddData != null){
                 $breed = new Breed;
-                $breed->setName($newBreed);
+                $breed->setName(ucfirst($formBreddData));
                 $breedRepository->saveBreed($breed, true);
                 $animal->setBreed($breed);
             }
@@ -105,7 +109,7 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_animal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository): Response
+    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository,ImageRepository $imageRepository, CsrfTokenManagerInterface $csrfTokenManager, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
 
@@ -120,11 +124,22 @@ class AnimalController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $newBreed = $form->get('addbreed')->getData();
+            $newImage = $form->get('image')->getData();
 
-            if($newBreed != null){
+            if($newImage != null){
+                $image = new Image;
+                $newImage = $form->get('image')->getData()->getAnimalFile();
+                $image->setAnimalFile($newImage);
+               
+                $imageRepository->saveImage($image, true);
+                $animal->addImage($image);
+            }
+
+            $formBreddData = $form->get('addbreed')->getData();
+
+            if($formBreddData != null){
                 $breed = new Breed;
-                $breed->setName($newBreed);
+                $breed->setName(ucfirst($formBreddData));
                 $breedRepository->saveBreed($breed, true);
                 $animal->setBreed($breed);
             }
@@ -147,7 +162,8 @@ class AnimalController extends AbstractController
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
-            'countBreeds' => $countBreeds
+            'countBreeds' => $countBreeds,
+            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
@@ -161,7 +177,9 @@ class AnimalController extends AbstractController
         $submittedToken = $request->request->get('token');
         
         if ($this->isCsrfTokenValid('delete-animal'.$animal->getId(), $submittedToken)) {
-            $animalRepository->removeAnimal($animal, true);
+
+            $animal->setDeletedAt(new \DateTimeImmutable());
+            $animalRepository->saveAnimal($animal, true);
 
             $this->addFlash('success', 'Le utilisateur "'.$animal->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_animal_index');
@@ -169,6 +187,30 @@ class AnimalController extends AbstractController
 
         $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet animal, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/add-image-field', name: 'app_add_image_field')]
+    public function addImageField(Request $request): Response
+    {
+        $form = $this->createForm(AnimalFileType::class, null, [
+            'mapped' => false,
+            'label' => false,
+            'required' => false,
+            'label_attr' => [
+                'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
+            ],
+        ]);
+
+        return $this->render('_include/_components/_forms/_image-upload-input.html.twig', [
+            'input' => $form->get('image'),
+            'inputFile' => $form->get('image')->get('animalFile'),
+            'removeFile' => $form->get('image')->get('animalFile'),
+            'label' => $form->get('image'),
+            'editButtonId' => 'edit-image-button-' . uniqid(),
+            'removeButtonId' => 'remove-image-button-' . uniqid(),
+            'uploaderHelper' => 'uploaderHelper',
+            'baliseImg' => 'balise-img'
+        ]);
     }
 
     // #[Route('/{user}/remove-animal-image', name: 'app_admin_user_remove_avatar', methods: ['POST'])]
