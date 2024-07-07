@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/{{ VARIABLE_NAME }}s')]
 class {{ ENTITY_NAME }}Controller extends AbstractController
@@ -26,8 +27,8 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
 
         return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
             '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
-            'csrf_Tokens'    => $csrfTokens,
-            'delete_btn'    => true
+            'csrf_tokens'    => $csrfTokens,
+            'delete_btn'    => true,
         ]);
     }
 
@@ -52,19 +53,19 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_{{ VARIABLE_NAME }}_show', methods: ['GET'])]
-    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}): Response
+    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
         return $this->render('admin/{{ VARIABLE_NAME }}/show.html.twig', [
             'csrf_token'  => $csrfToken,
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
-            'delete_btn' => true
+            'delete_btn' => true,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
+    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
@@ -82,7 +83,7 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
             'form' => $form,
             'mode'=> 'Modifier',
-            'delete_btn' => true
+            'delete_btn' => true,
         ]);
     }
 

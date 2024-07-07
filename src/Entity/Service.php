@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ServiceRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -24,6 +25,14 @@ class Service
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    public function __construct()
+    {
+
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+        $this->setDeletedAt(null);
+    }
 
     public function getId(): ?int
     {

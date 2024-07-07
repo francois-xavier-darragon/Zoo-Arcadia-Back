@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\AddressUserType;
 use App\Form\AvatarType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -95,53 +96,44 @@ class UserType extends AbstractType
                         'class' => 'form-control form-control-solid',
                     ]
                 ]
-            )
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
-                'required' => false,
-                'help' => 'Laissez vide pour ne pas modifier votre mot de passe.',
-                'help_attr' => [
-                    'class' => 'my-2'
-                ],
-                'help_html' => true,
-                'first_options'  => [
-                    'label' => 'Mot de passe',
-                    'label_attr' => [
-                        'class' => 'col-lg-4 col-form-label fw-semibold fs-6',
-                    ],
-                    'attr' => [
-                        'class' => 'form-control form-control-lg form-control-solid password-control',
-                        'autocomplete' => 'new-password',
-                    ],
-                    'help' => 'Laissez vide pour ne pas modifier votre mot de passe',
-                    'help_attr' => [
-                        'class' => 'my-2 fst-italic text-mute'
+            );
+
+        if($options['is_new'] === true) {
+            $builder
+                ->add('plainpassword',
+                    ManagePasswordType::class,
+                    [
+                        'mapped' =>false,
                     ]
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer',
-                    'label_attr' => [
-                        'class' => 'col-lg-4 col-form-label fw-semibold fs-6',
-                    ],
-                    'attr' => [
-                        'class' => 'form-control form-control-lg form-control-solid',
-                        'autocomplete' => 'new-password',
-                    ],
-                    'help' => 'Laissez vide pour ne pas modifier votre mot de passe',
-                    'help_attr' => [
-                        'class' => 'my-2 fst-italic text-mute'
+                );
+        }
+
+        if($options['is_edit'] === true) {
+            $builder
+                // ->add('changepassword',
+                //     ButtonType::class,
+                //     [
+                //     'label' => 'Modifier le mot de passe',
+                //     'attr' => [
+                //         'class' => 'btn btn-primary',
+                //         'onclick' => 'togglePasswordFields()',
+                //     ],
+                // ])
+                ->add('plainpassword',
+                    ManagePasswordType::class,
+                    [
+                        'mapped' =>false,
                     ]
-                ],
-            ]
-        )
-    ;
+                );
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_new'     => false,
+            'is_edit'    => false
         ]);
     }
 }

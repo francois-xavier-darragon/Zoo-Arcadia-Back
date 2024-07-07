@@ -20,11 +20,6 @@ class ImageType extends AbstractType
             ->add('originalName')
             ->add('size')
             ->add('src')
-            ->add('createdAt')
-            ->add('updatedAt')
-            ->add('deletedAt')
-            ->add('deleted')
-            
         ;
     }
 

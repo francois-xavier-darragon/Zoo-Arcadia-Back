@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\NoticeRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NoticeRepository::class)]
@@ -29,6 +30,14 @@ class Notice
 
     #[ORM\ManyToOne(inversedBy: 'notices')]
     private ?User $user = null;
+
+    public function __construct()
+    {
+        $this->isVisible = false;
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+        $this->setDeletedAt(null);
+    }
 
     public function getId(): ?int
     {

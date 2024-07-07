@@ -78,14 +78,10 @@ class ImageController extends AbstractController
     #[Route('/{id}/delete', name: 'app_admin_image_delete', methods: ['POST'])]
     public function delete(Request $request, Image $image, ImageRepository $repository): Response
     {
-        if($image->getDeletedAt()){
-            return $this->redirectToRoute('app_admin_image_index');
-        }
-
         $submittedToken = $request->request->get('token');
         
         if ($this->isCsrfTokenValid('delete-image', $submittedToken)) {
-            $userRepository->removeImage($image, true);
+            $repository->removeImage($image, true);
 
             $this->addFlash('success', 'Le utilisateur "'.$image->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_image_index');

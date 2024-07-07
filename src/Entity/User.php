@@ -75,6 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'user')]
     private Collection $veterinaryReports;
 
+    
     public function __construct()
     {
         $this->notices = new ArrayCollection();
@@ -296,5 +297,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
 }

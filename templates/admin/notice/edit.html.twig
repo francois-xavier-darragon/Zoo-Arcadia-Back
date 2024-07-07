@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row mt-5 mb-5 justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-center">
+                <div style="width: 100%;">
+                    {% if mode == 'Ajouter' %}
+                    <h1 class=" mb-4">{{mode}}</h1>
+                        {{ include('admin/notice/_form.html.twig') }}
+                    {% else %}   
+                    <div class="d-flex mb-4">
+                        <h1 class="me-4">{{mode}}</h1>
+                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-notice') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                            {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                        </a>
+                    </div> 
+                    {{ include('admin/notice/_form.html.twig', {'delete_btn': true }) }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if delete_btn is defined %}
+        {% include '/admin/notice/_delete_modal.html.twig' with {'path_form' : path('app_admin_notice_delete', {'id': notice.id}), 'csrf_token': csrf_token, 'notice': notice } %}
+    {% endif %}
+
+{% endblock %}

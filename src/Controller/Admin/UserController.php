@@ -8,11 +8,13 @@ use App\Form\UserType;
 use App\Repository\ImageRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/users')]
 class UserController extends AbstractController
@@ -27,11 +29,14 @@ class UserController extends AbstractController
             $csrfTokens[$user->getId()] = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
         }
 
+        $csrfToken = $csrfTokenManager->getToken('delete-user')->getValue();
+    
         return $this->render('admin/user/index.html.twig', [
-            'users'         => $users,
-            'csrf_Tokens'    => $csrfTokens,
-            'delete_btn'    => true,
-            'allRoles'      => User::ROLES,
+            'users'          => $users,
+            'csrf_tokens'    => $csrfTokens,
+            'csrf_token'     => $csrfToken,
+            'delete_btn'     => true,
+            'allRoles'       => User::ROLES,
         ]);
     }
 
@@ -39,12 +44,17 @@ class UserController extends AbstractController
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_new'  => true,
+            'is_edit' => false
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
+           
             $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getdata()));
             $userRepository->saveUser($user, true);
 
@@ -64,39 +74,34 @@ class UserController extends AbstractController
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
         
         return $this->render('admin/user/show.html.twig', [
-            'csrf_token'  => $csrfToken,
-            'user'        => $user,
-            'delete_btn'  => true,
-            'allRoles'    => User::ROLES,
+            'csrf_token'     => $csrfToken,
+            'user'           => $user,
+            'delete_btn'     => true,
+            'allRoles'       => User::ROLES,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, ImageRepository $imageRepository, UserPasswordHasherInterface $passwordHasher, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'is_new' => false,
+            'is_edit' => true
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if($user->getPassword()){
-                $image = $form->get('avatar')->getData();
-                if ($image instanceof Image) {
-                    $name = $image->getName();
-                    if($name === null) {
-                        $image->setDeletedAt(new \DateTimeImmutable());
-                        $imageRepository->saveImage($image, true);
-                        $user->setAvatar(null);
-                    }
-                }
+            $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile();
 
-                $roles[]= $form->get('roles')->getdata();
-                $user->setRoles($roles);
-                $user->setPassword($passwordHasher->hashPassword($user, $user->getPassword()));
-                $user->eraseCredentials();
+            if($avatarFile === null) {
+               $user->setAvatar(null);
             }
+
+            $roles[]= $form->get('roles')->getdata();
+            $user->setRoles($roles);
 
             $userRepository->saveUser($user, true);
 
@@ -104,11 +109,11 @@ class UserController extends AbstractController
         }
 
         return $this->render('admin/user/edit.html.twig', [
-            'csrf_token'  => $csrfToken,
-            'user'        => $user,
-            'form'        => $form,
-            'mode'        => 'Modifier',
-            'delete_btn'  => true
+            'csrf_token'     => $csrfToken,
+            'user'           => $user,
+            'delete_btn'     => true,
+            'form'           => $form,
+            'mode'           => 'Modifier',
         ]);
     }
 
@@ -130,5 +135,19 @@ class UserController extends AbstractController
 
         $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet user, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{user}/remove-avatar', name: 'app_admin_user_remove_avatar', methods: ['POST'])]
+    public function removeAvatar(User $user, UserRepository $userRepository, ImageRepository $imageRepository): JsonResponse
+    {
+        $image = $user->getAvatar();
+        if ($image) {
+            $image = $imageRepository->findOneById($user->getAvatar());
+            $user->setAvatar(null);
+            $userRepository->saveUser($user, true);
+            $imageRepository->removeImage($image, true);
+            return new JsonResponse(['status' => 'success'], 200);
+        }
+        return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);
     }
 }

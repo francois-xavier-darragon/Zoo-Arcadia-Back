@@ -9,36 +9,41 @@
         <table class="table custom-table">
             <thead>
                 <tr>
-                <th class="text-start">firstName</th>
-                <th class="text-center">health</th>
-                <th class="text-center">veterinaryReports</th>
-                <th class="text-center">breed</th>
-                <th class="text-center">habitat</th>
-                <th class="text-center">images</th>
+                {# <th class="text-start">images</th> #}
+                <th class="text-center">Nom</th>
+                <th class="text-center">Etat de santé</th>
+                <th class="text-center">Rapport Vétérinairs</th>
+                <th class="text-center">Race</th>
+                <th class="text-center">Habitat</th>
                 <th class="text-end">actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for animal in animals %}
                 <tr>
-                <td class="text-start">{{ animal.firstName }}</td>
-                <td class="text-center">{{ animal.health }}</td>
-                <td class="text-center">{{ animal.veterinaryReports }}</td>
-                <td class="text-center">{{ animal.breed }}</td>
-                {# <td class="text-center">{{ animal.habitat }}</td>
-                <td class="text-center">{{ animal.images }}</td> #}
+                    {# <td class="text-start">{{ animal.images }}</td> #}
+                    <td class="text-center">{{ animal.name }}</td>
+                    <td class="text-center">{{ animal.health }}</td>
+                    <td class="text-center">{{ animal.veterinaryReports }}</td>
+                    <td class="text-center">{{ animal.breed }}</td>
+                    <td class="text-center">{{ animal.habitat }}</td>
                     <td class="text-end">
-                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_animal_show', {'id': animal.id}) }}" title="{{ 'form.detail.show_title'|trans }}">
-                            {% include "_include/components/icons/show_icon_svg.html.twig" %}
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_animal_show', {'id': animal.id}) }}" title="voir">
+                            {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">
-                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}" title="éditer">
+                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class='text-danger me-2' href="{{ path('app_admin_animal_delete', {'id': animal.id}) }}" title="{{ 'form.detail.delete_title'|trans }}">
-                            {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[animal.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </td>
                 </tr>
+
+                {% if delete_btn is defined %}
+                    {% include '/admin/animal/_delete_modal.html.twig' with {'path_form' : path('app_admin_animal_delete', {'id': animal.id}), 'csrf_tokens': csrf_tokens[animal.id], 'animal': animal } %}
+                {% endif %}
+
             {% endfor %}
             </tbody>
         </table>

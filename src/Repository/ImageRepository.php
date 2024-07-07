@@ -44,15 +44,19 @@ class ImageRepository extends ServiceEntityRepository
         return $this->genericRepository->findBy($criteria, Image::class, $orderBy, $limit, $offset);
     }
 
-    // Method to save a user
+    // Method to save a Image
     public function saveImage(Image $entity, bool $flush = false)
     {
         $this->genericRepository->save(Image::class, $entity, $flush);
     }
 
-    // Method to delete a user
-    public function removeImage(Image $entity, bool $flush = false)
+    // Method to delete a image
+    public function removeImage(Image $entity, bool $flush = false): void
     {
-        $this->genericRepository->remove(Image::class, $entity, $flush);
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
     }
 }

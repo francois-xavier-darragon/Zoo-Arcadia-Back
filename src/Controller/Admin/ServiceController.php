@@ -10,12 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/services')]
 class ServiceController extends AbstractController
 {
     #[Route('/', name: 'app_admin_service_index', methods: ['GET'])]
-    public function index(ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function index(ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager, ): Response
     {
         $services = $serviceRepository->findAllservice();
         $csrfTokens = [];
@@ -26,20 +27,21 @@ class ServiceController extends AbstractController
 
         return $this->render('admin/service/index.html.twig', [
             'services' => $serviceRepository->findAllService(),
-            'csrf_Tokens'    => $csrfTokens,
-            'delete_btn'    => true
+            'csrf_tokens'    => $csrfTokens,
+            'delete_btn'    => true,
+
         ]);
     }
 
     #[Route('/new', name: 'app_admin_service_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ServiceRepository $repository): Response
+    public function new(Request $request, ServiceRepository $serviceRepository, ): Response
     {
         $service = new Service();
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $repository->saveService($service, true);
+            $serviceRepository->saveService($service, true);
 
             return $this->redirectToRoute('app_admin_service_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -52,21 +54,21 @@ class ServiceController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_service_show', methods: ['GET'])]
-    public function read(Service $service, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function read(Service $service, CsrfTokenManagerInterface $csrfTokenManager, ): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-service' . $service->getId())->getValue();
 
         return $this->render('admin/service/show.html.twig', [
             'csrf_token'  => $csrfToken,
             'service' => $service,
-            'delete_btn' => true
+            'delete_btn' => true,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_service_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Service $service, ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function edit(Request $request, Service $service, ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager, ): Response
     {
-        $csrfToken = $csrfTokenManager->getToken('delete-user' . $service->getId())->getValue();
+        $csrfToken = $csrfTokenManager->getToken('delete-service' . $service->getId())->getValue();
 
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
@@ -82,7 +84,7 @@ class ServiceController extends AbstractController
             'service' => $service,
             'form' => $form,
             'mode'=> 'Modifier',
-            'delete_btn' => true
+            'delete_btn' => true,
         ]);
     }
 

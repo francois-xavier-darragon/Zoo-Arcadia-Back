@@ -1,12 +1,17 @@
+{% set uploaderHelper = user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png')%}
 
 <div>
 {{ form_start(form) }}
-
     <div>
          {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
             input: form.avatar,
             inputFile: form.avatar.userAvatarFile,
+            removeFile: form.avatar.removeUserAvatarFile,
             label: form.avatar,
+            editButtonId: 'edit-avatar-button',
+            removeButtonId: 'remove-avatar-button',
+            uploaderHelper : uploaderHelper,
+            baliseImg : 'balise-img'
         } %}
 
         {{ form_row(form.firstname) }}
@@ -15,11 +20,20 @@
         {{ form_row(form.email) }}
         {{ form_row(form.address) }}
         {{ form_row(form.phone) }}
-        {{ form_row(form.password) }}
+        
+        {% if mode == 'Ajouter' %}
+            {{ form_row(form.plainpassword.password) }}
+        {% elseif mode == 'Modifier'  %}
+            {# {{ form_row(form.changepassword) }} #}
+            <button id="changePasswordBtn" type="button" class="btn btn-secondary mt-4" onclick="togglePasswordFields()">Modifier le mot de passe</button>
+            <div id="passwordFields" style="display: none;">
+               {{ form_row(form.plainpassword.password) }}
+            </div>  
+        {% endif %}
     </div>
 
     <div class="mt-4 d-flex justify-content-between">
-        <a type="button" class="btn btn-gradiant me-3 mb-2" title="Revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
+        <a type="button" class="btn btn-gradiant me-3 mb-2" title="Revenir à la liste" href="{{ path('app_admin_user_index') }}">Revenir à la liste</a>
         <div class="row mb-6">
             {% if mode == 'Ajouter' %}
                 <button class="btn btn-primary" title="Valider">Valider</button>
