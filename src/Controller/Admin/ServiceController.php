@@ -18,7 +18,7 @@ class ServiceController extends AbstractController
     #[Route('/', name: 'app_admin_service_index', methods: ['GET'])]
     public function index(ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager, ): Response
     {
-        $services = $serviceRepository->findAllservice();
+        $services = $serviceRepository->findAllservice(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($services as $service) {

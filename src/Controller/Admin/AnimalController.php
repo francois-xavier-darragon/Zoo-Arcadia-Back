@@ -3,24 +3,27 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Animal;
+use App\Entity\Breed;
+use App\Entity\VeterinaryReport;
 use App\Form\AnimalType;
 use App\Repository\AnimalRepository;
+use App\Repository\BreedRepository;
 use App\Repository\ImageRepository;
+use App\Repository\VeterinaryReportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/animals')]
 class AnimalController extends AbstractController
 {
     #[Route('/', name: 'app_admin_animal_index', methods: ['GET'])]
-    public function index(AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function index(AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $animals = $animalRepository->findAllanimal();
+        $animals = $animalRepository->findAllanimal(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($animals as $animal) {
@@ -31,18 +34,40 @@ class AnimalController extends AbstractController
             'animals' => $animalRepository->findAllAnimal(),
             'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
-            'uploaderHelper' => $uploaderHelper
         ]);
     }
 
     #[Route('/new', name: 'app_admin_animal_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AnimalRepository $animalRepository, UploaderHelper $uploaderHelper): Response
+    public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository): Response
     {
+        $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
+        $countBreeds = count($breeds) === 0;
+       
         $animal = new Animal();
-        $form = $this->createForm(AnimalType::class, $animal);
+        $form = $this->createForm(AnimalType::class, $animal, [
+            'countBreeds' => $countBreeds
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $newBreed = $form->get('addbreed')->getData();
+
+            if($newBreed != null){
+                $breed = new Breed;
+                $breed->setName($newBreed);
+                $breedRepository->saveBreed($breed, true);
+                $animal->setBreed($breed);
+            }
+
+            $newVeterinaryReports = $form->get('veterinaryReports')->getData();
+            $veterinaryReport = new veterinaryReport();
+            $veterinaryReport->setDetail($newVeterinaryReports);
+
+            $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
+            $animal->addVeterinaryReport($veterinaryReport);
+
             $animalRepository->saveAnimal($animal, true);
 
             return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
@@ -52,12 +77,12 @@ class AnimalController extends AbstractController
             'animal' => $animal,
             'form' => $form,
             'mode' => 'Ajouter',
-            'uploaderHelper' => $uploaderHelper,
+            'countBreeds' => $countBreeds
         ]);
     }
 
     #[Route('/{id}', name: 'app_admin_animal_show', methods: ['GET'])]
-    public function read(Animal $animal, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function read(Animal $animal, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
 
@@ -65,12 +90,11 @@ class AnimalController extends AbstractController
             'csrf_token'  => $csrfToken,
             'animal' => $animal,
             'delete_btn' => true,
-            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_animal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
 
@@ -89,7 +113,6 @@ class AnimalController extends AbstractController
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
-            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 

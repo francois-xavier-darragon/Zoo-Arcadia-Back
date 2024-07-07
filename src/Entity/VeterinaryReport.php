@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\VeterinaryReportRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VeterinaryReportRepository::class)]
@@ -27,6 +28,10 @@ class VeterinaryReport
     #[ORM\ManyToOne(inversedBy: 'veterinaryReports')]
     private ?Animal $animal = null;
 
+    public function __construct() {
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+    }
     public function getId(): ?int
     {
         return $this->id;

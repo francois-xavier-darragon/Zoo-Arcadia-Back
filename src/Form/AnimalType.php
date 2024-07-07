@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Animal;
 use App\Entity\Breed;
+use App\Entity\Habitat;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -46,19 +47,19 @@ class AnimalType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
-            ->add('breed', EntityType::class, [
-                'label' => 'Race',
-                'class'=> Breed::class,
-                'choice_label' => 'name',
+            ->add('addbreed', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Ajouter une race',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
                 ],
                 'attr' => [
                     'class' => 'form-control form-control-solid',
-                    'data-placeholder' => 'Choisir une race existante'
-                ],
+                ]
             ])
             ->add('veterinaryReports', TextareaType::class, [
+                'mapped' => false,
                 'label' => 'Rapport vétérinaire',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
@@ -67,7 +68,8 @@ class AnimalType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
-            ->add('habitat', TextType::class, [
+            ->add('habitat', EntityType::class, [
+                'class'=> Habitat::class,
                 'required' => true,
                 'label' => 'habitat',
                 'label_attr' => [
@@ -78,12 +80,31 @@ class AnimalType extends AbstractType
                 ]
             ])
         ;
+
+        $countBreeds = $options['countBreeds'];
+        if(!$countBreeds){
+        $builder
+            ->add('breed', EntityType::class, [
+                    'label' => 'Race',
+                    'class'=> Breed::class,
+                    'choice_label' => 'name',
+                    'label_attr' => [
+                        'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
+                    ],
+                    'attr' => [
+                        'class' => 'form-control form-control-solid',
+                        'data-placeholder' => 'Choisir une race existante'
+                    ],
+                ]
+            );
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Animal::class,
+            'countBreeds' => false,
         ]);
     }
 }

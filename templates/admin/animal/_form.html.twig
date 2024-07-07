@@ -1,9 +1,29 @@
 {# {% set uploaderHelper = user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png')%} #}
 
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <div class="mt-4 d-flex justify-content-between">
+ {{ form_row(form.images) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.health) }}
+
+        <button id="addBreedBtn" type="button" class="btn btn-secondary mt-4 mb-3 me-3" onclick="addBreed()">Ajouter une nouvelle race</button>
+        <div id="addBreedField" style="display: none;">
+            {{ form_row(form.addbreed) }}
+        </div>
+
+        {% if countBreeds != true %}
+            <button id="selectBreedBtn" type="button" class="btn btn-secondary mt-4 mb-3" onclick="selectBreed()">Sélectionner une race éxistante</button>
+            <div id="selectBreedFields" style="display: none;">
+                {{ form_row(form.breed) }}
+            </div>
+        {% endif %}
+        
+        {{ form_row(form.veterinaryReports) }}
+        {{ form_row(form.habitat) }}
+
+        
+        <div class="mt-4 d-flex justify-content-between">
         <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
+
         {% if mode == 'Ajouter' %} 
             <button class="btn btn-primary" title="Valider">Valider</button>
         {% elseif mode == "Modifier" %}

@@ -28,7 +28,6 @@ class Service
 
     public function __construct()
     {
-
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
         $this->setDeletedAt(null);
