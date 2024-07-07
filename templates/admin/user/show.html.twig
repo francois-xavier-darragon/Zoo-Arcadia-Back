@@ -8,7 +8,7 @@
         <div class="row m-4 ">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <img src="{{ uploaderHelper.asset(user.avatar, 'userAvatarFile')}}" class="card-img-top" alt="User Image" style="width: 200px; height: 200px;">
+                    <img src="{{ user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" class="card-img-top" alt="User-Image" style="width: 200px; height: 200px;">
                     <div class="card-body text-start mb-2">
                         <a class="text-secondary" title="Editer" href="{{ path('app_admin_user_edit', {'id': user.id}) }}">
                             {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}

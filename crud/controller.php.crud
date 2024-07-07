@@ -16,7 +16,7 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 class {{ ENTITY_NAME }}Controller extends AbstractController
 {
     #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
-    public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         ${{ VARIABLE_NAME }}s = ${{ VARIABLE_NAME }}Repository->findAll{{ VARIABLE_NAME }}();
         $csrfTokens = [];
@@ -29,12 +29,11 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
             '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
             'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
-            'uploaderHelper' => $uploaderHelper
         ]);
     }
 
     #[Route('/new', name: 'app_admin_{{ VARIABLE_NAME }}_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, UploaderHelper $uploaderHelper): Response
+    public function new(Request $request, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
     {
         ${{ VARIABLE_NAME }} = new {{ ENTITY_NAME }}();
         $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
@@ -50,12 +49,11 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
             'form' => $form,
             'mode' => 'Ajouter',
-            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
     #[Route('/{id}', name: 'app_admin_{{ VARIABLE_NAME }}_show', methods: ['GET'])]
-    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
@@ -63,12 +61,11 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
             'csrf_token'  => $csrfToken,
             '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
             'delete_btn' => true,
-            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
 
@@ -87,7 +84,6 @@ class {{ ENTITY_NAME }}Controller extends AbstractController
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
-            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 

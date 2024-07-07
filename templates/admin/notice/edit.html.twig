@@ -9,13 +9,13 @@
                     <h1 class=" mb-4">{{mode}}</h1>
                         {{ include('admin/notice/_form.html.twig') }}
                     {% else %}   
-                      <div class="d-flex mb-4">
+                    <div class="d-flex mb-4">
                         <h1 class="me-4">{{mode}}</h1>
                         <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-notice') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
-                        {{ include('admin/notice/_form.html.twig', {'button_label': "form.detail.update"|trans|raw , 'delete_btn': true }) }}
                     </div> 
+                    {{ include('admin/notice/_form.html.twig', {'delete_btn': true }) }}
                     {% endif %}
                 </div>
             </div>
