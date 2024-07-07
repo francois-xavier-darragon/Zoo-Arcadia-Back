@@ -8,7 +8,7 @@
         <div class="row m-4 ">
             <div class="col-md-6">
                 <div class="card mb-4">
-                    <img src="" class="card-img-top" alt="animal Image">
+                    {# <img src="" class="card-img-top" alt="animal Image"> #}
                     <div class="card-body text-start mb-2">
                         <a class="text-secondary" title="Editer" href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
                             {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
@@ -23,19 +23,19 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">firstName</div>
-                            <div class="col-8">{{ animal.firstName }}</div>
+                            <div class="col-4 font-weight-bold">Nom</div>
+                            <div class="col-8">{{ animal.name }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">health</div>
+                            <div class="col-4 font-weight-bold">Santé</div>
                             <div class="col-8">{{ animal.health }}</div>
                         </div>
                         <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">veterinaryReports</div>
-                            <div class="col-8">{{ animal.veterinaryReports }}</div>
+                            <div class="col-4 font-weight-bold">Rapport vétérinaire</div>
+                            {# <div class="col-8">{{ animal.veterinaryReports }}</div> #}
                         </div>
                         <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">breed</div>
+                            <div class="col-4 font-weight-bold">Race</div>
                             <div class="col-8">{{ animal.breed }}</div>
                         </div>
                         {# <div class="row mb-2">
@@ -49,6 +49,12 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6"> 
+                {% for image in animal.images %}
+                    <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt="User-Image" style="width: 200px; height: 200px;">
+                {% endfor %}
+            </div>    
+
         </div>
     </div>
 

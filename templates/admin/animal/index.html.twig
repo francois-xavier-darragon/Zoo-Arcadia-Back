@@ -3,13 +3,13 @@
 <div class='row mt-5 mb-5'>
     <div class='col-sm-12'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
-            <h1>Liste des Animals</h1>
+            <h1>Liste des Animaux</h1>
             <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_animal_new') }}" title="Ajouter un animal">Ajouter un animal</a>
         </div>
         <table class="table custom-table">
             <thead>
                 <tr>
-                {# <th class="text-start">images</th> #}
+                <th class="text-start">images</th>
                 <th class="text-center">Nom</th>
                 <th class="text-center">Etat de santé</th>
                 <th class="text-center">Race</th>
@@ -20,7 +20,9 @@
             <tbody>
             {% for animal in animals %}
                 <tr>
-                    {# <td class="text-start">{{ animal.images }}</td> #}
+                    <td class="text-start">
+                        <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="50" height="50">
+                    </td>
                     <td class="text-center">{{ animal.name }}</td>
                     <td class="text-center">{{ animal.health }}</td>
                     <td class="text-center">{{ animal.breed }}</td>

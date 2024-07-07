@@ -17,8 +17,8 @@ class AnimalFileType extends AbstractType
         $builder
             ->add("animalFile", VichImageType::class, [
                 "required" => false,
-                "label" => "Avatar",
-                "help" => "Fichiers autorisés: PNG, JPG, JPEG. Dimensions: 500x500. Taille max: 8MB.",
+                "label" => "Images",
+                "help" => "Fichiers autorisés: PNG, JPG, JPEG. Dimensions: 750x500. Taille max: 8MB.",
                 "attr" => [
                     "accept" => ".png, .jpg, .jpeg",
                     "class"  => "p-0",
@@ -28,8 +28,8 @@ class AnimalFileType extends AbstractType
                 ],
                 "constraints" => [
                     new Assert\Image([
-                        "minWidth" => 500,
-                        "maxWidth" => 500,
+                        "minWidth" => 750,
+                        "maxWidth" => 750,
                         "minHeight" => 500,
                         "maxHeight" => 500,
                         "maxSizeMessage" => "L'image doit respecter les dimensions suivantes : 500x500.",
