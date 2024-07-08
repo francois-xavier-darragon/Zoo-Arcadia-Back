@@ -12,6 +12,7 @@ use App\Repository\AnimalRepository;
 use App\Repository\BreedRepository;
 use App\Repository\ImageRepository;
 use App\Repository\VeterinaryReportRepository;
+use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -56,15 +57,6 @@ class AnimalController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // if($formImageData != null){
-            //     $image = new Image;
-            //     $formImageData = $form->get('image')->getData()->getAnimalFile();
-            //     $image->setAnimalFile($formImageData);
-               
-            //     $imageRepository->saveImage($image, true);
-            //     $animal->addImage($image);
-            // }
-
             $formBreddData = $form->get('addbreed')->getData();
 
             if($formBreddData != null){
@@ -93,7 +85,6 @@ class AnimalController extends AbstractController
             'form' => $form,
             'mode' => 'Ajouter',
             'countBreeds' => $countBreeds,
-            'existingImages' => null
         ]);
     }
 
@@ -119,16 +110,24 @@ class AnimalController extends AbstractController
         $images = $animal->getImages();
 
         $existingImages = [];
+
+        $reflectionClass = new \ReflectionClass($animal);
+
+        $entitiName = strtolower($reflectionClass->getShortName()).'s';
         foreach ($images as $image) {
+
+            $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
             $existingImages[] = [
-                'id' => $image->getId()
+                'id' => $image->getId(),
+                'path' => $path 
             ];
         }
-        
+      
         $form = $this->createForm(AnimalType::class, $animal, [
             'countBreeds' => $countBreeds
         ]);
 
+       
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -173,7 +172,7 @@ class AnimalController extends AbstractController
             'delete_btn' => true,
             'countBreeds' => $countBreeds,
             'uploaderHelper' => $uploaderHelper,
-            'existingImages' => $existingImages
+            'existingImages' => json_encode($existingImages)
         ]);
     }
 

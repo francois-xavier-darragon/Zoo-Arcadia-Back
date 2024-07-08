@@ -3,35 +3,16 @@
 {% set style = "width: 187px; height: 125px;" %}
 
 {{ form_start(form) }}
-<div>
-    <div class="row">
-        {# <div class="col-3">
-             {% include '_include/_components/_forms/_image-upload-input.html.twig' with {
-                input: form.image,
-                inputFile: form.image.animalFile,
-                removeFile: form.image.animalFile,
-                label: form.image,
-                editButtonId: 'edit-image-button',
-                removeButtonId: 'remove-image-button',
-                uploaderHelper : uploaderHelper,
-                baliseImg : 'balise-img', 
-                style : style
-            } %} 
-        </div>  
-        <div class="col-9">
-            <div class="d-flex flex-wrap align-items-center" id="image-fields-list"></div>
-        </div> #}
-        <div class="row" id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
-            {% for key, image in form.images %}
-                <img src="{{ uploaderHelper }}">
-            {% endfor %}
+    <div>
+        <div class="row">
+            <div class="row" id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
+                {% for key, image in form.images %}
+                {% endfor %}
+            </div>
         </div>
+        
+        <button id="add-image-btn" type="button" class="btn btn-secondary mt-4 mb-3 me-3">Ajouter une image</button>
     </div>
-    
-    <button id="add-image-btn" type="button" class="btn btn-secondary mt-4 mb-3 me-3">Ajouter une image</button>
-</div>
-
-
 
     <button id="addBreedBtn" type="button" class="btn btn-secondary mt-4 mb-3 me-3" onclick="addBreed()">Ajouter une nouvelle race</button>
     <div id="addBreedField" style="display: none;">
@@ -83,40 +64,41 @@ document.addEventListener('DOMContentLoaded', function() {
     const imageFieldsList = document.getElementById('image-fields-list');
     let index = imageFieldsList.children.length;
 
-    const defaultImageField = createImageField(index);
-    imageFieldsList.appendChild(defaultImageField);
-    index++;
-
+    let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
+    const defaultImagePath = "{{asset('images/default/default-750x500.png')}}";
+    
     addImageBtn.addEventListener('click', function() {
-        const newImageField = createImageField(index);
+        const newImageField = createImageField(index, defaultImagePath);
         imageFieldsList.appendChild(newImageField);
         index++; 
     });
 
-    //const existingImages = {{ existingImages|json_encode }}
-    //console.log(existingImages)
-    //if(typeof existingImages !== null && existingImages.length > 0) {
-      //  existingImages.forEach(function(image, idx) {
-       //     const imageField = createImageField(index, image.path);
-        //    imageFieldsList.appendChild(imageField);
-          //  index++;
-       // });
-    //}
+    if (existingImages.length > 0) {
+        existingImages.forEach(function(image, idx) {
+            const imagePath = image.path ? image.path : defaultImagePath;
+            const imageField = createImageField(index, imagePath);
+            imageFieldsList.appendChild(imageField);
+            index++;
+        });
+    } else {
+        const defaultImageField = createImageField(index, defaultImagePath);
+        imageFieldsList.appendChild(defaultImageField);
+        index++;
+    }
 
-    function createImageField(index) {
+    function createImageField(index, imagePath) {
         const div = document.createElement('div');
         div.classList.add('col');
 
         const editButtonId = 'edit-image-button-' + index;
         const removeButtonId = 'remove-image-button-' + index;
         const baliseImg = 'balise-Img' + index;
-        const pathDefaut = "{{asset('images/default/default-750x500.png')}}"
 
         div.innerHTML = `
-            <div class="col-lg-8">
-                <div class="row mt-4 position-relative">
+            <div class="col">
+                <div class="mt-4 position-relative">
                     <div class="image-card text-white">
-                        <img src="${pathDefaut}" class="rounded defaut-img" style="width: 187px; height: 125px;" alt="" id="${baliseImg}"/>
+                        <img src="${imagePath}" class="rounded defaut-img" style="width: 187px; height: 125px;" alt="" id="${baliseImg}"/>
                         <p class="titre-image"></p>
                     </div>
                     <div class="position-absolute top-0 start-1 mt-3 me-3">
