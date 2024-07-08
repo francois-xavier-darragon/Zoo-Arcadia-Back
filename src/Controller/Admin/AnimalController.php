@@ -92,7 +92,8 @@ class AnimalController extends AbstractController
             'animal' => $animal,
             'form' => $form,
             'mode' => 'Ajouter',
-            'countBreeds' => $countBreeds
+            'countBreeds' => $countBreeds,
+            'existingImages' => null
         ]);
     }
 
@@ -115,7 +116,15 @@ class AnimalController extends AbstractController
 
         $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
+        $images = $animal->getImages();
 
+        $existingImages = [];
+        foreach ($images as $image) {
+            $existingImages[] = [
+                'id' => $image->getId()
+            ];
+        }
+        
         $form = $this->createForm(AnimalType::class, $animal, [
             'countBreeds' => $countBreeds
         ]);
@@ -164,6 +173,7 @@ class AnimalController extends AbstractController
             'delete_btn' => true,
             'countBreeds' => $countBreeds,
             'uploaderHelper' => $uploaderHelper,
+            'existingImages' => $existingImages
         ]);
     }
 
