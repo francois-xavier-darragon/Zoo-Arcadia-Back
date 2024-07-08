@@ -1,5 +1,5 @@
 {% set uploaderHelper = user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png')%}
-
+{% set style = null %}
 <div>
 {{ form_start(form) }}
     <div>
@@ -11,7 +11,8 @@
             editButtonId: 'edit-avatar-button',
             removeButtonId: 'remove-avatar-button',
             uploaderHelper : uploaderHelper,
-            baliseImg : 'balise-img'
+            baliseImg : 'balise-img',
+            style : style
         } %}
 
         {{ form_row(form.firstname) }}

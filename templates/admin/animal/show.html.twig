@@ -51,7 +51,7 @@
             </div>
             <div class="col-md-6"> 
                 {% for image in animal.images %}
-                    <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt="User-Image" style="width: 750px; height: 500px;">
+                    <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt="User-Image" style="width: 375px; height: 250px;">
                 {% endfor %}
             </div>    
 

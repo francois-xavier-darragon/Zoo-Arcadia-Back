@@ -19,9 +19,21 @@ class AnimalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('image', AnimalFileType::class ,[
-                'mapped' => false,
+            // ->add('image', AnimalFileType::class ,[
+            //     'mapped' => false,
+            //     'label' => false,
+            //     'required' => false,
+            //     'label_attr' => [
+            //         'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
+            //     ],
+            // ])
+            ->add('images', CollectionType::class ,[
+                'entry_type' => AnimalFileType::class,
                 'label' => false,
+                'allow_add' => true,
+                // 'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
                 'required' => false,
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
