@@ -132,16 +132,16 @@ class AnimalController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $newImage = $form->get('image')->getData();
+            //$newImage = $form->get('image')->getData();
 
-            if($newImage != null){
-                $image = new Image;
-                $newImage = $form->get('image')->getData()->getAnimalFile();
-                $image->setAnimalFile($newImage);
+            // if($newImage != null){
+            //     $image = new Image;
+            //     $newImage = $form->get('image')->getData()->getAnimalFile();
+            //     $image->setAnimalFile($newImage);
                
-                $imageRepository->saveImage($image, true);
-                $animal->addImage($image);
-            }
+            //     $imageRepository->saveImage($image, true);
+            //     $animal->addImage($image);
+            // }
 
             $formBreddData = $form->get('addbreed')->getData();
 

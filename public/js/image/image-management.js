@@ -1,5 +1,5 @@
 
-function btnDnone(btnToHide) {
+export function btnDnone(btnToHide) {
     document.addEventListener('DOMContentLoaded', function() {
         if (btnToHide) {
             btnToHide.classList.add('d-none');
@@ -7,7 +7,7 @@ function btnDnone(btnToHide) {
     });
 }
 
-function newImage(btnEdit){
+export function newImage(btnEdit){
     btnEdit.addEventListener('change', function(event) {
         const file = event.target.files[0];
         
@@ -18,7 +18,7 @@ function newImage(btnEdit){
     });
 }
 
-function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
+export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
     removeButton.addEventListener("click", function() {
         fetch(url, {
             method: 'POST',
