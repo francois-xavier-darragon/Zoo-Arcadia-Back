@@ -29,10 +29,15 @@
 {% endblock %}
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('js/breed/breed.js') }}"></script>
-<script src="{{ asset('js/image/add-image-fiedls.js') }}"></script>
-{# <script>
-   const pathDefaut = "{{asset('images/default/default-750x500.png')}}"
-   addImgeFilds(pathDefaut) 
-</script> #}
+    <script src="{{ asset('js/breed/breed.js') }}"></script>
+    <script src="{{ asset('js/image/add-image-fiedls.js') }}"></script>
+    <script>
+        let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
+        const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
+        const divSelected = document.getElementById('animal_images')
+        const entityName = 'Animal';
+        const filedsName = 'animalFile';
+
+        addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) 
+    </script>
 {% endblock %}

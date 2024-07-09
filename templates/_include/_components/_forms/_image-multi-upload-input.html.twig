@@ -1,13 +1,10 @@
-<div class="col">
-    <div class="mt-4 position-relative">
-        <div class="image-card text-white">
-            <img src="" class="rounded defaut-img" style="width: 187px; height: 125px;" alt="" id=""/>
-            <p class="titre-image"></p>
-        </div>
-        <div class="position-absolute top-0 start-1 mt-3 me-3">
+<div class="image-card text-white">
+    <div class="d-flex">
+        <img src="" class="rounded defaut-img" style="width: 187px; height: 125px;" alt="" id=""/>
+        <div class="button-container ms-auto">
             <label class="btn btn-outline-light" id="">
                 {% include '_include/_components/_icons/_edit_image_icon_svg.html.twig' %}
-                <input type="file" name="${imageSelected}" class="custom-file-input">
+                <input type="file" name="" class="custom-file-input">
             </label>
             <button type="button" class="btn btn-outline-light" id="">
                 {% include '_include/_components/_icons/_delete_image_con_svg.html.twig' %}

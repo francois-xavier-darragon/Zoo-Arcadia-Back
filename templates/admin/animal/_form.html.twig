@@ -1,15 +1,14 @@
 
-{% set uploaderHelper = animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default-750x500.png') %}
-{% set style = "width: 187px; height: 125px;" %}
-
 {{ form_start(form) }}
     <div>
-        <div class="row">
-            <div class="row" id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
-            </div>
+        <button id="add-image-btn" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image</button>
+
+        <div id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
         </div>
-        
-        <button id="add-image-btn" type="button" class="btn btn-secondary mt-4 mb-3 me-3">Ajouter une image</button>
+        <div class="d-flex text-danger mt-3 d-none" id="image-error-bloc">
+            {% include '_include/_components/_icons/_help_icon_svg.html.twig' %}
+            <div id="image-error-message" class="text-danger ms-2"></div>
+        </div>
     </div>
 
     <button id="addBreedBtn" type="button" class="btn btn-secondary mt-4 mb-3 me-3" onclick="addBreed()">Ajouter une nouvelle race</button>
@@ -27,7 +26,6 @@
     {{ form_row(form.habitat) }}
     {{ form_row(form.name) }}
     {{ form_row(form.health) }}
-
     {{ form_row(form.veterinaryReports) }}
    
     <div class="mt-4 d-flex justify-content-between">
@@ -58,57 +56,3 @@
         {% include '/admin/animal/_delete_modal.html.twig' with {'path_form' : path('app_admin_animal_delete', {'id': animal.id}), 'csrf_token': csrf_token, 'animal': animal } %}
     {% endif %}
 </div>
-
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    const addImageBtn = document.getElementById('add-image-btn');
-    const imageFieldsList = document.getElementById('image-fields-list');
-    let index = imageFieldsList.children.length;
-
-    let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
-    const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
-    const template = document.getElementById('image-field-template')
-
-    addImageBtn.addEventListener('click', function() {
-        const newImageField = createImageField(index, defaultImagePath);
-        imageFieldsList.appendChild(newImageField);
-        index++;
-    });
-
-    if (existingImages.length > 0) {
-        existingImages.forEach(function(image, idx) {
-            const imagePath = image.path ? image.path : defaultImagePath;
-            const imageField = createImageField(idx, imagePath);
-            imageFieldsList.appendChild(imageField);
-        });
-    } else {
-        const defaultImageField = createImageField(index, defaultImagePath);
-        imageFieldsList.appendChild(defaultImageField);
-        index++;
-    }
-
-    function createImageField(index, imagePath) {
-        const clone = template.content.cloneNode(true);
-
-        const img = clone.querySelector('img');
-        const input = clone.querySelector('input[type="file"]');
-        const label = clone.querySelector('label');
-        const button = clone.querySelector('button');
-
-        img.src = imagePath;
-        img.id = `balise-Img-${index}`;
-        input.name = `animal[images][${index}][animalFile]`;
-        label.setAttribute('id', `edit-image-button-${index}`);
-        button.setAttribute('id', `remove-image-button-${index}`);
-
-        const animalDiv = document.getElementById(`animal_images`)
-        if(animalDiv) {
-            animalDiv.classList.add('d-none');
-        }
-
-        return clone;
-    }
-});
-
-</script>

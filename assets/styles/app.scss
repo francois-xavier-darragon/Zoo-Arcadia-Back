@@ -95,3 +95,23 @@ p {
     content: 'Choisir un fichier';
 }
 
+#image-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; 
+}
+
+.image-card {
+    position: relative;
+    width: 187px;
+    height: 125px;
+}
+
+.button-container {
+    position: absolute;
+    right: 0;
+}
+
+.bi-exclamation-circle {
+    margin-top: 5px;
+}
