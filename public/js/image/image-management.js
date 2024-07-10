@@ -1,24 +1,38 @@
 
-function btnDnone(btnToHide) {
-    document.addEventListener('DOMContentLoaded', function() {
+export function btnDnone(btnToHide) {
+    function hideButton() {
         if (btnToHide) {
             btnToHide.classList.add('d-none');
         }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideButton);
+    } else {
+        hideButton();
+    }
 }
 
-function newImage(btnEdit){
+export function newImage(btnEdit, imgElement){
+   
     btnEdit.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            document.querySelector('.image-card img').src = imageUrl;
+        const files = event.target.files;
+
+        if (files.length > 0) {
+            const imageContainer = document.querySelector('.image-container'); 
+            console.log(imageContainer)
+            imageContainer.innerHTML = '';
+
+            Array.from(files).forEach(file => {
+                const imageUrl = URL.createObjectURL(file);
+                //document.querySelector('.image-card img').src = imageUrl;
+                imgElement.src = imageUrl; 
+            });
         }
     });
 }
 
-function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
+export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
     removeButton.addEventListener("click", function() {
         fetch(url, {
             method: 'POST',

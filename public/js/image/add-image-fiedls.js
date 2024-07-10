@@ -1,4 +1,6 @@
-function addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) {
+import { btnDnone, newImage, removeExistingImage } from './image-management.js';
+
+export function addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName) {
     document.addEventListener('DOMContentLoaded', function() {
         const addImageBtn = document.getElementById('add-image-btn');
         const imageFieldsList = document.getElementById('image-fields-list');
@@ -10,9 +12,13 @@ function addImgeFilds(existingImages, defaultImagePath, divSelected, entityName,
         const maxImages = 8
     
         let currentImageCount = existingImages.length;
+
+        if (currentImageCount > 0) {
+           index = currentImageCount;
+        }
     
         addImageBtn.addEventListener('click', function() {
-             if (currentImageCount + index < maxImages) {
+             if (index < maxImages) {
                 const newImageField = createImageField(index, defaultImagePath);
                 imageFieldsList.appendChild(newImageField);
                 index++;
@@ -24,7 +30,7 @@ function addImgeFilds(existingImages, defaultImagePath, divSelected, entityName,
             }
         });
     
-        if (existingImages.length > 0) {
+        if (currentImageCount > 0) {
             existingImages.forEach(function(image, idx) {
                 const imagePath = image.path ? image.path : defaultImagePath;
                 const imageField = createImageField(idx, imagePath);
@@ -49,13 +55,27 @@ function addImgeFilds(existingImages, defaultImagePath, divSelected, entityName,
             input.name = `${entityName}[images][${index}][${filedsName}]`;
             label.setAttribute('id', `edit-image-button-${index}`);
             button.setAttribute('id', `remove-image-button-${index}`);
-    
+            
+            const btnTrash = clone.getElementById(`remove-image-button-${index}`);
+            const btnEdit = clone.getElementById(`edit-image-button-${index}`);
+            newImage(btnEdit, img)
+
+            if(entityId === null ){
+                btnDnone(btnTrash)
+            } else if(index < existingImages.length ) {
+                btnDnone(btnEdit)
+            } else if(index >= existingImages.length) {
+                btnDnone(btnTrash)
+            }
+         
             if(divSelected) {
                 divSelected.classList.add('d-none');
             }
-            
+
             return clone;
         }
     });
 }
+
+
 
