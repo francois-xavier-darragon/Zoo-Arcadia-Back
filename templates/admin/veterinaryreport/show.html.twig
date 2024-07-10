@@ -23,16 +23,16 @@
                 <div class="card mb-4">
                     <div class="card-body">
                                     <div class="row mb-2">
-                <div class="col-4 font-weight-bold">detail</div>
-                <div class="col-8">{{ veterinaryreport.detail }}</div>
-            </div>
-            <div class="row mb-2">
                 <div class="col-4 font-weight-bold">user</div>
                 <div class="col-8">{{ veterinaryreport.user }}</div>
             </div>
             <div class="row mb-2">
                 <div class="col-4 font-weight-bold">animal</div>
                 <div class="col-8">{{ veterinaryreport.animal }}</div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-4 font-weight-bold">detail</div>
+                <div class="col-8">{{ veterinaryreport.detail }}</div>
             </div>
             <div class="row mb-2">
                 <div class="col-4 font-weight-bold">createdAt</div>
@@ -57,7 +57,7 @@
     </div>
 
     {% if delete_btn is defined %}
-        {% include '/admin/veterinaryreport/_delete_modal.html.twig' with {'path_form' : path('app_admin_veterinaryreport_delete', {'id': veterinaryreport.id}), 'csrf_token': csrf_token, 'veterinaryreport': veterinaryreport } %}
+        {# {% include '/admin/veterinaryreport/_delete_modal.html.twig' with {'path_form' : path('app_admin_veterinaryreport_delete', {'id': veterinaryreport.id}), 'csrf_token': csrf_token, 'veterinaryreport': veterinaryreport } %} #}
     {% endif %}
 
 {% endblock %}

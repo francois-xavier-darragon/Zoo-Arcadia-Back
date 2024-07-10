@@ -87,23 +87,23 @@ class VeterinaryReportController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
-    public function delete(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository): Response
-    {
-        if($veterinaryreport->getDeletedAt()){
-            return $this->redirectToRoute('app_admin_veterinaryreport_index');
-        }
+    // #[Route('/{id}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
+    // public function delete(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository): Response
+    // {
+    //     if($veterinaryreport->getDeletedAt()){
+    //         return $this->redirectToRoute('app_admin_veterinaryreport_index');
+    //     }
 
-        $submittedToken = $request->request->get('token');
+    //     $submittedToken = $request->request->get('token');
         
-        if ($this->isCsrfTokenValid('delete-veterinaryreport'.$veterinaryreport->getId(), $submittedToken)) {
-            $veterinaryreportRepository->removeVeterinaryReport($veterinaryreport, true);
+    //     if ($this->isCsrfTokenValid('delete-veterinaryreport'.$veterinaryreport->getId(), $submittedToken)) {
+    //         $veterinaryreportRepository->removeVeterinaryReport($veterinaryreport, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$veterinaryreport->getName().'" a été supprimé avec succès.');
-            return $this->redirectToRoute('app_admin_veterinaryreport_index');
-        }
+    //         $this->addFlash('success', 'Le utilisateur "'.$veterinaryreport->getName().'" a été supprimé avec succès.');
+    //         return $this->redirectToRoute('app_admin_veterinaryreport_index');
+    //     }
 
-        $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet veterinaryreport, veuillez réessayer.');
-        return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
-    }
+    //     $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet veterinaryreport, veuillez réessayer.');
+    //     return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
+    // }
 }

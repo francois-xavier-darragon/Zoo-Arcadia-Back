@@ -9,26 +9,22 @@
         <table class="table custom-table">
             <thead>
                 <tr>
-                                    <th class="text-center">detail</th>
-                <th class="text-center">user</th>
+                                    <th class="text-center">user</th>
                 <th class="text-center">animal</th>
+                <th class="text-center">detail</th>
                 <th class="text-center">createdAt</th>
                 <th class="text-center">updatedAt</th>
                 <th class="text-center">deletedAt</th>
-                <th class="text-center">deleted</th>
-                    <th class="text-end">actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for veterinaryreport in veterinaryreports %}
                 <tr>
-                                    <td class="text-center">{{ veterinaryreport.detail }}</td>
-                <td class="text-center">{{ veterinaryreport.user }}</td>
-                <td class="text-center">{{ veterinaryreport.animal }}</td>
-                <td class="text-center">{{ veterinaryreport.createdAt }}</td>
-                <td class="text-center">{{ veterinaryreport.updatedAt }}</td>
-                <td class="text-center">{{ veterinaryreport.deletedAt }}</td>
-                <td class="text-center">{{ veterinaryreport.deleted }}</td>
+                                    <td class="text-center">{{ veterinaryreport.user }}</td>
+                {# <td class="text-center">{{ veterinaryreport.animal }}</td> #}
+                <td class="text-center">{{ veterinaryreport.detail }}</td>
+                {# <td class="text-center">{{ veterinaryreport.createdAt }}</td>
+                <td class="text-center">{{ veterinaryreport.updatedAt }}</td> #}
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_veterinaryreport_show', {'id': veterinaryreport.id}) }}" title="voir">
                             {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
@@ -36,14 +32,14 @@
                         <a type='button' class='text-secondary me-2' href="{{ path('app_admin_veterinaryreport_edit', {'id': veterinaryreport.id}) }}" title="éditer">
                             {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                         </a>
-                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[veterinaryreport.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[veterinaryreport.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ veterinaryreport.id }}" title="Supprimer">
                              {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </td>
                 </tr>
 
                 {% if delete_btn is defined %}
-                    {% include '/admin/veterinaryreport/_delete_modal.html.twig' with {'path_form' : path('app_admin_veterinaryreport_delete', {'id': veterinaryreport.id}), 'csrf_tokens': csrf_tokens[veterinaryreport.id], 'veterinaryreport': veterinaryreport } %}
+                    {# {% include '/admin/veterinaryreport/_delete_modal.html.twig' with {'path_form' : path('app_admin_veterinaryreport_delete', {'id': veterinaryreport.id}), 'csrf_tokens': csrf_tokens[veterinaryreport.id], 'veterinaryreport': veterinaryreport } %} #}
                 {% endif %}
 
             {% endfor %}

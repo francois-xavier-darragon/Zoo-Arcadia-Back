@@ -19,7 +19,7 @@ class VeterinaryReport
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255)]
     private ?string $detail = null;
 
     #[ORM\ManyToOne(inversedBy: 'veterinaryReports')]
@@ -32,6 +32,7 @@ class VeterinaryReport
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -61,12 +62,12 @@ class VeterinaryReport
         return $this;
     }
 
-    public function getDetail(): ?string
+    public function getDetail(): string
     {
         return $this->detail;
     }
 
-    public function setDetail(?string $detail): static
+    public function setDetail(string $detail): static
     {
         $this->detail = $detail;
 

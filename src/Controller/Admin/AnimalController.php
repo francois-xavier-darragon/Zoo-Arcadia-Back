@@ -44,14 +44,15 @@ class AnimalController extends AbstractController
     #[Route('/new', name: 'app_admin_animal_new', methods: ['GET', 'POST'])]
     public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository, TokenStorageInterface $tokenStorage, VeterinaryReportRepository $veterinaryReportRepository): Response
     {
-        // $roles = $this->getVeterinaryRole($tokenStorage);
-
+        $roles = $this->getRole($tokenStorage);
+        
         $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
        
         $animal = new Animal();
         $form = $this->createForm(AnimalType::class, $animal, [
-            'countBreeds' => $countBreeds
+            'countBreeds' => $countBreeds,
+            'roles' => $roles
         ]);
 
         $form->handleRequest($request);
@@ -69,13 +70,14 @@ class AnimalController extends AbstractController
             
             }
 
-            $newVeterinaryReports = $form->get('veterinaryReports')->getData();
-            $veterinaryReport = new veterinaryReport();
-            $veterinaryReport->setDetail($newVeterinaryReports);
-
-            $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
-            $animal->addVeterinaryReport($veterinaryReport);
-
+            if(in_array('ROLE_VETERINARY',$roles)) {
+                $newVeterinaryReports = $form->get('veterinaryReports')->getData();
+                $veterinaryReport = new veterinaryReport();
+                $veterinaryReport->setDetail($newVeterinaryReports);
+                $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
+                $animal->addVeterinaryReport($veterinaryReport);
+            }
+                
             $animalRepository->saveAnimal($animal, true);
 
             return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
@@ -102,9 +104,10 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_animal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
+        $roles = $this->getRole($tokenStorage);
 
         $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
@@ -125,7 +128,8 @@ class AnimalController extends AbstractController
         }
       
         $form = $this->createForm(AnimalType::class, $animal, [
-            'countBreeds' => $countBreeds
+            'countBreeds' => $countBreeds,
+            'roles' => $roles
         ]);
 
        
@@ -142,12 +146,13 @@ class AnimalController extends AbstractController
                 $animal->setBreed($breed);
             }
 
-            $newVeterinaryReports = $form->get('veterinaryReports')->getData();
-            $veterinaryReport = new veterinaryReport();
-            $veterinaryReport->setDetail($newVeterinaryReports);
-
-            $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
-            $animal->addVeterinaryReport($veterinaryReport);
+            if(in_array('ROLE_VETERINARY',$roles)) {
+                $newVeterinaryReports = $form->get('veterinaryReports')->getData();
+                $veterinaryReport = new veterinaryReport();
+                $veterinaryReport->setDetail($newVeterinaryReports);
+                $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
+                $animal->addVeterinaryReport($veterinaryReport);
+            }
 
             $animalRepository->saveAnimal($animal, true);
 
@@ -236,19 +241,18 @@ class AnimalController extends AbstractController
         return new JsonResponse(['status' => 'success'], 200);
     }
 
-    // public function getVeterinaryRole($tokenStorage) {
-    //     $role = [];
-    //     $token = $tokenStorage->getToken();
+    public function getRole($tokenStorage) {
+        $roles = null;
+        $token = $tokenStorage->getToken();
+        
+        if ($token != null) {
 
-    //     if ($token !== null) {
+            $user = $token->getUser();
 
-    //         $user = $token->getUser();
-
-    //         if ($user instanceof UserInterface) {
-    //             $roles[] = $user->getRoles();
-    //         }
-    //     }
-    //     return $role;
-    // }
-
+            if ($user instanceof UserInterface) {
+                $roles = $user->getRoles();
+            }
+        }
+        return $roles;
+    }
 }

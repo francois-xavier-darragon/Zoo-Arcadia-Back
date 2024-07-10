@@ -51,10 +51,10 @@ class Animal
 
     public function __construct()
     {
-        $this->veterinaryReports = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
+        $this->health = 'En attente du rapport Vétérinaire';
     }
 
     public function getId(): ?int

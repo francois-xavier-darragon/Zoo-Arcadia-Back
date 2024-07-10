@@ -73,8 +73,9 @@ p {
     position: relative
 }
 
-.custom-table, .custom-card {
-    border: 3px solid $secondary;     
+.custom-border{
+    border: 3px solid $secondary;
+    border-radius: 20px;     
     box-shadow: 0 8px 30px $dark;
 }
 

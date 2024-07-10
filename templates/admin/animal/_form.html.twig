@@ -29,9 +29,12 @@
 
     {{ form_row(form.habitat) }}
     {{ form_row(form.name) }}
-    {{ form_row(form.health) }}
-    {{ form_row(form.veterinaryReports) }}
-   
+    
+    {% if form.health is defined %}
+        {{ form_row(form.health) }}
+        {{ form_row(form.veterinaryReports) }}
+    {% endif %}
+    
     <div class="mt-4 d-flex justify-content-between">
     <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
 

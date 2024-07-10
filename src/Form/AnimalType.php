@@ -19,19 +19,10 @@ class AnimalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            // ->add('image', AnimalFileType::class ,[
-            //     'mapped' => false,
-            //     'label' => false,
-            //     'required' => false,
-            //     'label_attr' => [
-            //         'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
-            //     ],
-            // ])
             ->add('images', CollectionType::class ,[
                 'entry_type' => AnimalFileType::class,
                 'label' => false,
                 'allow_add' => true,
-                // 'allow_delete' => true,
                 'by_reference' => false,
                 'prototype' => true,
                 'required' => false,
@@ -49,33 +40,12 @@ class AnimalType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
-            ->add('health', TextType::class, [
-                'required' => true,
-                'label' => 'Etat de Santé',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ])
             ->add('addbreed', TextType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Ajouter une race',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ])
-            ->add('veterinaryReports', TextareaType::class, [
-                'mapped' => false,
-                'required' => false,
-                'label' => 'Rapport vétérinaire',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                 ],
                 'attr' => [
                     'class' => 'form-control form-control-solid',
@@ -96,18 +66,44 @@ class AnimalType extends AbstractType
 
         $countBreeds = $options['countBreeds'];
         if(!$countBreeds){
-        $builder
-            ->add('breed', EntityType::class, [
-                    'label' => 'Race',
-                    'class'=> Breed::class,
-                    'choice_label' => 'name',
+            $builder
+                ->add('breed', EntityType::class, [
+                        'label' => 'Race',
+                        'class'=> Breed::class,
+                        'choice_label' => 'name',
+                        'label_attr' => [
+                            'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
+                        ],
+                        'attr' => [
+                            'class' => 'form-control form-control-solid',
+                            'data-placeholder' => 'Choisir une race existante'
+                        ],
+                    ]
+                );
+            }
+
+        if(in_array('ROLE_VETERINARY',$options['roles'])){
+            $builder
+                ->add('health', TextType::class, [
+                    'required' => true,
+                    'label' => 'Etat de Santé',
                     'label_attr' => [
-                        'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
+                        'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                     ],
                     'attr' => [
                         'class' => 'form-control form-control-solid',
-                        'data-placeholder' => 'Choisir une race existante'
+                    ]
+                ])
+                ->add('veterinaryReports', TextareaType::class, [
+                    'mapped' => false,
+                    'required' => false,
+                    'label' => 'Rapport vétérinaire',
+                    'label_attr' => [
+                        'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                     ],
+                    'attr' => [
+                        'class' => 'form-control form-control-solid',
+                    ]
                 ]
             );
         }
@@ -118,6 +114,7 @@ class AnimalType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Animal::class,
             'countBreeds' => false,
+            'roles' => null
         ]);
     }
 }

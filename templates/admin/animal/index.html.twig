@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div class='row mt-5 mb-5'>
-    <div class='col-sm-12'> 
+    <div class='col-sm-12 p-4 custom-border'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
             <h1>Liste des Animaux</h1>
             <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_animal_new') }}" title="Ajouter un animal">Ajouter un animal</a>
         </div>
-        <table class="table custom-table">
+        <table class="table">
             <thead>
                 <tr>
                 <th class="text-start">images</th>
