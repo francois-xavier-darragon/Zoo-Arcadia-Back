@@ -83,7 +83,7 @@ class AnimalType extends AbstractType
             ->add('habitat', EntityType::class, [
                 'class'=> Habitat::class,
                 'required' => true,
-                'label' => 'habitat',
+                'label' => 'Habitat',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                 ],

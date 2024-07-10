@@ -119,7 +119,7 @@ class AnimalController extends AbstractController
             $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
             $existingImages[] = [
                 'id' => $image->getId(),
-                'path' => $path 
+                'path' => $path
             ];
         }
       
@@ -131,17 +131,6 @@ class AnimalController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            //$newImage = $form->get('image')->getData();
-
-            // if($newImage != null){
-            //     $image = new Image;
-            //     $newImage = $form->get('image')->getData()->getAnimalFile();
-            //     $image->setAnimalFile($newImage);
-               
-            //     $imageRepository->saveImage($image, true);
-            //     $animal->addImage($image);
-            // }
 
             $formBreddData = $form->get('addbreed')->getData();
 
@@ -222,17 +211,27 @@ class AnimalController extends AbstractController
         ]);
     }
 
-    // #[Route('/{user}/remove-animal-image', name: 'app_admin_user_remove_avatar', methods: ['POST'])]
-    // public function removeAnimalImage(Animal $animal, AnimalRepository $userRepository, ImageRepository $imageRepository): JsonResponse
-    // {
-    //     $image = $animal->getImages();
-    //     if ($image) {
-    //         $image = $imageRepository->findOneById($animal->getAvatar());
-    //         $animal->addImage(null);
-    //         $userRepository->saveAnimal($animal, true);
-    //         $imageRepository->removeImage($image, true);
-    //         return new JsonResponse(['status' => 'success'], 200);
-    //     }
-    //     return new JsonResponse(['status' => 'error', 'message' => 'No avatar to remove'], 400);
-    // }
+    #[Route('/{animal}/remove-animal-image/', name: 'app_admin_animal_remove_image', methods: ['POST'])]
+    public function removeAnimalImage(Request $request, Animal $animal, AnimalRepository $animalRepository, ImageRepository $imageRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $imageId = ($data['imgId']) ?? null;
+
+        if ($imageId === null) {
+            return new JsonResponse(['status' => 'error', 'message' => 'ID de l\'image manquant'], 400);
+        }
+     
+        $image = $imageRepository->findOneById($imageId);
+
+        if (!$image) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Image non trouvée'], 404);
+        }
+
+        $animal->removeImage($image);
+        $animalRepository->saveAnimal($animal, true);
+
+        $imageRepository->removeImage($image, true);
+
+        return new JsonResponse(['status' => 'success'], 200);
+    }
 }

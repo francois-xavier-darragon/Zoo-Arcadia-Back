@@ -25,7 +25,6 @@ export function newImage(btnEdit, imgElement){
 
             Array.from(files).forEach(file => {
                 const imageUrl = URL.createObjectURL(file);
-                //document.querySelector('.image-card img').src = imageUrl;
                 imgElement.src = imageUrl; 
             });
         }
@@ -34,28 +33,36 @@ export function newImage(btnEdit, imgElement){
 
 export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
     removeButton.addEventListener("click", function() {
+        const imageId = existingImg.dataset.imgId
+        
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            body: JSON.stringify({ id: id })
+            body: JSON.stringify({ id: id, imgId: imageId })
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.status === 'success') {
-                document.querySelector('.image-card img').src = path
-                existingImg
-                btnToHide.classList.remove('d-none');
-                removeButton.classList.add('d-none');
+                //document.querySelector('.image-card img').src = path
+                //existingImg
+                //btnToHide.classList.remove('d-none');
+                //removeButton.classList.add('d-none');
+                
             } else {
                 alert(data.message);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('An error occurred while trying to remove the avatar.');
+            alert('An error occurred while trying to remove the image.');
         });
     });
 

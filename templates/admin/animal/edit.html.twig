@@ -41,6 +41,12 @@
         const entityName = 'animal';
         const filedsName = 'animalFile';
 
-        addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName) 
+        let url
+        {% if animal.id is not null %}
+             url = "{{ path('app_admin_animal_remove_image', { 'animal': animal.id, }) }}";  
+        {% endif %}
+        
+      
+        addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName, url) 
     </script>
 {% endblock %}
