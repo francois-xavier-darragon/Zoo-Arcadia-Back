@@ -22,7 +22,7 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $users = $userRepository->findAllUser();
+        $users = $userRepository->findAllUser(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($users as $user) {
@@ -51,11 +51,17 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            $avatarFile = $form->get('avatar')->getdata();
+
+            if($avatarFile != null) {
+               $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile(); 
+               $user->setAvatar(null);
+            }
+
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
-           
-            $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getdata()));
+          
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainpassword')->get('password')->getdata()));
             $userRepository->saveUser($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
@@ -82,7 +88,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
@@ -90,19 +96,28 @@ class UserController extends AbstractController
             'is_new' => false,
             'is_edit' => true
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile();
+            $avatarFile = $form->get('avatar')->getdata();
 
-            if($avatarFile === null) {
+            if($avatarFile != null) {
+               $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile(); 
                $user->setAvatar(null);
             }
 
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
 
+            $password = $form->get('plainpassword')->get('password')->getdata();
+         
+            if($password != null) {
+                $password = $form->get('plainpassword')->get('password')->getdata();
+                $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainpassword')->get('password')->getdata()));
+            }
+            
             $userRepository->saveUser($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);

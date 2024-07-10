@@ -18,7 +18,7 @@ class NoticeController extends AbstractController
     #[Route('/', name: 'app_admin_notice_index', methods: ['GET'])]
     public function index(NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
-        $notices = $noticeRepository->findAllnotice();
+        $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($notices as $notice) {

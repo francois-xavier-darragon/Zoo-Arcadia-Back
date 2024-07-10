@@ -4,50 +4,73 @@
 
 {% block body %}
   
- <div class="container mt-5 custom-card">
+ <div class="container mt-5 custom-border">
         <div class="row m-4 ">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    <img src="" class="card-img-top" alt="animal Image">
-                    <div class="card-body text-start mb-2">
-                        <a class="text-secondary" title="Editer" href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
-                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
-                        </a>
-                        <a type='button' class="text-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
-                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-                        </a>
-                    </div>
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="">Habitat :</h2>
+            <h2 class="ms-1">{{ animal.habitat }}</h2>
+                <div class="card-body d-flex mb-2">
+                <div class="ms-auto">
+                    <a class="text-secondary me-1" title="Editer" href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
+                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                    </a>
+                    <a type='button' class="text-danger mb-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}" title="Supprimer">
+                        {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                    </a>
                 </div>
             </div>
-             <div class="col-md-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">firstName</div>
-                            <div class="col-8">{{ animal.firstName }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">health</div>
-                            <div class="col-8">{{ animal.health }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">veterinaryReports</div>
-                            <div class="col-8">{{ animal.veterinaryReports }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">breed</div>
-                            <div class="col-8">{{ animal.breed }}</div>
-                        </div>
-                        {# <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">habitat</div>
-                            <div class="col-8">{{ animal.habitat }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-4 font-weight-bold">images</div>
-                            <div class="col-8">{{ animal.images }}</div>
-                        </div> #}
+        </div>
+        <div class="d-flex justify-content-start mb-2">
+            <div class="d-flex mb-2 me-3">
+                <h4 class="">Nom :</h4>
+                <h4 class="ms-1">{{ animal.name }}</h4>
+            </div>
+            <div class="d-flex mb-2">
+                <h4 class="">Race :</h4>
+                <h4 class="ms-1">{{ animal.breed }}</h4>
+            </div>
+        </div>
+        <div class="col-md-12">
+                <div class="card p-4 mb-4">
+                <div class="d-flex flex-column mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3 class="">Rapports vétérinaire :</h3>
+                        <a type="button" class='text-primary' href="{{ path('app_admin_veterinaryreport_new') }}" title="Nouveau rapport vétérinaire">
+                            {% include "_include/_components/_icons/_add_repport_icon_svg.html.twig" %}
+                        </a>
                     </div>
+                    
+                    <div class="d-flex mt-1 mb-2">
+                        <h5 class="">Santé :</h5>
+                        <h5 class="ms-1">{{ animal.health }}</h5>
+                    </div>
+                    {% for veterinaryReport in animal.veterinaryReports  %}
+                        <hr>
+                            <div class="ms-1" >
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y') }}</p> 
+                                    <a class="text-secondary" title="Editer" href="{{ path('app_admin_veterinaryreport_edit', {'id': veterinaryReport.id}) }}"> 
+                                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                                    </a>
+                                </div>
+                                
+                                <p class="text-dark">{{ veterinaryReport.detail }}</p>
+                            </div>
+                            <br> 
+                            <hr>  
+                    {% endfor %}
                 </div>
+            </div>
+        </div>
+            <div class="row">
+                {% for image in animal.images %}
+                    {% if loop.index0 % 3 == 0 %}
+                        </div><div class="row">
+                    {% endif %}
+                    <div class="col-4 mb-3">
+                        <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt="Animal-Image" style="width: 100%; height: auto;">
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>

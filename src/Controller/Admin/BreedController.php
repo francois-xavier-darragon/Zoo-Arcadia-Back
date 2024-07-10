@@ -14,23 +14,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 #[Route('/admin/breeds')]
 class BreedController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_breed_index', methods: ['GET'])]
-    public function index(BreedRepository $breedRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
-        $breeds = $breedRepository->findAllbreed();
-        $csrfTokens = [];
-
-        foreach ($breeds as $breed) {
-            $csrfTokens[$breed->getId()] = $csrfTokenManager->getToken('delete-breed' . $breed->getId())->getValue();
-        }
-
-        return $this->render('admin/breed/index.html.twig', [
-            'breeds' => $breedRepository->findAllBreed(),
-            'csrf_Tokens'    => $csrfTokens,
-            'delete_btn'    => true
-        ]);
-    }
-
     #[Route('/new', name: 'app_admin_breed_new', methods: ['GET', 'POST'])]
     public function new(Request $request, BreedRepository $breedRepository): Response
     {

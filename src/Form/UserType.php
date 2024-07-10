@@ -110,15 +110,6 @@ class UserType extends AbstractType
 
         if($options['is_edit'] === true) {
             $builder
-                // ->add('changepassword',
-                //     ButtonType::class,
-                //     [
-                //     'label' => 'Modifier le mot de passe',
-                //     'attr' => [
-                //         'class' => 'btn btn-primary',
-                //         'onclick' => 'togglePasswordFields()',
-                //     ],
-                // ])
                 ->add('plainpassword',
                     ManagePasswordType::class,
                     [

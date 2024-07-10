@@ -4,15 +4,15 @@
     <div class="row mt-5 mb-5 justify-content-center">
         <div class="col-lg-8">
             <div class="d-flex justify-content-center">
-                <div style="width: 100%;">
+                <div class="custom-border p-4" style="width: 100%;" >
                     {% if mode == 'Ajouter' %}
-                    <h1 class=" mb-4">{{mode}}</h1>
+                        <h1 class=" mb-4">{{mode}}</h1>
                         {{ include('admin/animal/_form.html.twig') }}
                     {% else %}   
                     <div class="d-flex mb-4">
                         <h1 class="me-4">{{mode}}</h1>
-                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-animal') }}" data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
-                            {% include "_include/_components/_icons/delete_icon_svg.html.twig" %}
+                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-animal') }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{animal.id}}" title="Supprimer">
+                            {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </div> 
                      {{ include('admin/animal/_form.html.twig', {'delete_btn': true }) }}
@@ -26,4 +26,40 @@
         {% include '/admin/animal/_delete_modal.html.twig' with {'path_form' : path('app_admin_animal_delete', {'id': animal.id}), 'csrf_token': csrf_token, 'animal': animal } %}
     {% endif %}
 
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+    <script src="{{ asset('js/breed/breed.js') }}"></script>
+    <script>
+        const addBreedField = document.getElementById('addBreedField');
+        const addBreedBtn = document.getElementById('addBreedBtn');
+        const selectBreedFields = document.getElementById('selectBreedFields');
+        const selectBreedBtn = document.getElementById('selectBreedBtn');
+
+        manageBreed(addBreedBtn, addBreedField, selectBreedBtn)
+        
+        if(selectBreedBtn != null) {
+             manageBreed(selectBreedBtn, selectBreedFields, addBreedBtn)
+        }
+
+        manageEditBreed(addBreedBtn, selectBreedFields, addBreedField)
+       
+    </script>
+    <script type="module">
+        import {addImgeFilds} from "/js/image/add-image-fiedls.js";
+
+        const entityId = {{ animal.id ? animal.id|json_encode() : 'null'}}
+        let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
+        const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
+        const divSelected = document.getElementById('animal_images')
+        const entityName = 'animal';
+        const filedsName = 'animalFile';
+
+        let url
+        {% if animal.id is not null %}
+             url = "{{ path('app_admin_animal_remove_image', { 'animal': animal.id, }) }}";  
+        {% endif %}
+        
+        addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName, url) 
+    </script>
 {% endblock %}

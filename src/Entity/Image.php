@@ -51,7 +51,7 @@ class Image
     /**
      * @var Collection<int, Animal>
      */
-    #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'images')]
+    #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'images', cascade: ['persist'])]
     private Collection $animals;
 
     public function __construct()

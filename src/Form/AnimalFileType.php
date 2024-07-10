@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,10 +16,10 @@ class AnimalFileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add("animalFile", VichImageType::class, [
+            ->add("animalFile", FileType::class, [
                 "required" => false,
-                "label" => "Avatar",
-                "help" => "Fichiers autorisés: PNG, JPG, JPEG. Dimensions: 500x500. Taille max: 8MB.",
+                "label" => "Images",
+                "help" => "Fichiers autorisés: PNG, JPG, JPEG. Dimensions: 750x500. Taille max: 2MB.",
                 "attr" => [
                     "accept" => ".png, .jpg, .jpeg",
                     "class"  => "p-0",
@@ -28,8 +29,8 @@ class AnimalFileType extends AbstractType
                 ],
                 "constraints" => [
                     new Assert\Image([
-                        "minWidth" => 500,
-                        "maxWidth" => 500,
+                        "minWidth" => 750,
+                        "maxWidth" => 750,
                         "minHeight" => 500,
                         "maxHeight" => 500,
                         "maxSizeMessage" => "L'image doit respecter les dimensions suivantes : 500x500.",
@@ -40,21 +41,21 @@ class AnimalFileType extends AbstractType
                         "mimeTypesMessage" => "Veuillez joindre un fichier au format JPG, JPEG, PNG.",
                     ]),
                 ],
-                "allow_delete" => true,
-                "download_uri" => false,
-                "image_uri" => false,
-            ])
-            ->add(
-                'removeAnimalFile',
-                HiddenType::class,
-                [
-                    'required' => false,
-                    'mapped'   => false,
-                    'attr' => [
-                        'data-kt-image-input-delete-name' => 'userAvatarFile',
-                    ],
-                ]
-            );
+                // "allow_delete" => true,
+                // "download_uri" => false,
+                // "image_uri" => false,
+            ]);
+            // ->add(
+            //     'removeAnimalFile',
+            //     HiddenType::class,
+            //     [
+            //         'required' => false,
+            //         'mapped'   => false,
+            //         'attr' => [
+            //             'data-kt-image-input-delete-name' => 'userAvatarFile',
+            //         ],
+            //     ]
+            // );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

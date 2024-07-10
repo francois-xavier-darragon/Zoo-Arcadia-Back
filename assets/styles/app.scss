@@ -59,6 +59,7 @@ p {
 }
 
 .btn-gradiant, .btn-primary, .btn-secondary, .btn-danger {
+    box-shadow: 0 8px 10px $dark;
     color:white;
     font-family: $font-family-headline-sans-serif;
 }
@@ -67,12 +68,14 @@ p {
     background: linear-gradient(to right, $secondary, $primary);
 }
 
+
 .dataTables_wrapper {
     position: relative
 }
 
-.custom-table, .custom-card {
-    border: 3px solid $secondary;     
+.custom-border{
+    border: 3px solid $secondary;
+    border-radius: 20px;     
     box-shadow: 0 8px 30px $dark;
 }
 
@@ -93,4 +96,23 @@ p {
     content: 'Choisir un fichier';
 }
 
+#image-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; 
+}
 
+.image-card {
+    position: relative;
+    width: 187px;
+    height: 125px;
+}
+
+.button-container {
+    position: absolute;
+    right: 0;
+}
+
+.bi-exclamation-circle {
+    margin-top: 5px;
+}

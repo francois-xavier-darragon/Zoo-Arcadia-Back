@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\AnimalRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: AnimalRepository::class)]
 class Animal
 {
@@ -38,18 +41,20 @@ class Animal
      * @var Collection<int, VeterinaryReport>
      */
     #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'animal')]
-    private Collection $veterinaryReports;
+    private ?Collection $veterinaryReports = null;
 
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'animals')]
+    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'animals', cascade: ['persist'])]
     private Collection $images;
 
     public function __construct()
     {
-        $this->veterinaryReports = new ArrayCollection();
         $this->images = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
+        $this->updatedAt = new DateTimeImmutable();
+        $this->health = 'En attente du rapport Vétérinaire';
     }
 
     public function getId(): ?int
@@ -84,7 +89,7 @@ class Animal
     /**
      * @return Collection<int, VeterinaryReport>
      */
-    public function getVeterinaryReports(): Collection
+    public function getVeterinaryReports(): ?Collection
     {
         return $this->veterinaryReports;
     }

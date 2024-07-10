@@ -31,10 +31,10 @@
 
 {% block javascripts %}
 {{ parent() }}
-<script src="{{ asset('js/image/image-management.js') }}" ></script>
+{# <script src="{{ asset('js/image/image-management.js') }}" ></script> #}
 <script src="{{ asset('js/password/toggle-password-fields.js') }}" ></script>
 <script> 
-    const userId = {{ user.id ? user.id|json_encode() : 'null'}}
+    {# const userId = {{ user.id ? user.id|json_encode() : 'null'}}
     const btnTrash = document.getElementById('remove-avatar-button');
     const btnEdit = document.getElementById('edit-avatar-button');
 
@@ -58,7 +58,7 @@
         {% endif %}
 
         newImage(btnEdit);
-    } 
+    }  #}
 </script>
 
 {% endblock %}
