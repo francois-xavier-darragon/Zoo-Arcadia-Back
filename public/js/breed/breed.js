@@ -5,7 +5,6 @@ function manageBreed(btn, divForm, btnSelect) {
             divForm.style.display = 'block';
             btn.style.display = 'none';
         } 
-
         if(btnSelect != null) {
             btnSelect.style.display = 'none';
         }

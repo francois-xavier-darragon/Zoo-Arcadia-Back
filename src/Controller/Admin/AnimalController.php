@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Animal;
 use App\Entity\Breed;
-use App\Entity\Image;
 use App\Entity\VeterinaryReport;
 use App\Form\AnimalFileType;
 use App\Form\AnimalType;
@@ -12,13 +11,13 @@ use App\Repository\AnimalRepository;
 use App\Repository\BreedRepository;
 use App\Repository\ImageRepository;
 use App\Repository\VeterinaryReportRepository;
-use ReflectionClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
@@ -43,8 +42,10 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_animal_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository, ImageRepository $imageRepository, VeterinaryReportRepository $veterinaryReportRepository): Response
+    public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository, TokenStorageInterface $tokenStorage, VeterinaryReportRepository $veterinaryReportRepository): Response
     {
+        // $roles = $this->getVeterinaryRole($tokenStorage);
+
         $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
        
@@ -101,7 +102,7 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_animal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository,ImageRepository $imageRepository, CsrfTokenManagerInterface $csrfTokenManager, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
 
@@ -234,4 +235,20 @@ class AnimalController extends AbstractController
 
         return new JsonResponse(['status' => 'success'], 200);
     }
+
+    // public function getVeterinaryRole($tokenStorage) {
+    //     $role = [];
+    //     $token = $tokenStorage->getToken();
+
+    //     if ($token !== null) {
+
+    //         $user = $token->getUser();
+
+    //         if ($user instanceof UserInterface) {
+    //             $roles[] = $user->getRoles();
+    //         }
+    //     }
+    //     return $role;
+    // }
+
 }

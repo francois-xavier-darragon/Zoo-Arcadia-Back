@@ -55,7 +55,7 @@ class UserController extends AbstractController
             $roles[]= $form->get('roles')->getdata();
             $user->setRoles($roles);
            
-            $user->setPassword($passwordHasher->hashPassword($user, $form->get('password')->getdata()));
+            $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainpassword')->getdata()));
             $userRepository->saveUser($user, true);
 
             return $this->redirectToRoute('app_admin_user_index', [], Response::HTTP_SEE_OTHER);
@@ -94,9 +94,10 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile();
+            $avatarFile = $form->get('avatar')->getdata();
 
-            if($avatarFile === null) {
+            if($avatarFile != null) {
+               $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile(); 
                $user->setAvatar(null);
             }
 
