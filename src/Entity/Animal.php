@@ -41,7 +41,7 @@ class Animal
      * @var Collection<int, VeterinaryReport>
      */
     #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'animal')]
-    private Collection $veterinaryReports;
+    private ?Collection $veterinaryReports = null;
 
     /**
      * @var Collection<int, Image>
@@ -89,7 +89,7 @@ class Animal
     /**
      * @return Collection<int, VeterinaryReport>
      */
-    public function getVeterinaryReports(): Collection
+    public function getVeterinaryReports(): ?Collection
     {
         return $this->veterinaryReports;
     }

@@ -72,6 +72,7 @@ class AnimalType extends AbstractType
             ])
             ->add('veterinaryReports', TextareaType::class, [
                 'mapped' => false,
+                'required' => false,
                 'label' => 'Rapport vétérinaire',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'

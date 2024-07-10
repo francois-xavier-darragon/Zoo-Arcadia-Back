@@ -51,10 +51,10 @@ export function removeExistingImage(removeButton, id, url, path, btnToHide, exis
         })
         .then(data => {
             if (data.status === 'success') {
-                //document.querySelector('.image-card img').src = path
-                //existingImg
-                //btnToHide.classList.remove('d-none');
-                //removeButton.classList.add('d-none');
+                // document.querySelector('img').src = path
+                existingImg.src = path
+                btnToHide.classList.remove('d-none');
+                removeButton.classList.add('d-none');
                 
             } else {
                 alert(data.message);

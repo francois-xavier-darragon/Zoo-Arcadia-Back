@@ -10,7 +10,8 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
         let index = imageFieldsList.children.length;
         const template = document.getElementById('image-field-template')
         const maxImages = 8
-    
+        let imgId = null;
+
         let currentImageCount = existingImages.length;
 
         if (currentImageCount > 0) {
@@ -19,7 +20,6 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
     
         addImageBtn.addEventListener('click', function() {
              if (index < maxImages) {
-                const imgId = null;
                 const newImageField = createImageField(index, defaultImagePath, imgId);
                 imageFieldsList.appendChild(newImageField);
                 index++;
@@ -27,19 +27,19 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
                 errorBloc.classList.add('d-none')
             } else {
                 errorBloc.classList.remove('d-none')
-                errorMessage.innerHTML = `<em>Vous ne pouvez pas ajouter plus de 8 images !</em>`;
+                addImageBtn.classList.add('d-none')
+                errorMessage.innerHTML = `<em>Vous avez atteint le nombre maximum d'images téléchargeable ! !</em>`;
             }
         });
     
         if (currentImageCount > 0) {
             existingImages.forEach(function(image, idx) {
                 const imagePath = image.path ? image.path : defaultImagePath;
-                const imgId = image.id ? image.id :null;
+                imgId = image.id ? image.id :null;
                 const imageField = createImageField(idx, imagePath, imgId);
                 imageFieldsList.appendChild(imageField);
             });
         } else {
-            const imgId = null
             const defaultImageField = createImageField(index, defaultImagePath, imgId);
             imageFieldsList.appendChild(defaultImageField);
             index++;
@@ -53,6 +53,7 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
             const button = clone.querySelector('button');
    
             img.src = imagePath;
+           
             img.id = `balise-Img-${index}`;
             img.setAttribute('data-img-id', imgId)
             input.name = `${entityName}[images][${index}][${filedsName}]`;
@@ -64,7 +65,7 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
             newImage(btnEdit, img)
             removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img)
 
-            if(entityId === null ){
+            if(entityId === null){
                 btnDnone(btnTrash)
             } else if(index < existingImages.length ) {
                 btnDnone(btnEdit)
@@ -80,6 +81,3 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
         }
     });
 }
-
-
-

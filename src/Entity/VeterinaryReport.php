@@ -19,7 +19,7 @@ class VeterinaryReport
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $detail = null;
 
     #[ORM\ManyToOne(inversedBy: 'veterinaryReports')]
@@ -35,18 +35,6 @@ class VeterinaryReport
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getDetail(): ?string
-    {
-        return $this->detail;
-    }
-
-    public function setDetail(string $detail): static
-    {
-        $this->detail = $detail;
-
-        return $this;
     }
 
     public function getUser(): ?User
@@ -69,6 +57,18 @@ class VeterinaryReport
     public function setAnimal(?Animal $animal): static
     {
         $this->animal = $animal;
+
+        return $this;
+    }
+
+    public function getDetail(): ?string
+    {
+        return $this->detail;
+    }
+
+    public function setDetail(?string $detail): static
+    {
+        $this->detail = $detail;
 
         return $this;
     }
