@@ -31,14 +31,14 @@
 {{ parent() }}
     <script src="{{ asset('js/breed/breed.js') }}"></script>
     {# <script type="module" src="{{ asset('js/image/add-image-fiedls.js') }}"></script> #}
-    <script type="module" >
+    <script type="module">
         import {addImgeFilds} from "/js/image/add-image-fiedls.js";
 
         const entityId = {{ animal.id ? animal.id|json_encode() : 'null'}}
         let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
         const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
         const divSelected = document.getElementById('animal_images')
-        const entityName = 'Animal';
+        const entityName = 'animal';
         const filedsName = 'animalFile';
 
         addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName) 

@@ -58,13 +58,14 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
             
             const btnTrash = clone.getElementById(`remove-image-button-${index}`);
             const btnEdit = clone.getElementById(`edit-image-button-${index}`);
+            newImage(btnEdit, img)
 
             if(entityId === null ){
-                btnTrash.classList.add('d-none');
+                btnDnone(btnTrash)
             } else if(index < existingImages.length ) {
-                btnEdit.classList.add('d-none');
+                btnDnone(btnEdit)
             } else if(index >= existingImages.length) {
-                btnTrash.classList.add('d-none');
+                btnDnone(btnTrash)
             }
          
             if(divSelected) {
@@ -75,4 +76,6 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
         }
     });
 }
+
+
 
