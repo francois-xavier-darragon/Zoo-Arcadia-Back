@@ -7,6 +7,7 @@ use App\Entity\Breed;
 use App\Entity\VeterinaryReport;
 use App\Form\AnimalFileType;
 use App\Form\AnimalType;
+use App\Form\VeterinaryReportType;
 use App\Repository\AnimalRepository;
 use App\Repository\BreedRepository;
 use App\Repository\ImageRepository;
@@ -92,11 +93,34 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_animal_show', methods: ['GET'])]
-    public function read(Animal $animal, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function read(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage, VeterinaryReportRepository $veterinaryReportRepository): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
+        $roles = $this->getRole($tokenStorage);
+
+        $form = $this->createForm(VeterinaryReportType::class, $animal, [
+            'roles' => $roles
+        ]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            if(in_array('ROLE_VETERINARY',$roles)) {
+                $newVeterinaryReports = $form->get('veterinaryReports')->getData();
+                $veterinaryReport = new veterinaryReport();
+                $veterinaryReport->setDetail($newVeterinaryReports);
+                $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
+                $animal->addVeterinaryReport($veterinaryReport);
+            }
+
+            $animalRepository->saveAnimal($animal, true);
+
+            return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
+        }
 
         return $this->render('admin/animal/show.html.twig', [
+            'form' => $form,
             'csrf_token'  => $csrfToken,
             'animal' => $animal,
             'delete_btn' => true,

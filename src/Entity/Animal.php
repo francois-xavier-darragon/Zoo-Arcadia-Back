@@ -18,6 +18,12 @@ class Animal
     use TimestampableTrait;
     use SoftDeletableTrait;
 
+    CONST HEALTH = [
+       'parfait',
+       'malade',
+       'blessé',
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

@@ -6,13 +6,14 @@ use App\Entity\VeterinaryReport;
 use App\Form\VeterinaryReportType;
 use App\Repository\VeterinaryReportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
-#[Route('/admin/veterinaryreports')]
+#[Route('/admin/animals/{id}/veterinaryreports')]
 class VeterinaryReportController extends AbstractController
 {
     #[Route('/', name: 'app_admin_veterinaryreport_index', methods: ['GET'])]
@@ -33,26 +34,28 @@ class VeterinaryReportController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_veterinaryreport_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, VeterinaryReportRepository $veterinaryreportRepository): Response
+    public function new(Request $request, VeterinaryReportRepository $veterinaryreportRepository): JsonResponse
     {
-        $veterinaryreport = new VeterinaryReport();
-        $form = $this->createForm(VeterinaryReportType::class, $veterinaryreport);
-        $form->handleRequest($request);
+        //$veterinaryreport = new VeterinaryReport();
+        //$form = $this->createForm(VeterinaryReportType::class, $veterinaryreport);
+        //$form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $veterinaryreportRepository->saveVeterinaryReport($veterinaryreport, true);
+        //if ($form->isSubmitted() && $form->isValid()) {
+          //  $veterinaryreportRepository->saveVeterinaryReport($veterinaryreport, true);
 
-            return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
-        }
+            //return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
+        //}
 
-        return $this->render('admin/veterinaryreport/edit.html.twig', [
-            'veterinaryreport' => $veterinaryreport,
-            'form' => $form,
-            'mode' => 'Ajouter',
-        ]);
+        //return $this->render('admin/veterinaryreport/edit.html.twig', [
+          //  'veterinaryreport' => $veterinaryreport,
+            //'form' => $form,
+            //'mode' => 'Ajouter',
+        //]);
+
+        return new JsonResponse(['status' => 'error', 'message' => 'No data to add'], 400);
     }
 
-    #[Route('/{id}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
+    #[Route('/{rapport}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
     public function read(VeterinaryReport $veterinaryreport, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-veterinaryreport' . $veterinaryreport->getId())->getValue();
@@ -64,7 +67,7 @@ class VeterinaryReportController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
+    #[Route('/{rapport}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-veterinaryreport' . $veterinaryreport->getId())->getValue();
