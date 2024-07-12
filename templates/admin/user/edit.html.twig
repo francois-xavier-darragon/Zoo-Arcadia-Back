@@ -33,14 +33,16 @@
 {{ parent() }}
 {# <script src="{{ asset('js/image/image-management.js') }}" ></script> #}
 <script src="{{ asset('js/password/toggle-password-fields.js') }}" ></script>
-<script> 
-    {# const userId = {{ user.id ? user.id|json_encode() : 'null'}}
+<script type="module">
+    import { btnDnone, newImage, removeExistingImage} from "/js/image/image-management.js";
+    const userId = {{ user.id ? user.id|json_encode() : 'null'}}
     const btnTrash = document.getElementById('remove-avatar-button');
+    let defaultImg = null;
     const btnEdit = document.getElementById('edit-avatar-button');
 
     if(userId === null) {
         btnDnone(btnTrash)
-        newImage(btnEdit) 
+        newImage(btnEdit, defaultImg) 
     } else {
         const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
 
@@ -57,8 +59,8 @@
             removeExistingImage(btnTrash, userId, url, path, btnEdit, existingImg)
         {% endif %}
 
-        newImage(btnEdit);
-    }  #}
+        newImage(btnEdit, existingImg);
+    } 
 </script>
 
 {% endblock %}

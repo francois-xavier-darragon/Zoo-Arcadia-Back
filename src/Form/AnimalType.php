@@ -81,32 +81,6 @@ class AnimalType extends AbstractType
                     ]
                 );
             }
-
-        if(in_array('ROLE_VETERINARY',$options['roles'])){
-            $builder
-                ->add('health', TextType::class, [
-                    'required' => true,
-                    'label' => 'Etat de Santé',
-                    'label_attr' => [
-                        'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                    ],
-                    'attr' => [
-                        'class' => 'form-control form-control-solid',
-                    ]
-                ])
-                ->add('veterinaryReports', TextareaType::class, [
-                    'mapped' => false,
-                    'required' => false,
-                    'label' => 'Rapport vétérinaire',
-                    'label_attr' => [
-                        'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                    ],
-                    'attr' => [
-                        'class' => 'form-control form-control-solid',
-                    ]
-                ]
-            );
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -114,7 +88,6 @@ class AnimalType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Animal::class,
             'countBreeds' => false,
-            'roles' => null
         ]);
     }
 }

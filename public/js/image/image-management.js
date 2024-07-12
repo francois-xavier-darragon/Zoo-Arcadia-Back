@@ -13,21 +13,25 @@ export function btnDnone(btnToHide) {
     }
 }
 
-export function newImage(btnEdit, imgElement){
+export function newImage(btnEdit, imgElement = null){
    
     btnEdit.addEventListener('change', function(event) {
         const files = event.target.files;
-
-        if (files.length > 0) {
+        const file = event.target.files[0];
+      
+        if (files.length > 0 && imgElement != null) {
             const imageContainer = document.querySelector('.image-container'); 
-            console.log(imageContainer)
             imageContainer.innerHTML = '';
 
             Array.from(files).forEach(file => {
-                const imageUrl = URL.createObjectURL(file);
-                imgElement.src = imageUrl; 
+               const imageUrl = URL.createObjectURL(file);
+               imgElement.src = imageUrl; 
             });
+        } else if(file)  {
+            const imageUrl = URL.createObjectURL(file);
+            document.querySelector('.image-card img').src = imageUrl;
         }
+       
     });
 }
 

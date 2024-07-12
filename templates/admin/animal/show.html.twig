@@ -31,8 +31,25 @@
                 <h4 class="ms-1">{{ animal.breed }}</h4>
             </div>
         </div>
-        <div class="col-md-12">
-                <div class="card p-4 mb-4">
+        <div class="d-flex justify-content-betweestartn align-items-center mb-4" >
+            <div id="btn-gallery" class="me-4">
+                <button type="button" class="btn btn-secondary galerie-photos" title="galerie photos">Galerie photos</button>
+            </div>
+            <div id="btn-veterinaryReports">
+                <button type="button" class="btn btn-secondary veterinaryReports" title="rapports vétérinaire">Rapports vétérinaire</button>
+            </div>
+        </div>
+        <div id="gallery" class="d-none">
+            <div class="row">
+            {% for image in animal.images %}
+                <div  class="col-3 mb-3">
+                    <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top rounded" alt="Animal-Image" style="width: 100%; height: auto;">
+                </div>
+            {% endfor %}
+        </div>
+        </div>
+        <div id="veterinaryReports" class="col-md-12 d-none">
+            <div class="card p-4 mb-4">
                 <div class="d-flex flex-column mb-2">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h3 class="">Rapports vétérinaire :</h3>
@@ -69,7 +86,6 @@
                                     {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                                 </a>
                             </div>
-                            
                             <p class="text-dark">{{ veterinaryReport.detail }}</p>
                         </div>
                         <br> 
@@ -79,18 +95,8 @@
                 </div>
             </div>
         </div>
-            <div class="row">
-                {% for image in animal.images %}
-                    {% if loop.index0 % 3 == 0 %}
-                        </div><div class="row">
-                    {% endif %}
-                    <div class="col-4 mb-3">
-                        <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt="Animal-Image" style="width: 100%; height: auto;">
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
     </div>
+</div>
 {{ form_end(form) }}
 
     {% if delete_btn is defined %}
@@ -100,70 +106,10 @@
 {% endblock %}
 {% block javascripts %}
 {{ parent() }}
+<script src="{{ asset('js/animal/manage-show-animal-fields.js') }}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const newRapport = document.getElementById('new-rapport');
-    const rapport = document.getElementById('add-rapport');
-
-    const animalId = {{ animal.id }}
-    newRapport.addEventListener('click', function() {
-        rapport.classList.remove('d-none')
-    })
-
-    document.querySelector('.submit-rapport').addEventListener('click', function(e) {
-        e.preventDefault(); 
-       
-        let formData = {
-            health: document.getElementById('veterinary_report_health').value,
-            veterinaryReport: document.getElementById('veterinary_report_veterinaryReports').value
-        };
-       
-        const url = "{{ path('app_admin_veterinaryreport_new', {'id': animal.id}) }}"
-
-        fetch(url, {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur lors de la requête.');
-            }
-            return response.json(); 
-        })
-        .then(data => {
-            
-            console.log('Réponse reçue du serveur :', data);
-            
-            if (data.status == 'success') {
-                
-                let newElement = document.createElement('div');
-                newElement.classList.add('ms-1');
-                newElement.innerHTML = `
-                <div class="d-flex justify-content-between align-items-center">
-                    <p class="text-muted mb-0">le : ${data.date}</p>
-                </div>
-                    <p class="text-dark" > ${data.veterinaryReport} </p>
-                `;
-                document.getElementById('rapport-create').appendChild(newElement);
-                //console.log(newElement)
-                //debugger
-                document.getElementById('add-rapport').classList.add('d-none');
-            } else {
-                console.error('Erreur lors de la validation : ', data.message);
-            }
-        })
-        .catch(error => {
-           
-            console.error('Erreur lors de la validation : ', error);
-        
-        });
-    });
-});
-
-
+    const url = "{{ path('app_admin_veterinaryreport_new', {'id': animal.id}) }}"
+    showData(url)
 </script>
 
 {% endblock %}

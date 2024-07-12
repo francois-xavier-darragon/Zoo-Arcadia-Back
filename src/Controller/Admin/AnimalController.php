@@ -43,17 +43,14 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_animal_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository, TokenStorageInterface $tokenStorage, VeterinaryReportRepository $veterinaryReportRepository): Response
+    public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository): Response
     {
-        $roles = $this->getRole($tokenStorage);
-        
         $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
        
         $animal = new Animal();
         $form = $this->createForm(AnimalType::class, $animal, [
-            'countBreeds' => $countBreeds,
-            'roles' => $roles
+            'countBreeds' => $countBreeds
         ]);
 
         $form->handleRequest($request);
@@ -71,14 +68,6 @@ class AnimalController extends AbstractController
             
             }
 
-            if(in_array('ROLE_VETERINARY',$roles)) {
-                $newVeterinaryReports = $form->get('veterinaryReports')->getData();
-                $veterinaryReport = new veterinaryReport();
-                $veterinaryReport->setDetail($newVeterinaryReports);
-                $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
-                $animal->addVeterinaryReport($veterinaryReport);
-            }
-                
             $animalRepository->saveAnimal($animal, true);
 
             return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
@@ -93,7 +82,7 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_animal_show', methods: ['GET'])]
-    public function read(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage, VeterinaryReportRepository $veterinaryReportRepository): Response
+    public function read(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
         $roles = $this->getRole($tokenStorage);
@@ -105,14 +94,6 @@ class AnimalController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            if(in_array('ROLE_VETERINARY',$roles)) {
-                $newVeterinaryReports = $form->get('veterinaryReports')->getData();
-                $veterinaryReport = new veterinaryReport();
-                $veterinaryReport->setDetail($newVeterinaryReports);
-                $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
-                $animal->addVeterinaryReport($veterinaryReport);
-            }
 
             $animalRepository->saveAnimal($animal, true);
 
@@ -128,11 +109,10 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_animal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage, BreedRepository $breedRepository, VeterinaryReportRepository $veterinaryReportRepository, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage, BreedRepository $breedRepository, UploaderHelper $uploaderHelper): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
-        $roles = $this->getRole($tokenStorage);
-
+    
         $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
         $images = $animal->getImages();
@@ -152,8 +132,7 @@ class AnimalController extends AbstractController
         }
       
         $form = $this->createForm(AnimalType::class, $animal, [
-            'countBreeds' => $countBreeds,
-            'roles' => $roles
+            'countBreeds' => $countBreeds
         ]);
 
        
@@ -168,14 +147,6 @@ class AnimalController extends AbstractController
                 $breed->setName(ucfirst($formBreddData));
                 $breedRepository->saveBreed($breed, true);
                 $animal->setBreed($breed);
-            }
-
-            if(in_array('ROLE_VETERINARY',$roles)) {
-                $newVeterinaryReports = $form->get('veterinaryReports')->getData();
-                $veterinaryReport = new veterinaryReport();
-                $veterinaryReport->setDetail($newVeterinaryReports);
-                $veterinaryReportRepository->saveVeterinaryReport($veterinaryReport, true);
-                $animal->addVeterinaryReport($veterinaryReport);
             }
 
             $animalRepository->saveAnimal($animal, true);

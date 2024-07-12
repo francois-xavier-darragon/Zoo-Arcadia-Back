@@ -19,7 +19,7 @@ class Animal
     use SoftDeletableTrait;
 
     CONST HEALTH = [
-       'parfait',
+       'parfaite',
        'malade',
        'blessé',
     ];
