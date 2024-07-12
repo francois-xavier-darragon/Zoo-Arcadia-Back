@@ -3,7 +3,7 @@
 {% block title %}Animal{% endblock %}
 
 {% block body %}
-
+{% set sortedReports = animal.veterinaryReports|sort((a, b) => b.createdAt.timestamp <=> a.createdAt.timestamp) %}
 {{ form_start(form) }}  
  <div class="container mt-5 custom-border">
         <div class="row m-4 ">
@@ -52,18 +52,20 @@
                         {% endif %}
                     </div>
                     <hr>
+                    <div id="rapport-create" class="mt-1"></div>
                     <div id="add-rapport" class="mt-1 d-none">
-                        <p>{{ form_row(form.veterinaryReports) }}</p>
+                        <p class="text-muted mb-0" >{{ form_row(form.veterinaryReports) }}</p>
                         <div class = "d-flex justify-content-end">
                             <button class="btn btn-secondary submit-rapport" title="valider">Valider</button>
                         </div>
                     </div>
-                    {% for veterinaryReport in animal.veterinaryReports  %}
+                    {% for veterinaryReport in sortedReports  %}
                         <hr>
                         <div class="ms-1" >
                             <div class="d-flex justify-content-between align-items-center">
-                                <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y') }}</p> 
-                                <a class="text-secondary" title="Editer" href="{{ path('app_admin_veterinaryreport_edit', {'id': veterinaryReport.id}) }}"> 
+                                <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y')}}</p> 
+                                {# <a class="text-secondary" title="Editer" href="{{ path('app_admin_veterinaryreport_edit', {'id': veterinaryReport.id}) }}">  #}
+                                 <a class="text-secondary" title="Editer" href=""> 
                                     {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                                 </a>
                             </div>
@@ -103,20 +105,20 @@ document.addEventListener('DOMContentLoaded', function() {
     const newRapport = document.getElementById('new-rapport');
     const rapport = document.getElementById('add-rapport');
 
-    const animalId = {{}}
+    const animalId = {{ animal.id }}
     newRapport.addEventListener('click', function() {
         rapport.classList.remove('d-none')
     })
 
     document.querySelector('.submit-rapport').addEventListener('click', function(e) {
         e.preventDefault(); 
-        
+       
         let formData = {
-            health: document.getElementById('veterinary_report_health').value
-            veterinaryReports: document.getElementById('veterinary_report_veterinaryReports').value
+            health: document.getElementById('veterinary_report_health').value,
+            veterinaryReport: document.getElementById('veterinary_report_veterinaryReports').value
         };
        
-        //const url = "{{ path('app_admin_veterinaryreport_new', id: animal.id ) }}"
+        const url = "{{ path('app_admin_veterinaryreport_new', {'id': animal.id}) }}"
 
         fetch(url, {
             method: 'POST', 
@@ -129,14 +131,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!response.ok) {
                 throw new Error('Erreur lors de la requête.');
             }
-            return response.text(); 
+            return response.json(); 
         })
         .then(data => {
             
-            console.log('Validation réussie !');
-          
-            document.getElementById('add-rapport').classList.add('d-none');
-           
+            console.log('Réponse reçue du serveur :', data);
+            
+            if (data.status == 'success') {
+                
+                let newElement = document.createElement('div');
+                newElement.classList.add('ms-1');
+                newElement.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="text-muted mb-0">le : ${data.date}</p>
+                </div>
+                    <p class="text-dark" > ${data.veterinaryReport} </p>
+                `;
+                document.getElementById('rapport-create').appendChild(newElement);
+                //console.log(newElement)
+                //debugger
+                document.getElementById('add-rapport').classList.add('d-none');
+            } else {
+                console.error('Erreur lors de la validation : ', data.message);
+            }
         })
         .catch(error => {
            

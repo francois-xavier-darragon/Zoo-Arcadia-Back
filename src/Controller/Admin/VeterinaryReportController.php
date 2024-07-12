@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Animal;
 use App\Entity\VeterinaryReport;
 use App\Form\VeterinaryReportType;
+use App\Repository\AnimalRepository;
 use App\Repository\VeterinaryReportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,25 +36,35 @@ class VeterinaryReportController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_veterinaryreport_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, VeterinaryReportRepository $veterinaryreportRepository): JsonResponse
+    public function new(Request $request, Animal $animal, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
     {
-        //$veterinaryreport = new VeterinaryReport();
-        //$form = $this->createForm(VeterinaryReportType::class, $veterinaryreport);
-        //$form->handleRequest($request);
+        $datas = json_decode($request->getContent(), true);
 
-        //if ($form->isSubmitted() && $form->isValid()) {
-          //  $veterinaryreportRepository->saveVeterinaryReport($veterinaryreport, true);
+        if (!$datas) {
+            return new Response('Données invalides', Response::HTTP_BAD_REQUEST);
+        }
 
-            //return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
-        //}
+        $health = intval($datas['health']) ;
+        $healths = Animal::HEALTH;
 
-        //return $this->render('admin/veterinaryreport/edit.html.twig', [
-          //  'veterinaryreport' => $veterinaryreport,
-            //'form' => $form,
-            //'mode' => 'Ajouter',
-        //]);
+        $checkHealth = $healths[$health];
+        $animal->setHealth($checkHealth);
 
-        return new JsonResponse(['status' => 'error', 'message' => 'No data to add'], 400);
+        $veterinaryReport = new VeterinaryReport();
+        $veterinaryReport->setDetail($datas['veterinaryReport']);
+
+        $animal->addVeterinaryReport($veterinaryReport);
+        $veterinaryreportRepository->saveVeterinaryReport($veterinaryReport, true);
+        $animalRepository->saveAnimal($animal, true);
+       
+        
+        return new Response(json_encode([
+            'status' => 'success',
+            'health' => $checkHealth,
+            'date' => $veterinaryReport->getCreatedAt()->format('d/m/Y'),
+            'veterinaryReport' => $veterinaryReport->getDetail(),
+        ]
+    ), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{rapport}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
