@@ -78,7 +78,7 @@ class VeterinaryReportController extends AbstractController
         ]);
     }
 
-    #[Route('/{report}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
+    #[Route('/{veterinaryreport}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Animal $animal, VeterinaryReport $veterinaryReport, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
     {
         $datas = json_decode($request->getContent(), true);
@@ -95,7 +95,6 @@ class VeterinaryReportController extends AbstractController
 
         $veterinaryReport->setDetail($datas['veterinaryReport']);
 
-        $animal->addVeterinaryReport($veterinaryReport);
         $veterinaryreportRepository->saveVeterinaryReport($veterinaryReport, true);
         $animalRepository->saveAnimal($animal, true);
        
@@ -107,7 +106,7 @@ class VeterinaryReportController extends AbstractController
         ]), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
-    // #[Route('/{id}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
+    // #[Route('/{veterinaryreport}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
     // public function delete(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository): Response
     // {
     //     if($veterinaryreport->getDeletedAt()){

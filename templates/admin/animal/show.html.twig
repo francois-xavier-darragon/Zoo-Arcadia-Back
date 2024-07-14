@@ -7,7 +7,7 @@
 
 {{ form_start(form) }}  
  <div id="animal-data" data-animal-id="{{ animal.id|default('') }}"
-     data-veterinaryreport-new-url="{{ path('app_admin_veterinaryreport_new', { 'id': 'ANIMAL_ID'}) }}" 
+     data-new-url="{{ path('app_admin_veterinaryreport_new', { 'id': 'ANIMAL_ID'}) }}" 
      class="container mt-5 custom-border">
         <div class="row m-4 ">
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -69,7 +69,7 @@
                             </a>
                         {% endif %}
                     </div>
-                    {{ form_start(form) }}
+                    {{ form_start(form, {'attr': {'id': 'form-id'}}) }}
                     <div class="d-flex mt-1 mb-2">
                         <h5 class="mt-1">Santé :</h5>
                         {% if  is_granted('ROLE_VETERINARY') %}
@@ -84,25 +84,23 @@
                         {% if is_granted('ROLE_VETERINARY') %}
                             <p class="text-muted mb-0" >{{ form_row(form.veterinaryReports) }}</p>
                         {% endif %}
-                        <div class = "d-flex justify-content-end">
+                        <div class="d-flex justify-content-end">
                             <button class="btn btn-secondary submit-rapport" title="valider">Valider</button>
                         </div>
                     </div>
                     {% for veterinaryReport in sortedReports  %}
                         <hr>
-                        <div class="ms-1" id="report-data-{{ veterinaryReport.id }}" data-animal-id="{{ veterinaryReport.id|default('') }}" id="animal-data" 
-                        data-animal-id="{{ veterinaryReport.id|default('') }}" 
-                        data-veterinaryreport-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID', 'report' : 'REPORT_ID' }) }}">
+                        <div class="ms-1" id="veterinaryreport-data" data-veterinaryreport-id="{{ veterinaryReport.id|default('') }}"
+                        data-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID', 'veterinaryreport' : 'VETERINARYREPORT_ID' }) }}">
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y')}}</p> 
                                 {% if is_granted('ROLE_VETERINARY') %}
-                                {# <a class="text-secondary" title="Editer" href="{{ path('app_admin_veterinaryreport_edit', {'id': veterinaryReport.id}) }}">  #}
-                                <a class="text-secondary" title="Editer" href=""> 
+                                <a type="button" class="text-secondary edit-report" title="Editer"> 
                                     {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                                 </a>
                                 {% endif %}
                             </div>
-                            <p class="text-dark">{{ veterinaryReport.detail }}</p>
+                            <p id="veterinaryreport-{{ veterinaryReport.id }}" class="text-dark">{{ veterinaryReport.detail }}</p>
                         </div>
                         <br> 
                         <hr>  
@@ -126,6 +124,7 @@
 <script>
     const url = "{{ path('app_admin_veterinaryreport_new', {'id': animal.id}) }}"
     showData(url)
+    manageEditeReport()
 </script>
 
 {% endblock %}
