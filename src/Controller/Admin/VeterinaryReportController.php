@@ -63,8 +63,7 @@ class VeterinaryReportController extends AbstractController
             'health' => $checkHealth,
             'date' => $veterinaryReport->getCreatedAt()->format('d/m/Y'),
             'veterinaryReport' => $veterinaryReport->getDetail(),
-        ]
-    ), Response::HTTP_OK, ['Content-Type' => 'application/json']);
+        ]), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
     #[Route('/{rapport}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
@@ -80,26 +79,32 @@ class VeterinaryReportController extends AbstractController
     }
 
     #[Route('/{rapport}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function edit(Request $request, Animal $animal, VeterinaryReport $veterinaryReport, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
     {
-        $csrfToken = $csrfTokenManager->getToken('delete-veterinaryreport' . $veterinaryreport->getId())->getValue();
+        $datas = json_decode($request->getContent(), true);
 
-        $form = $this->createForm(VeterinaryReportType::class, $veterinaryreport);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $veterinaryreportRepository->saveVeterinaryReport($veterinaryreport, true);
-
-            return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
+        if (!$datas) {
+            return new Response('Données invalides', Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->render('admin/veterinaryreport/edit.html.twig', [
-            'csrf_token'  => $csrfToken,
-            'veterinaryreport' => $veterinaryreport,
-            'form' => $form,
-            'mode'=> 'Modifier',
-            'delete_btn' => true,
-        ]);
+        $health = intval($datas['health']) ;
+        $healths = Animal::HEALTH;
+
+        $checkHealth = $healths[$health];
+        $animal->setHealth($checkHealth);
+
+        $veterinaryReport->setDetail($datas['veterinaryReport']);
+
+        $animal->addVeterinaryReport($veterinaryReport);
+        $veterinaryreportRepository->saveVeterinaryReport($veterinaryReport, true);
+        $animalRepository->saveAnimal($animal, true);
+       
+        return new Response(json_encode([
+            'status' => 'success',
+            'health' => $checkHealth,
+            'date' => $veterinaryReport->getUpdatedAt()->format('d/m/Y'),
+            'veterinaryReport' => $veterinaryReport->getDetail(),
+        ]), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
     // #[Route('/{id}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
