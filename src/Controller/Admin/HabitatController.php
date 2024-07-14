@@ -74,6 +74,22 @@ class HabitatController extends AbstractController
         $form = $this->createForm(HabitatType::class, $habitat);
         $form->handleRequest($request);
 
+        $existingImages = [];
+
+        $reflectionClass = new \ReflectionClass($habitat);
+
+        $entitiName = strtolower($reflectionClass->getShortName()).'s';
+
+        $images = $habitat->getImages();
+        foreach ($images as $image) {
+
+            $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
+            $existingImages[] = [
+                'id' => $image->getId(),
+                'path' => $path
+            ];
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $habitatRepository->saveHabitat($habitat, true);
 
@@ -86,6 +102,7 @@ class HabitatController extends AbstractController
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
+            'existingImages' => json_encode($existingImages)
         ]);
     }
 
@@ -109,7 +126,7 @@ class HabitatController extends AbstractController
         return $this->redirectToRoute('app_admin_habitat_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{habitat}/remove-animal-image/', name: 'app_admin_habitat_remove_image', methods: ['POST'])]
+    #[Route('/{habitat}/remove-habitat-image/', name: 'app_admin_habitat_remove_image', methods: ['POST'])]
     public function removeAnimalImage(Request $request, Habitat $habitat, HabitatRepository $habitatRepository, ImageRepository $imageRepository): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -126,7 +143,7 @@ class HabitatController extends AbstractController
         }
 
         $habitat->removeImage($image);
-        $habitatRepository->saveAnimal($habitat, true);
+        $habitatRepository->saveHabitat($habitat, true);
 
         $imageRepository->removeImage($image, true);
 
