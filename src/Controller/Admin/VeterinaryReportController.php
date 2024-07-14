@@ -66,7 +66,7 @@ class VeterinaryReportController extends AbstractController
         ]), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
-    #[Route('/{rapport}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
+    #[Route('/{report}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
     public function read(VeterinaryReport $veterinaryreport, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-veterinaryreport' . $veterinaryreport->getId())->getValue();
@@ -78,7 +78,7 @@ class VeterinaryReportController extends AbstractController
         ]);
     }
 
-    #[Route('/{rapport}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
+    #[Route('/{report}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Animal $animal, VeterinaryReport $veterinaryReport, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
     {
         $datas = json_decode($request->getContent(), true);

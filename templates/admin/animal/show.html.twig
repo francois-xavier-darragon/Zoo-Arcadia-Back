@@ -90,9 +90,9 @@
                     </div>
                     {% for veterinaryReport in sortedReports  %}
                         <hr>
-                        <div class="ms-1" id="veterinaryReport-data" data-animal-id="{{ veterinaryReport.id|default('') }}" id="animal-data" 
+                        <div class="ms-1" id="report-data-{{ veterinaryReport.id }}" data-animal-id="{{ veterinaryReport.id|default('') }}" id="animal-data" 
                         data-animal-id="{{ veterinaryReport.id|default('') }}" 
-                        data-veterinaryreport-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID', 'rapport' : 'REPORT_ID' }) }}">
+                        data-veterinaryreport-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID', 'report' : 'REPORT_ID' }) }}">
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y')}}</p> 
                                 {% if is_granted('ROLE_VETERINARY') %}
