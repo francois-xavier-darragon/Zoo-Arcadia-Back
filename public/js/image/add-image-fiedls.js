@@ -17,12 +17,25 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
         if (currentImageCount > 0) {
            index = currentImageCount;
         }
-    
-        const animalDataElement = document.getElementById('animal-data');
-        const animalId = animalDataElement.dataset.animalId;
-        let url = animalDataElement.dataset.removeImageUrl;
-        url = url.replace('ANIMAL_ID', animalId);
+        
+        let animalDataElement
+        let animalId
+        let habitatDataElement
+        let habitatId
+        let url
 
+        if(entityName === 'animal') {
+            animalDataElement = document.getElementById('animal-data');
+            animalId = animalDataElement.dataset.animalId;
+            url = animalDataElement.dataset.removeImageUrl;
+            url = url.replace('ANIMAL_ID', animalId);
+        } else {
+            habitatDataElement = document.getElementById('habitat-data');
+            habitatId = habitatDataElement.dataset.habitatId;
+            url = habitatDataElement.dataset.removeImageUrl;
+            url = url.replace('HABITAT_ID', habitatId);
+        }
+        
         addImageBtn.addEventListener('click', function() {
              if (index < maxImages) {
                 const newImageField = createImageField(index, defaultImagePath, imgId);

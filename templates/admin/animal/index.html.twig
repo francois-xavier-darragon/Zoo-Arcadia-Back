@@ -22,7 +22,7 @@
                 {% if animal.deletedAt is null %}
                     <tr>
                         <td class="text-start">
-                            <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="70" height="50">
+                            <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="première image de la liste" width="70" height="50">
                         </td>
                         <td class="text-center">{{ animal.name }}</td>
                         <td class="text-center">{{ animal.health }}</td>

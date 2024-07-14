@@ -5,7 +5,9 @@ namespace App\Controller\Admin;
 use App\Entity\Habitat;
 use App\Form\HabitatType;
 use App\Repository\HabitatRepository;
+use App\Repository\ImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -105,5 +107,29 @@ class HabitatController extends AbstractController
 
         $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet habitat, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_habitat_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{habitat}/remove-animal-image/', name: 'app_admin_habitat_remove_image', methods: ['POST'])]
+    public function removeAnimalImage(Request $request, Habitat $habitat, HabitatRepository $habitatRepository, ImageRepository $imageRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $imageId = ($data['imgId']) ?? null;
+
+        if ($imageId === null) {
+            return new JsonResponse(['status' => 'error', 'message' => 'ID de l\'image manquant'], 400);
+        }
+     
+        $image = $imageRepository->findOneById($imageId);
+
+        if (!$image) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Image non trouvée'], 404);
+        }
+
+        $habitat->removeImage($image);
+        $habitatRepository->saveAnimal($habitat, true);
+
+        $imageRepository->removeImage($image, true);
+
+        return new JsonResponse(['status' => 'success'], 200);
     }
 }
