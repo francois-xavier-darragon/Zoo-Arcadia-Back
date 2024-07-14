@@ -32,19 +32,7 @@
 {{ parent() }}
 <script src="{{ asset('js/breed/breed.js') }}"></script>
 <script>
-    const addBreedField = document.getElementById('addBreedField');
-    const addBreedBtn = document.getElementById('addBreedBtn');
-    const selectBreedFields = document.getElementById('selectBreedFields');
-    const selectBreedBtn = document.getElementById('selectBreedBtn');
-
-    manageBreed(addBreedBtn, addBreedField, selectBreedBtn)
-    
-    if(selectBreedBtn != null) {
-        manageBreed(selectBreedBtn, selectBreedFields, addBreedBtn)
-    }
-
-    manageEditBreed(addBreedBtn, selectBreedFields, addBreedField)
-    
+    mangeDomeBreed()
 </script>
 <script type="module">
     import {addImgeFilds} from "/js/image/add-image-fiedls.js";

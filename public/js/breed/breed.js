@@ -1,4 +1,19 @@
 
+const addBreedField = document.getElementById('addBreedField');
+const addBreedBtn = document.getElementById('addBreedBtn');
+const selectBreedFields = document.getElementById('selectBreedFields');
+const selectBreedBtn = document.getElementById('selectBreedBtn');
+
+function mangeDomeBreed(){
+    manageBreed(addBreedBtn, addBreedField, selectBreedBtn)
+    
+    if(selectBreedBtn != null) {
+        manageBreed(selectBreedBtn, selectBreedFields, addBreedBtn)
+    }
+
+    manageEditBreed(addBreedBtn, selectBreedFields, addBreedField)
+}
+
 function manageBreed(btn, divForm, btnSelect) {
     btn.addEventListener('click',function (e) {
         if(divForm.style.display === 'none') {
