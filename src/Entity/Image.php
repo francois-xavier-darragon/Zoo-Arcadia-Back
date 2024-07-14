@@ -23,6 +23,9 @@ class Image
 
     #[Vich\UploadableField(mapping: 'animal_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $animalFile = null;
+
+    #[Vich\UploadableField(mapping: 'habitat_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    private ?File $habitatFile = null;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -41,23 +44,14 @@ class Image
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $mimeType = null;
 
-    
-    /**
-     * @var Collection<int, Habitat>
-     */
-    #[ORM\ManyToMany(targetEntity: Habitat::class, inversedBy: 'images')]
-    private Collection $habitats;
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Animal $animal = null;
 
-    /**
-     * @var Collection<int, Animal>
-     */
-    #[ORM\ManyToMany(targetEntity: Animal::class, inversedBy: 'images', cascade: ['persist'])]
-    private Collection $animals;
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Habitat $habitat = null;
 
     public function __construct()
     {
-        $this->habitats = new ArrayCollection();
-        $this->animals = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
     }
@@ -79,54 +73,7 @@ class Image
         return $this;
     }
 
-    /**
-     * @return Collection<int, Habitat>
-     */
-    public function getHabitats(): Collection
-    {
-        return $this->habitats;
-    }
-
-    public function addHabitat(Habitat $habitat): static
-    {
-        if (!$this->habitats->contains($habitat)) {
-            $this->habitats->add($habitat);
-        }
-
-        return $this;
-    }
-
-    public function removeHabitat(Habitat $habitat): static
-    {
-        $this->habitats->removeElement($habitat);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Animal>
-     */
-    public function getAnimals(): Collection
-    {
-        return $this->animals;
-    }
-
-    public function addAnimal(Animal $animal): static
-    {
-        if (!$this->animals->contains($animal)) {
-            $this->animals->add($animal);
-        }
-
-        return $this;
-    }
-
-    public function removeAnimal(Animal $animal): static
-    {
-        $this->animals->removeElement($animal);
-
-        return $this;
-    }
-
+   
     public function getUserAvatarFile(): ?File
     {
         return $this->userAvatarFile;
@@ -193,6 +140,47 @@ class Image
         if ($animalFile === null && $this->animalFile !== null) {
             $this->updatedAt = new DateTimeImmutable();
         }
+
+        return $this;
+    }
+
+    public function getHabitatFile(): ?File
+    {
+        return $this->habitatFile;
+    }
+
+    public function setHabitatFile(?File $habitatFile): static
+    {
+        $this->habitatFile = $habitatFile;
+
+        // unset the owning side of the relation if necessary
+        if ($habitatFile === null && $this->habitatFile !== null) {
+            $this->updatedAt = new DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
+    public function getAnimal(): ?Animal
+    {
+        return $this->animal;
+    }
+
+    public function setAnimal(?Animal $animal): static
+    {
+        $this->animal = $animal;
+
+        return $this;
+    }
+
+    public function getHabitat(): ?Habitat
+    {
+        return $this->habitat;
+    }
+
+    public function setHabitat(?Habitat $habitat): static
+    {
+        $this->habitat = $habitat;
 
         return $this;
     }

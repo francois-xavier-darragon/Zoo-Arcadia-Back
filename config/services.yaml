@@ -31,4 +31,10 @@ services:
             $databaseService: '@App\Service\DatabaseService'
             $databaseUrl: '%env(resolve:DATABASE_URL)%'
     App\Command\MakeTraitCommand:
-        tags: [ 'console.command' ]        
+        tags: [ 'console.command' ]
+    App\Service\GlobalVariablesService:
+        arguments:
+            $twig: '@twig'
+            $habitatRepository: '@App\Repository\HabitatRepository'
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }            

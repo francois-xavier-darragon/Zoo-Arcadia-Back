@@ -25,7 +25,7 @@ class ServiceType extends AbstractType
             ]
         ])
         ->add('description', TextareaType::class, [
-            'label' => 'Rapport vétérinaire',
+            'label' => 'Description',
             'label_attr' => [
                 'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
             ],

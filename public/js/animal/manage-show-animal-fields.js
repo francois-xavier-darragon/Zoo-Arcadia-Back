@@ -68,15 +68,18 @@ function showData(url) {
     );
 
     function showInfo(btnGallery, btnVeterinaryReports, gallery, veterinaryReports) {
-
-        btnGallery.addEventListener("click", function() {
-            gallery.classList.remove('d-none')
-            veterinaryReports.classList.add('d-none')
-        })
+        if(btnGallery != null) {
+            btnGallery.addEventListener("click", function() {
+                gallery.classList.remove('d-none')
+                veterinaryReports.classList.add('d-none')
+            })
+        }
 
         btnVeterinaryReports.addEventListener("click", function() {
             veterinaryReports.classList.remove('d-none')
-            gallery.classList.add('d-none')
+            if(btnGallery != null){
+                gallery.classList.add('d-none')
+            }
         })
     }
 }

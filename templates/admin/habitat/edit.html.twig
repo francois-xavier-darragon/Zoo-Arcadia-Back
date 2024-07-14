@@ -4,7 +4,7 @@
     <div class="row mt-5 mb-5 justify-content-center">
         <div class="col-lg-8">
             <div class="d-flex justify-content-center">
-                <div style="width: 100%;">
+                <div class="p-4 custom-border" style="width: 100%;">
                     {% if mode == 'Ajouter' %}
                     <h1 class=" mb-4">{{mode}}</h1>
                         {{ include('admin/habitat/_form.html.twig') }}
@@ -27,3 +27,18 @@
     {% endif %}
 
 {% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script type="module">
+import {addImgeFilds} from "/js/image/add-image-fiedls.js";
+
+    let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
+    const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
+    const divSelected = document.getElementById('habitat_images')
+    const entityName = 'habitat';
+    const filedsName = 'habitatFile';
+
+    addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) 
+</script>
+{% endblock %}
+

@@ -52,7 +52,7 @@ class Animal
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\ManyToMany(targetEntity: Image::class, mappedBy: 'animals', cascade: ['persist'])]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'animal', cascade: ['persist'])]
     private Collection $images;
 
     public function __construct()
@@ -158,7 +158,7 @@ class Animal
     {
         if (!$this->images->contains($image)) {
             $this->images->add($image);
-            $image->addAnimal($this);
+            $image->setAnimal($this);
         }
 
         return $this;
@@ -167,11 +167,13 @@ class Animal
     public function removeImage(Image $image): static
     {
         if ($this->images->removeElement($image)) {
-            $image->removeAnimal($this);
+            // set the owning side to null (unless already changed)
+            if ($image->getAnimal() === $this) {
+                $image->setAnimal(null);
+            }
         }
 
         return $this;
     }
-
 
 }
