@@ -4,6 +4,7 @@
 
 {% block body %}
 {% set sortedReports = animal.veterinaryReports|sort((a, b) => b.createdAt.timestamp <=> a.createdAt.timestamp) %}
+
 {{ form_start(form) }}  
  <div class="container mt-5 custom-border">
         <div class="row m-4 ">
@@ -53,16 +54,17 @@
                 <div class="d-flex flex-column mb-2">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h3 class="">Rapports vétérinaire :</h3>
-                        <a id="new-rapport" type="button" class='text-primary' title="Nouveau rapport vétérinaire">
-                            {% include "_include/_components/_icons/_add_repport_icon_svg.html.twig" %}
-                        </a>
+                        {% if is_granted('ROLE_VETERINARY') %}
+                             <a id="new-rapport" type="button" class='text-primary' title="Nouveau rapport vétérinaire">
+                                {% include "_include/_components/_icons/_add_repport_icon_svg.html.twig" %}
+                            </a>
+                        {% endif %}
                     </div>
-                    {% set searchRole = 'ROLE_VETERINARY' %}
-
+                  
                     {{ form_start(form) }}
                     <div class="d-flex mt-1 mb-2">
                         <h5 class="mt-1">Santé :</h5>
-                        {% if searchRole in app.user.roles %}
+                        {% if  is_granted('ROLE_VETERINARY') %}
                             <h5 class="ms-1"> {{ form_row(form.health) }}</h5>
                         {% else %}
                             <h5 class="mt-1 ms-1">{{ animal.health }}</h5>
@@ -71,7 +73,9 @@
                     <hr>
                     <div id="rapport-create" class="mt-1"></div>
                     <div id="add-rapport" class="mt-1 d-none">
-                        <p class="text-muted mb-0" >{{ form_row(form.veterinaryReports) }}</p>
+                        {% if is_granted('ROLE_VETERINARY') %}
+                            <p class="text-muted mb-0" >{{ form_row(form.veterinaryReports) }}</p>
+                        {% endif %}
                         <div class = "d-flex justify-content-end">
                             <button class="btn btn-secondary submit-rapport" title="valider">Valider</button>
                         </div>
@@ -81,10 +85,12 @@
                         <div class="ms-1" >
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y')}}</p> 
+                                {% if is_granted('ROLE_VETERINARY') %}
                                 {# <a class="text-secondary" title="Editer" href="{{ path('app_admin_veterinaryreport_edit', {'id': veterinaryReport.id}) }}">  #}
                                  <a class="text-secondary" title="Editer" href=""> 
                                     {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                                 </a>
+                                {% endif %}
                             </div>
                             <p class="text-dark">{{ veterinaryReport.detail }}</p>
                         </div>

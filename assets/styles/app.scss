@@ -108,9 +108,15 @@ p {
     height: 125px;
 }
 
-.button-container {
+.button-container, .button-avatar-container {
     position: absolute;
+}
+.button-container {
     right: 0;
+}
+
+.button-avatar-container {
+    right: 64px;
 }
 
 .bi-exclamation-circle {

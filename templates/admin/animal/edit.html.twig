@@ -49,18 +49,12 @@
 <script type="module">
     import {addImgeFilds} from "/js/image/add-image-fiedls.js";
 
-    const entityId = {{ animal.id ? animal.id|json_encode() : 'null'}}
     let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
     const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
     const divSelected = document.getElementById('animal_images')
     const entityName = 'animal';
     const filedsName = 'animalFile';
 
-    let url
-    {% if animal.id is not null %}
-            url = "{{ path('app_admin_animal_remove_image', { 'animal': animal.id, }) }}";  
-    {% endif %}
-    
-    addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName, url) 
+    addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) 
 </script>
 {% endblock %}

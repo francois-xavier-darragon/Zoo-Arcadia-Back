@@ -31,36 +31,13 @@
 
 {% block javascripts %}
 {{ parent() }}
-{# <script src="{{ asset('js/image/image-management.js') }}" ></script> #}
 <script src="{{ asset('js/password/toggle-password-fields.js') }}" ></script>
-<script type="module">
-    import { btnDnone, newImage, removeExistingImage} from "/js/image/image-management.js";
-    const userId = {{ user.id ? user.id|json_encode() : 'null'}}
-    const btnTrash = document.getElementById('remove-avatar-button');
-    let defaultImg = null;
-    const btnEdit = document.getElementById('edit-avatar-button');
+<script type="module"> 
+import {manageAvatar} from "/js/image/avatar-management.js";
+   
+    const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
+    const path = "{{ asset('images/default/default.png') }}";
 
-    if(userId === null) {
-        btnDnone(btnTrash)
-        newImage(btnEdit, defaultImg) 
-    } else {
-        const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
-
-        if(userAvatar != null) {
-            btnDnone(btnEdit)  
-        } else{
-            btnDnone(btnTrash)  
-        }
-
-        {% if user.id is not null %}
-            const path = "{{ asset('images/default/default.png') }}";
-            const existingImg = document.getElementById('{{ form.avatar.removeUserAvatarFile.vars.id }}').value = 1;
-            const url = "{{ path('app_admin_user_remove_avatar', { 'user': user.id }) }}";
-            removeExistingImage(btnTrash, userId, url, path, btnEdit, existingImg)
-        {% endif %}
-
-        newImage(btnEdit, existingImg);
-    } 
+    manageAvatar(userAvatar, path)
 </script>
-
 {% endblock %}

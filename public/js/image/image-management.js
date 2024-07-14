@@ -13,13 +13,12 @@ export function btnDnone(btnToHide) {
     }
 }
 
-export function newImage(btnEdit, imgElement = null){
+export function newImage(btnEdit, imgElement){
    
     btnEdit.addEventListener('change', function(event) {
         const files = event.target.files;
-        const file = event.target.files[0];
-      
-        if (files.length > 0 && imgElement != null) {
+        
+        if (files.length > 0 ) {
             const imageContainer = document.querySelector('.image-container'); 
             imageContainer.innerHTML = '';
 
@@ -27,9 +26,6 @@ export function newImage(btnEdit, imgElement = null){
                const imageUrl = URL.createObjectURL(file);
                imgElement.src = imageUrl; 
             });
-        } else if(file)  {
-            const imageUrl = URL.createObjectURL(file);
-            document.querySelector('.image-card img').src = imageUrl;
         }
        
     });
@@ -37,6 +33,7 @@ export function newImage(btnEdit, imgElement = null){
 
 export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
     removeButton.addEventListener("click", function() {
+        
         const imageId = existingImg.dataset.imgId
         
         fetch(url, {
@@ -55,7 +52,7 @@ export function removeExistingImage(removeButton, id, url, path, btnToHide, exis
         })
         .then(data => {
             if (data.status === 'success') {
-                // document.querySelector('img').src = path
+                
                 existingImg.src = path
                 btnToHide.classList.remove('d-none');
                 removeButton.classList.add('d-none');
@@ -69,6 +66,5 @@ export function removeExistingImage(removeButton, id, url, path, btnToHide, exis
             alert('An error occurred while trying to remove the image.');
         });
     });
-
-    
 }
+

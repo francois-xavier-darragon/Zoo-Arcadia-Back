@@ -1,6 +1,6 @@
 import { btnDnone, newImage, removeExistingImage } from './image-management.js';
 
-export function addImgeFilds(entityId, existingImages, defaultImagePath, divSelected, entityName, filedsName, url) {
+export function addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) {
     document.addEventListener('DOMContentLoaded', function() {
         const addImageBtn = document.getElementById('add-image-btn');
         const imageFieldsList = document.getElementById('image-fields-list');
@@ -18,6 +18,11 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
            index = currentImageCount;
         }
     
+        const animalDataElement = document.getElementById('animal-data');
+        const animalId = animalDataElement.dataset.animalId;
+        let url = animalDataElement.dataset.removeImageUrl;
+        url = url.replace('ANIMAL_ID', animalId);
+
         addImageBtn.addEventListener('click', function() {
              if (index < maxImages) {
                 const newImageField = createImageField(index, defaultImagePath, imgId);
@@ -63,9 +68,9 @@ export function addImgeFilds(entityId, existingImages, defaultImagePath, divSele
             const btnTrash = clone.getElementById(`remove-image-button-${index}`);
             const btnEdit = clone.getElementById(`edit-image-button-${index}`);
             newImage(btnEdit, img)
-            removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img)
+            removeExistingImage(btnTrash, animalId, url, defaultImagePath, btnEdit, img)
 
-            if(entityId === null){
+            if(animalId === null){
                 btnDnone(btnTrash)
             } else if(index < existingImages.length ) {
                 btnDnone(btnEdit)

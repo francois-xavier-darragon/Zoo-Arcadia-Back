@@ -48,14 +48,14 @@ class UserController extends AbstractController
             'is_new'  => true,
             'is_edit' => false
         ]);
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $avatarFile = $form->get('avatar')->getdata();
 
+            $avatarFile = $form->get('avatar')->getdata();
             if($avatarFile != null) {
-               $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile(); 
-               $user->setAvatar(null);
+               $user->setAvatar($avatarFile);
             }
 
             $roles[]= $form->get('roles')->getdata();
@@ -102,10 +102,9 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $avatarFile = $form->get('avatar')->getdata();
-
+           
             if($avatarFile != null) {
-               $avatarFile = $form->get('avatar')->getdata()->getUserAvatarFile(); 
-               $user->setAvatar(null);
+               $user->setAvatar($avatarFile);
             }
 
             $roles[]= $form->get('roles')->getdata();

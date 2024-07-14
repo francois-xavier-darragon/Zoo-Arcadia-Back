@@ -1,6 +1,7 @@
 
 {{ form_start(form) }}
-    <div>
+    <div id="animal-data"  data-animal-id="{{ animal.id|default('') }}"
+     data-remove-image-url="{{ path('app_admin_animal_remove_image', { 'animal': 'ANIMAL_ID' }) }}">
         <button id="add-image-btn" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image</button>
 
         <div id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}">
