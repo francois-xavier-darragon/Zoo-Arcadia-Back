@@ -4,45 +4,54 @@
 
 {% block body %}
   
- <div class="container mt-5 custom-border">
-        <div class="row m-4 ">
-            <div class="col-md-6">
-                <div class="card mb-4">
-                    {# <img src="" class="card-img-top" alt="notice Image"> #}
-                    <div class="card-body text-start mb-2">
-                        <a class="text-secondary" title="Editer" href="{{ path('app_admin_notice_edit', {'id': notice.id}) }}">
-                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
-                        </a>
-                        <a type='button' class="text-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ notice.id }}" title="Supprimer">
-                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-4">
-                <div class="card-body">
-                <div class="row mb-2">
-                <div class="col-4 font-weight-bold">nickname</div>
-                <div class="col-8">{{ notice.nickname }}</div>
-            </div>
-                <div class="row mb-2">
-                    <div class="col-4 font-weight-bold">comment</div>
-                    <div class="col-8">{{ notice.comment }}</div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-4 font-weight-bold">visible</div>
-                    <div class="col-8">{{ notice.visible }}</div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-4 font-weight-bold">user</div>
-                    <div class="col-8">{{ notice.user }}</div>
-                </div>
-                    </div>
+<div class="container mt-5 custom-border" style="width: 70%;">
+    <div class="row m-4 card">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="card-body d-flex mb-2">
+                <div class="ms-auto">
+                    <a type='button' class="text-danger mb-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ notice.id }}" title="Supprimer">
+                        {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                    </a>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="d-flex justify-content-start mb-2">
+            <div "d-flex me-3">
+                <img src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" class="card-img-top rounded-circle" alt="User-Image" style="width: 75px; height: 75px;">
+            </div>
+            <div class="d-flex mb-2 ms-3 me-3">
+                <h4 class="">Pseudo :</h4>
+                <h4 class="ms-1">{{ notice.nickname }}</h4>
+            </div>
+            <div class="d-flex mb-2">
+                <h4 class="">Utilisateur :</h4>
+                <h4 class="ms-1">{{ notice.user }}</h4>
+            </div>
+        </div>
+        {{ form_start(form, {'attr': {'id': 'form-id'}}) }}
+        <div class="d-flex mt-1 mb-2">
+            <h5 class="mt-1">Staut :</h5>
+            {% if  is_granted('ROLE_ADMIN') %}
+                <h5 class="ms-1"> {{ form_row(form.isvisible) }}</h5>
+            {% else %}
+                <h5 class="mt-1 ms-1">{{ notice.isvisible }}</h5>
+            {% endif %}
+        </div>
+        
+        <div class="mb-2">
+            <h4 class="card-body">Commentaire :</h4>
+            <div class="card p-4 mb-2" >
+                <p class="text-muted mb-0" >{{ notice.comment }}</p>
+            </div>
+            {% if  is_granted('ROLE_ADMIN') %}
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-secondary mt-2" href="{{ path('app_admin_notice_index') }}" title="valider">Valider</button>
+            </div>
+            {% endif %}
+        </div>
+        {{ form_end(form) }}
+    </div>    
+</div>
 
     {% if delete_btn is defined %}
         {% include '/admin/notice/_delete_modal.html.twig' with {'path_form' : path('app_admin_notice_delete', {'id': notice.id}), 'csrf_token': csrf_token, 'notice': notice } %}

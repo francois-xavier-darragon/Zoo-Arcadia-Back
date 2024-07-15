@@ -9,7 +9,7 @@
  <div id="animal-data" data-animal-id="{{ animal.id|default('') }}"
      data-new-url="{{ path('app_admin_veterinaryreport_new', { 'id': 'ANIMAL_ID'}) }}" 
      class="container mt-5 custom-border">
-        <div class="row m-4 ">
+        <div class="row m-4 card">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h2 class="">Habitat :</h2>
             <h2 class="ms-1">{{ animal.habitat }}</h2>

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div class='row mt-5 mb-5'>
-    <div class='col-sm-12 p-4 custom-border'> 
+    <div class='col-sm-12 p-4 custom-border card'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
             <h1>Liste des Avis</h1>
             <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_notice_new') }}" title="Ajouter un notice">Ajouter un Avis</a>
@@ -9,26 +9,29 @@
         <table class="table custom-table">
             <thead>
                 <tr>
+                    <th class="text-start">avatar</th>
                     <th class="text-center">Pseudo</th>
+                    <th class="text-center">Utilisateur</th>
                     <th class="text-center">Commentaire</th>
-                    <th class="text-center">validé</th>
-                    <th class="text-end">Utilisateur</th>
+                    <th class="text-center">Status</th>
                     <th class="text-end">actions</th>
                 </tr>
             </thead>
             <tbody>
             {% for notice in notices %}
                 <tr>
+                    <td class="text-start">
+                        <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="50" height="50">
+                    </td>
                     <td class="text-center">{{ notice.nickname }}</td>
-                    <td class="text-center">{{ notice.comment }}</td>
-                    <td class="text-center">{{ notice.visible }}</td>
                     <td class="text-center">{{ notice.user }}</td>
+                    <td class="text-center">{{ notice.comment }}</td>
+                    {% if arrayStatut[notice.visible] is defined %}
+                    <td class="text-center"> {{ arrayStatut[notice.visible] }}</td>
+                    {% endif %}    
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_notice_show', {'id': notice.id}) }}" title="voir">
                             {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
-                        </a>
-                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_notice_edit', {'id': notice.id}) }}" title="éditer">
-                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                         </a>
                         <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[notice.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ notice.id }}" title="Supprimer">
                              {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}

@@ -14,6 +14,12 @@ class Notice
     use TimestampableTrait;
     use SoftDeletableTrait;
     
+    CONST STATUT = [
+        'En attente',
+        'Validé',
+        'Refusé'
+    ];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -26,14 +32,14 @@ class Notice
     private ?string $comment = null;
 
     #[ORM\Column]
-    private ?bool $isVisible = null;
+    private ?int $isVisible = null;
 
     #[ORM\ManyToOne(inversedBy: 'notices')]
     private ?User $user = null;
 
     public function __construct()
     {
-        $this->isVisible = false;
+        $this->isVisible = 0;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
         $this->setDeletedAt(null);
@@ -68,12 +74,12 @@ class Notice
         return $this;
     }
 
-    public function isVisible(): ?bool
+    public function isVisible(): ?int
     {
         return $this->isVisible;
     }
 
-    public function setVisible(bool $isVisible): static
+    public function setVisible(int $isVisible): static
     {
         $this->isVisible = $isVisible;
 
