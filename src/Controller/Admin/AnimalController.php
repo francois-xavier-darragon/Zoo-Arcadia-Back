@@ -85,6 +85,7 @@ class AnimalController extends AbstractController
     public function read(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
+        $csrfTokenVeterinaryReport = $csrfTokenManager->getToken('delete-veterinaryReport' . $animal->getId())->getValue();
         $roles = $this->getRole($tokenStorage);
 
         $form = $this->createForm(VeterinaryReportType::class, $animal, [
@@ -103,6 +104,7 @@ class AnimalController extends AbstractController
         return $this->render('admin/animal/show.html.twig', [
             'form' => $form,
             'csrf_token'  => $csrfToken,
+            'csrf_token_VeterinaryReport' => $csrfTokenVeterinaryReport,
             'animal' => $animal,
             'delete_btn' => true,
         ]);

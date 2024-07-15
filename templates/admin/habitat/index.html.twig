@@ -9,10 +9,10 @@
         <table class="table custom-table">
             <thead>
                 <tr>
-                    {# <th class="text-center">Images</th> #}
-                    <th class="text-start">Name</th>
+                    <th class="text-start">Images</th>
+                    <th class="text-center">Name</th>
                     <th class="text-center">Description</th>
-                    {# <th class="text-center">Animals</th> #}
+                    <th class="text-center">Liste des animaux</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -20,11 +20,22 @@
             {% for habitat in habitats %}
                 <tr>
                     <td class="text-start">
-                            <img src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="première image de la liste" width="70" height="50">
-                        </td>
+                        <img src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="première image de la liste" width="70" height="50">
+                    </td>
                     <td class="text-start">{{ habitat.name }}</td>
                     <td class="text-center">{{ habitat.description }}</td>
-                    {# <td class="text-center">{{ habitat.animals }}</td> #}
+                   <td class="text-center" style="width: 0">
+                         {% if habitat.animals|length > 0 %}
+                            <select class="form-select form-select-sm custom-narrow-select" aria-label="Liste des animaux">
+                                <option selected disabled hidden></option>
+                                {% for animal in habitat.animals %}
+                                    <option disabled>{{ animal.name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <span>Aucun animal</span>
+                        {% endif %}
+                    </td>
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_habitat_show', {'id': habitat.id}) }}" title="voir">
                             {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}

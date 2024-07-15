@@ -122,3 +122,37 @@ p {
 .bi-exclamation-circle {
     margin-top: 5px;
 }
+
+.custom-narrow-select {
+    width: 80px;  /* Vous pouvez ajuster cette valeur selon vos besoins */
+    padding-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.custom-narrow-select {
+    width: 80px;  
+    padding-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 0.2rem;
+    cursor: pointer;
+}
+
+.custom-narrow-select option {
+    background-color: white;
+    color: black;
+}
+
+.custom-narrow-select option:disabled {
+    color: black;
+    font-style: normal;
+}
+
+.custom-narrow-select option[disabled]:first-child {
+    display: none;
+}

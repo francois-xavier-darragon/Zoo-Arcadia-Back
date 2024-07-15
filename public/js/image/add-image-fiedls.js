@@ -29,7 +29,9 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             animalId = animalDataElement.dataset.animalId;
             url = animalDataElement.dataset.removeImageUrl;
             url = url.replace('ANIMAL_ID', animalId);
-        } else {
+        } 
+        
+        if(entityName === 'habitat'){
             habitatDataElement = document.getElementById('habitat-data');
             habitatId = habitatDataElement.dataset.habitatId;
             url = habitatDataElement.dataset.removeImageUrl;
@@ -81,9 +83,14 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             const btnTrash = clone.getElementById(`remove-image-button-${index}`);
             const btnEdit = clone.getElementById(`edit-image-button-${index}`);
             newImage(btnEdit, img)
-            removeExistingImage(btnTrash, animalId, url, defaultImagePath, btnEdit, img)
 
-            if(animalId === null){
+            if(entityName === 'animal') {
+                removeExistingImage(btnTrash, animalId, url, defaultImagePath, btnEdit, img)
+            } else {
+                removeExistingImage(btnTrash, habitatId, url, defaultImagePath, btnEdit, img)
+            }
+           
+            if(animalId === null || habitatId === null){
                 btnDnone(btnTrash)
             } else if(index < existingImages.length ) {
                 btnDnone(btnEdit)

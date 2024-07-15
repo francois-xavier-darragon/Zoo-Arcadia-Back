@@ -1,10 +1,14 @@
 <nav class="sidebar bg-dark">
     <ul class="nav flex-column">
         <li class="nav-item">
-            <a class="nav-link active" href="{{path('app_admin_notice_index')}}">Accueil</a>
+            <a class="nav-link active" href="{{path('app_admin_notice_index')}}">
+             {% include "_include/_components/_icons/_home_icon_svg.html.twig" %} 
+             Accueil</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ path('app_admin_user_index') }}">Utilisateur</a>
+            <a class="nav-link" href="{{ path('app_admin_user_index') }}">  
+            {% include "_include/_components/_icons/_user_icon_svg.html.twig" %}
+            Utilisateur</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{path('app_admin_habitat_index')}}">Habitats</a>
