@@ -35,7 +35,7 @@ class NoticeController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_notice_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, NoticeRepository $noticeRepository, UploaderHelper $uploaderHelper): Response
+    public function new(Request $request, NoticeRepository $noticeRepository): Response
     {
         $notice = new Notice();
         $form = $this->createForm(NoticeType::class, $notice);

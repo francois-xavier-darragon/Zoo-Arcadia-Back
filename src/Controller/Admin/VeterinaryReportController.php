@@ -15,23 +15,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 #[Route('/admin/animals/{id}/veterinaryreports')]
 class VeterinaryReportController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_veterinaryreport_index', methods: ['GET'])]
-    public function index(VeterinaryReportRepository $veterinaryreportRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
-        $veterinaryreports = $veterinaryreportRepository->findAllveterinaryreport();
-        $csrfTokens = [];
-
-        foreach ($veterinaryreports as $veterinaryreport) {
-            $csrfTokens[$veterinaryreport->getId()] = $csrfTokenManager->getToken('delete-veterinaryreport' . $veterinaryreport->getId())->getValue();
-        }
-
-        return $this->render('admin/veterinaryreport/index.html.twig', [
-            'veterinaryreports' => $veterinaryreportRepository->findAllVeterinaryReport(),
-            'csrf_tokens'    => $csrfTokens,
-            'delete_btn'    => true,
-        ]);
-    }
-
     #[Route('/new', name: 'app_admin_veterinaryreport_new', methods: ['GET', 'POST'])]
     public function new(Request $request, Animal $animal, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
     {

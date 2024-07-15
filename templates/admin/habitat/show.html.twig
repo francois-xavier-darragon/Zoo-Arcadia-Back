@@ -21,13 +21,21 @@
             </div>
         </div>
     <div>
-    <h2 class="">Gallerie :</h2>
-    <div class="row">
-    {% for image in habitat.images %}
-        <div  class="col-3 mb-3">
-            <img src="{{ image ? uploaderHelper.asset(image, 'habitatFile') : asset('images/default/default.png') }}" class="card-img-top rounded" alt="habitat-Image" style="width: 100%; height: auto;">
+    <div>
+        <h2>Description :</h2>
+        <div class="card p-4 mb-2" >
+            <p class="text-muted mb-0" >{{habitat.description}}</p>
         </div>
-    {% endfor %}
+    </div>
+    <div>
+        <h2>Gallerie :</h2>
+        <div class="row">
+        {% for image in habitat.images %}
+            <div  class="col-3 mb-3">
+                <img src="{{ image ? uploaderHelper.asset(image, 'habitatFile') : asset('images/default/default.png') }}" class="card-img-top rounded" alt="habitat-Image" style="width: 100%; height: auto;">
+            </div>
+        {% endfor %}
+        </div>
     </div>
 </div>
 
