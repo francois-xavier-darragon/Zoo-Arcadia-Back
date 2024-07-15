@@ -25,6 +25,10 @@ class NoticeType extends AbstractType
                         'data-placeholder' => 'Choisir une race existante'
                     ],
             ])
+            //TODO à supprimer après les test
+            ->add('comment')
+            ->add('nickname')
+            ->add('user')
         ;
     }
 

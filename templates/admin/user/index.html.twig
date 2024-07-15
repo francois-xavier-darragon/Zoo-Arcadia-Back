@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
 <div class='row mt-5 mb-5'>
-    <div class='col-sm-12 p-4 custom-border'> 
+    <div class='col-sm-12 p-4 custom-border card'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
             <h1>Utilisateurs</h1>
             <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_user_new') }}" title="Ajouter un user">Ajouter un utilisateur</a>
@@ -33,9 +33,9 @@
                     {% endfor %}
                     <td class="text-center">{{ user.email }}</td>
                     <td class="text-end">
-                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_user_show', {'id': user.id}) }}" title="voir">
+                        {# <a type='button' class='text-primary me-2' href="{{ path('app_admin_user_show', {'id': user.id}) }}" title="voir">
                             {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
-                        </a>
+                        </a> #}
                         <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
                             {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                         </a>
