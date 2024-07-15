@@ -4,16 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\Animal;
 use App\Entity\VeterinaryReport;
-use App\Form\VeterinaryReportType;
 use App\Repository\AnimalRepository;
 use App\Repository\VeterinaryReportRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 
 #[Route('/admin/animals/{id}/veterinaryreports')]
 class VeterinaryReportController extends AbstractController
@@ -66,7 +63,7 @@ class VeterinaryReportController extends AbstractController
         ]), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
-    #[Route('/{report}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
+    #[Route('/{veterinaryreport}', name: 'app_admin_veterinaryreport_show', methods: ['GET'])]
     public function read(VeterinaryReport $veterinaryreport, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-veterinaryreport' . $veterinaryreport->getId())->getValue();
@@ -78,9 +75,10 @@ class VeterinaryReportController extends AbstractController
         ]);
     }
 
-    #[Route('/{veterinaryreport}/edit', name: 'app_admin_veterinaryreport_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, VeterinaryReport $veterinaryReport, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
+    #[Route('/edit', name: 'app_admin_veterinaryreport_edit', methods: ['POST'])]
+    public function edit(Request $request, Animal $animal, VeterinaryReportRepository $veterinaryreportRepository, AnimalRepository $animalRepository): Response
     {
+
         $datas = json_decode($request->getContent(), true);
 
         if (!$datas) {
@@ -93,6 +91,9 @@ class VeterinaryReportController extends AbstractController
         $checkHealth = $healths[$health];
         $animal->setHealth($checkHealth);
 
+        $veterinaryReportId = $datas['reportId'];
+        $veterinaryReport = $veterinaryreportRepository->findOneById($veterinaryReportId);
+        
         $veterinaryReport->setDetail($datas['veterinaryReport']);
 
         $veterinaryreportRepository->saveVeterinaryReport($veterinaryReport, true);
@@ -106,23 +107,22 @@ class VeterinaryReportController extends AbstractController
         ]), Response::HTTP_OK, ['Content-Type' => 'application/json']);
     }
 
-    // #[Route('/{veterinaryreport}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
-    // public function delete(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository): Response
-    // {
-    //     if($veterinaryreport->getDeletedAt()){
-    //         return $this->redirectToRoute('app_admin_veterinaryreport_index');
-    //     }
+    #[Route('/{veterinaryreport}/delete', name: 'app_admin_veterinaryreport_delete', methods: ['POST'])]
+    public function delete(Request $request, VeterinaryReport $veterinaryreport, VeterinaryReportRepository $veterinaryreportRepository): Response
+    {
+        if($veterinaryreport->getDeletedAt()){
+            $this->addFlash('error', 'Ce rapport a déjà été supprimé.');
+        }
 
-    //     $submittedToken = $request->request->get('token');
+        $submittedToken = $request->request->get('token');
         
-    //     if ($this->isCsrfTokenValid('delete-veterinaryreport'.$veterinaryreport->getId(), $submittedToken)) {
-    //         $veterinaryreportRepository->removeVeterinaryReport($veterinaryreport, true);
+        if ($this->isCsrfTokenValid('delete-veterinaryreport'.$veterinaryreport->getId(), $submittedToken)) {
+            $veterinaryreportRepository->removeVeterinaryReport($veterinaryreport, true);
 
-    //         $this->addFlash('success', 'Le utilisateur "'.$veterinaryreport->getName().'" a été supprimé avec succès.');
-    //         return $this->redirectToRoute('app_admin_veterinaryreport_index');
-    //     }
+            $this->addFlash('success', 'Le rapport a été supprimé avec succès.');
+        }
 
-    //     $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet veterinaryreport, veuillez réessayer.');
-    //     return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
-    // }
+        $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet veterinaryreport, veuillez réessayer.');
+        return $this->redirectToRoute('app_admin_veterinaryreport_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

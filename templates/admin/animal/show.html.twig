@@ -85,19 +85,27 @@
                             <p class="text-muted mb-0" >{{ form_row(form.veterinaryReports) }}</p>
                         {% endif %}
                         <div class="d-flex justify-content-end">
-                            <button class="btn btn-secondary submit-rapport" title="valider">Valider</button>
+                            <button class="btn btn-secondary submit-report" title="valider">Valider</button>
                         </div>
                     </div>
                     {% for veterinaryReport in sortedReports  %}
                         <hr>
-                        <div class="ms-1" id="veterinaryreport-data" data-veterinaryreport-id="{{ veterinaryReport.id|default('') }}"
-                        data-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID', 'veterinaryreport' : 'VETERINARYREPORT_ID' }) }}">
+                        <div class="ms-1 veterinaryreport-data" data-veterinaryreport-id="{{ veterinaryReport.id|default('') }}"
+                        data-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID' }) }}">
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y')}}</p> 
                                 {% if is_granted('ROLE_VETERINARY') %}
-                                <a type="button" class="text-secondary edit-report" title="Editer"> 
-                                    {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
-                                </a>
+                                <div>
+                                    <a type="button" class="text-secondary edit-report" title="Editer"> 
+                                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                                    </a>
+                                    <a type='button' class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ veterinaryReport.id }}" title="Supprimer">
+                                        {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                                    </a>
+                                </div>
+                                    {% if delete_btn is defined %}
+                                        {% include '/admin/veterinaryreport/_delete_modal.html.twig' with {'path_form' : path('app_admin_veterinaryreport_delete', {'id': animal.id, 'veterinaryreport': veterinaryReport.id}), 'csrf_token_VeterinaryReport': csrf_token_VeterinaryReport, 'veterinaryreport': veterinaryReport} %}
+                                    {% endif %}
                                 {% endif %}
                             </div>
                             <p id="veterinaryreport-{{ veterinaryReport.id }}" class="text-dark">{{ veterinaryReport.detail }}</p>
