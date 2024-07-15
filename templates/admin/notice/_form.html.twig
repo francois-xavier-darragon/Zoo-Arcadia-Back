@@ -9,7 +9,7 @@
         {% elseif mode == "Modifier" %}
             <button class="btn btn-primary" title="Valider">Valider</button>
         {% else %}
-            <div class = "d-flex">
+            <div class="d-flex">
                 <button class="btn btn-secondary" href="{{ path('app_admin_notice_index') }}" title="valider">Valider</button>
                 <button type='button' class="btn btn-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ notice.id }}" title="supprimer">
                     supprimer

@@ -29,7 +29,8 @@ class NoticeController extends AbstractController
             'notices' => $noticeRepository->findAllNotice(),
             'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
-            'uploaderHelper' => $uploaderHelper
+            'uploaderHelper' => $uploaderHelper,
+            'arrayStatut' => Notice::STATUT
         ]);
     }
 
@@ -50,25 +51,11 @@ class NoticeController extends AbstractController
             'notice' => $notice,
             'form' => $form,
             'mode' => 'Ajouter',
-            // 'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_notice_show', methods: ['GET'])]
-    public function read(Notice $notice, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
-    {
-        $csrfToken = $csrfTokenManager->getToken('delete-notice' . $notice->getId())->getValue();
-
-        return $this->render('admin/notice/show.html.twig', [
-            'csrf_token'  => $csrfToken,
-            'notice' => $notice,
-            'delete_btn' => true,
-            // 'uploaderHelper' => $uploaderHelper,
-        ]);
-    }
-
-    #[Route('/{id}/edit', name: 'app_admin_notice_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Notice $notice, NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    #[Route('/{id}', name: 'app_admin_notice_show', methods: ['GET','POST'])]
+    public function read(Request $request, Notice $notice,NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-notice' . $notice->getId())->getValue();
 
@@ -76,18 +63,20 @@ class NoticeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $statut = $form->get('isvisible')->getData();
+            $notice->setVisible($statut);
+
             $noticeRepository->saveNotice($notice, true);
 
             return $this->redirectToRoute('app_admin_notice_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('admin/notice/edit.html.twig', [
+        return $this->render('admin/notice/show.html.twig', [
             'csrf_token'  => $csrfToken,
             'notice' => $notice,
             'form' => $form,
-            'mode'=> 'Modifier',
             'delete_btn' => true,
-            'uploaderHelper' => $uploaderHelper,
         ]);
     }
 
