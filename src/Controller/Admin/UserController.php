@@ -74,19 +74,6 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_user_show', methods: ['GET'])]
-    public function read(User $user, CsrfTokenManagerInterface $csrfTokenManager): Response
-    {
-        $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
-        
-        return $this->render('admin/user/show.html.twig', [
-            'csrf_token'     => $csrfToken,
-            'user'           => $user,
-            'delete_btn'     => true,
-            'allRoles'       => User::ROLES,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $passwordHasher): Response
     {
