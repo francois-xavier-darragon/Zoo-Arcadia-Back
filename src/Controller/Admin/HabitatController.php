@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Enclosure;
 use App\Entity\Habitat;
 use App\Form\HabitatType;
+use App\Repository\EnclosureRepository;
 use App\Repository\HabitatRepository;
 use App\Repository\ImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,13 +37,24 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_habitat_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, HabitatRepository $habitatRepository): Response
+    public function new(Request $request, HabitatRepository $habitatRepository, EnclosureRepository $enclosureRepository): Response
     {
         $habitat = new Habitat();
         $form = $this->createForm(HabitatType::class, $habitat);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // $enclore = new Enclosure;
+            // $enclosureName = $form->get('enclosureName')->getData();
+            // $enclosuredescription = $form->get('enclosuredescription')->getData();
+            // $enclore->setName($enclosureName);
+            // $enclore->setDescription($enclosuredescription);
+
+            // $habitat->addEnclosure($enclore);
+            foreach ($habitat->getEnclosures() as $enclosure) {
+                $enclosure->setHabitat($habitat);
+            }
+            
             $habitatRepository->saveHabitat($habitat, true);
 
             return $this->redirectToRoute('app_admin_habitat_index', [], Response::HTTP_SEE_OTHER);

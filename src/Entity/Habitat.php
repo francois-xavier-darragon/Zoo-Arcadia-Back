@@ -30,7 +30,7 @@ class Habitat
     /**
      * @var Collection<int, Animal>
      */
-    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat', orphanRemoval: true, cascade: ['persist'])]
     private Collection $animals;
 
     /**
@@ -39,12 +39,19 @@ class Habitat
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'habitat', cascade: ['persist'])]
     private Collection $images;
 
+    /**
+     * @var Collection<int, Enclosure>
+     */
+    #[ORM\OneToMany(targetEntity: Enclosure::class, mappedBy: 'habitat', orphanRemoval: true, cascade: ['persist'])]
+    private Collection $enclosures;
+
     public function __construct()
     {
         $this->animals = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
+        $this->enclosures = new ArrayCollection();
         $this->setDeletedAt(null);
     }
 
@@ -163,6 +170,36 @@ class Habitat
             // set the owning side to null (unless already changed)
             if ($image->getHabitat() === $this) {
                 $image->setHabitat(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Enclosure>
+     */
+    public function getEnclosures(): Collection
+    {
+        return $this->enclosures;
+    }
+
+    public function addEnclosure(Enclosure $enclosure): static
+    {
+        if (!$this->enclosures->contains($enclosure)) {
+            $this->enclosures->add($enclosure);
+            $enclosure->setHabitat($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnclosure(Enclosure $enclosure): static
+    {
+        if ($this->enclosures->removeElement($enclosure)) {
+            // set the owning side to null (unless already changed)
+            if ($enclosure->getHabitat() === $this) {
+                $enclosure->setHabitat(null);
             }
         }
 

@@ -55,6 +55,10 @@ class Animal
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'animal', cascade: ['persist'])]
     private Collection $images;
 
+    #[ORM\ManyToOne(inversedBy: 'animals')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Enclosure $enclosure = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -172,6 +176,18 @@ class Animal
                 $image->setAnimal(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEnclosure(): ?Enclosure
+    {
+        return $this->enclosure;
+    }
+
+    public function setEnclosure(?Enclosure $enclosure): static
+    {
+        $this->enclosure = $enclosure;
 
         return $this;
     }
