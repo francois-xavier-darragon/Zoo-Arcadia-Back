@@ -29,6 +29,10 @@
 {% endblock %}
 {% block javascripts %}
 {{ parent() }}
+<script src="{{ asset('js/enclosure/manage-add-enclosure-fields.js') }}"></script>
+<script>
+    manageEnclosureField()
+</script>
 <script type="module">
 import {addImgeFilds} from "/js/image/add-image-fiedls.js";
 

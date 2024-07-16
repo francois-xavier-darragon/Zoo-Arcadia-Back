@@ -45,9 +45,15 @@ class HabitatType extends AbstractType
                 'attr' => [
                     'class' => 'form-control form-control-solid',
                 ]
-        ])
-        // ->add('animals' ,TextType::class)
-        // ->add('
+            ])
+            ->add('enclosures', CollectionType::class, [
+                'entry_type' => EnclosureType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'prototype' => true,
+                'label' => false,
+            ])
         ;
     }
 
