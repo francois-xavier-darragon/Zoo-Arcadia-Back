@@ -11,7 +11,7 @@
                 <thead>
                     <tr>
                         <th class="w-15 text-start">Images</th>
-                        <th class="w-20 text-start">Name</th>
+                        <th class="w-20 text-start">Nom</th>
                         <th class="w-15 text-center">Liste des animaux</th>
                         <th class="w-15 text-center">Liste des enclos</th>
                         <th class="w-15 text-end">Actions</th>
@@ -26,7 +26,7 @@
                         <td class="text-start">{{ habitat.name }}</td>
                         <td class="text-center">
                             {% if habitat.animals|length > 0 %}
-                                <select class="form-select-sm custom-select" aria-label="Liste des animaux">
+                                <select class="form-select-sm custom-select habitat-select" aria-label="Liste des animaux">
                                     <option selected disabled hidden>voir la liste</option>
                                     {% for animal in habitat.animals %}
                                         <option disabled>{{ animal.name }}</option>
@@ -38,7 +38,7 @@
                         </td>
                         <td class="text-center">
                             {% if habitat.enclosures|length > 0 %}
-                                <select class="form-select-sm custom-select" aria-label="Liste des enclos">
+                                <select class="form-select-sm custom-select habitat-select" aria-label="Liste des enclos">
                                     <option selected disabled hidden>voir la liste</option>
                                     {% for enclosure in habitat.enclosures %}
                                         <option disabled>{{ enclosure.name }}</option>
@@ -71,4 +71,13 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/css/manage-width-select.js') }}"></script>
+<script>
+    const selects = document.querySelectorAll('.habitat-select');
+    manageWidthSelect(selects)
+</script>
+
 {% endblock %}
