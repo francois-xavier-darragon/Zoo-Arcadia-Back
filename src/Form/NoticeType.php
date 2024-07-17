@@ -13,7 +13,7 @@ class NoticeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('isvisible', ChoiceType::class, [
+            ->add('status', ChoiceType::class, [
                 'mapped' => false,
                 'label' => false,
                 'choices' => array_flip(NOTICE::STATUT),

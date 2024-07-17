@@ -26,8 +26,8 @@
                     <td class="text-center">{{ notice.nickname }}</td>
                     <td class="text-center">{{ notice.user }}</td>
                     <td class="text-center">{{ notice.comment }}</td>
-                    {% if arrayStatut[notice.visible] is defined %}
-                    <td class="text-center"> {{ arrayStatut[notice.visible] }}</td>
+                    {% if arrayStatut[notice.status] is defined %}
+                    <td class="text-center badge rounded-pill {% if arrayStatut[notice.status] == 'En attente' %}status-pending{% elseif arrayStatut[notice.status] == 'Refusé' %}status-refused{% elseif arrayStatut[notice.status] == 'Validé' %}status-valid{% endif %}"> {{ arrayStatut[notice.status] }}</td>
                     {% endif %}    
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_notice_show', {'id': notice.id}) }}" title="voir">

@@ -55,4 +55,20 @@ class NoticeRepository extends ServiceEntityRepository
     {
         $this->genericRepository->remove(Notice::class, $entity, $flush);
     }
+
+    public function countPendingNotices(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+            SELECT COUNT(id) as count
+            FROM notice
+            WHERE status = :status
+        ';
+        
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['status' => 'En attente']);
+
+        return (int) $result->fetchOne();
+    }
 }
