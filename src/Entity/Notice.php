@@ -32,14 +32,14 @@ class Notice
     private ?string $comment = null;
 
     #[ORM\Column]
-    private ?int $isVisible = null;
+    private ?int $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'notices')]
     private ?User $user = null;
 
     public function __construct()
     {
-        $this->isVisible = 0;
+        $this->status = 0;
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
         $this->setDeletedAt(null);
@@ -74,14 +74,14 @@ class Notice
         return $this;
     }
 
-    public function isVisible(): ?int
+    public function status(): ?int
     {
-        return $this->isVisible;
+        return $this->status;
     }
 
-    public function setVisible(int $isVisible): static
+    public function setVisible(int $status): static
     {
-        $this->isVisible = $isVisible;
+        $this->status = $status;
 
         return $this;
     }

@@ -44,13 +44,7 @@ class HabitatController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $enclore = new Enclosure;
-            // $enclosureName = $form->get('enclosureName')->getData();
-            // $enclosuredescription = $form->get('enclosuredescription')->getData();
-            // $enclore->setName($enclosureName);
-            // $enclore->setDescription($enclosuredescription);
-
-            // $habitat->addEnclosure($enclore);
+            
             foreach ($habitat->getEnclosures() as $enclosure) {
                 $enclosure->setHabitat($habitat);
             }

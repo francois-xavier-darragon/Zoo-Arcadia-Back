@@ -64,7 +64,7 @@ class NoticeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $statut = $form->get('isvisible')->getData();
+            $statut = $form->get('status')->getData();
             $notice->setVisible($statut);
 
             $noticeRepository->saveNotice($notice, true);
@@ -77,6 +77,7 @@ class NoticeController extends AbstractController
             'notice' => $notice,
             'form' => $form,
             'delete_btn' => true,
+            'arrayStatut' => Notice::STATUT
         ]);
     }
 

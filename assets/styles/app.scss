@@ -139,9 +139,49 @@ p, .health {
 .w-25 { width: 25%; }
 .w-30 { width: 30%; }
 
+.badge.status-pending,
+.badge.status-refused,
+.badge.status-valid {
+    display: inline-block;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 10rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    top: 20px;
+    width: 90px;
+    left: 55px;
+}
+
+.badge.status-pending {
+    color: #fff; 
+    background-color: #d44747;
+}
+
+.badge.status-refused {
+    color: #fff; 
+    background-color: #808080;
+}
+.badge.status-valid {
+    color: #000; 
+    background-color: $secondary;
+}
+
+td .badge {
+    display: block;
+    margin: 0 auto;
+    max-width: fit-content;
+}
+
 .habitat-select {
-    min-width: 120px;  /* Ajustez selon vos besoins */
-    max-width: 250px;  /* Ajustez selon vos besoins */
+    min-width: 120px;
+    max-width: 250px;
     width: auto;
     white-space: nowrap;
     overflow: hidden;
@@ -167,17 +207,6 @@ td {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-}
-
-.custom-select:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.custom-select option {
-    background-color: white;
-    color: black;
 }
 
 .custom-select option:disabled {
@@ -232,39 +261,5 @@ td {
 
 .bi-exclamation-circle {
     margin-top: 5px;
-}
-
-.custom-narrow-select {
-    width: 80px;
-    padding-right: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.custom-narrow-select {
-    width: 80px;  
-    padding-right: 20px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    background-color: #f8f9fa;
-    border: 1px solid #ced4da;
-    border-radius: 0.2rem;
-    cursor: pointer;
-}
-
-.custom-narrow-select option {
-    background-color: white;
-    color: black;
-}
-
-.custom-narrow-select option:disabled {
-    color: black;
-    font-style: normal;
-}
-
-.custom-narrow-select option[disabled]:first-child {
-    display: none;
 }
 
