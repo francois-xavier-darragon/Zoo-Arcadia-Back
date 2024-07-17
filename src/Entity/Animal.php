@@ -64,7 +64,7 @@ class Animal
         $this->images = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
-        $this->health = 'En attente du rapport Vétérinaire';
+        $this->health = 'En attente du rapport vétérinaire';
     }
 
     public function getId(): ?int
