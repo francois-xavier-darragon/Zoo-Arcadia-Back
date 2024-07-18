@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ManageDatabaseCommand extends Command
@@ -21,43 +22,60 @@ class ManageDatabaseCommand extends Command
     private $entityManager;
     private $databaseService;
     private $databaseUrl;
+    private $sqlDir;
 
-    public function __construct(EntityManagerInterface $entityManager, DatabaseService $databaseService, string $databaseUrl)
+    public function __construct(EntityManagerInterface $entityManager, DatabaseService $databaseService, string $databaseUrl, string $projectDir)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
         $this->databaseService = $databaseService;
         $this->databaseUrl = $databaseUrl;
+        $this->sqlDir = $projectDir . '/sql/';
     }
 
     // configuration
     protected function configure()
     {
         $this
-            ->setDescription('Creates, drops, or updates the database.')
-            ->addArgument('action', InputArgument::REQUIRED, 'The action to perform: create, drop, or update');
+            ->setDescription('Creates, drops, updates the database, or imports SQL data.')
+            ->addArgument('action', InputArgument::REQUIRED, 'The action to perform: create, drop, update, or import')
+            ->addArgument('filename', InputArgument::OPTIONAL, 'The name of the SQL file to import (without path, required for import action)');
     }
 
-    // command execution
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $action = $input->getArgument('action');
 
-        if (!in_array($action, ['create', 'drop', 'update'])) {
-            throw new InvalidArgumentException('Invalid action. Use "create", "drop", or "update".');
+        if (!in_array($action, ['create', 'drop', 'update', 'import'])) {
+            throw new InvalidArgumentException('Invalid action. Use "create", "drop", "update", or "import".');
         }
 
         $dbopts = parse_url($this->databaseUrl);
         $dbName = ltrim($dbopts['path'], '/');
 
         try {
-            if ($action === 'create') {
-                $this->createDatabase($dbName, $io);
-            } elseif ($action === 'drop') {
-                $this->dropDatabase($dbName, $io);
-            } elseif ($action === 'update') {
-                $this->updateDatabase($dbName, $io);
+            switch ($action) {
+                case 'create':
+                    $this->createDatabase($dbName, $io);
+                    break;
+                case 'drop':
+                    $this->dropDatabase($dbName, $io);
+                    break;
+                case 'update':
+                    $this->updateDatabase($dbName, $io);
+                    break;
+                case 'import':
+                    $filename = $input->getArgument('filename');
+                    if (!$filename) {
+                        throw new InvalidArgumentException('The SQL filename is required for the import action.');
+                    }
+                    $filePath = $this->sqlDir . $filename;
+                    if (!file_exists($filePath)) {
+                        throw new InvalidArgumentException("The SQL file '$filename' does not exist in the SQL directory.");
+                    }
+                    $this->importDatabase($dbName, $filePath, $io);
+                    break;
             }
 
             return Command::SUCCESS;
@@ -65,7 +83,6 @@ class ManageDatabaseCommand extends Command
             $io->error('Connection error: ' . $e->getMessage());
         } catch (\Exception $e) {
             $io->error('Error: ' . $e->getMessage());
-          
         }
 
         return Command::FAILURE;
@@ -130,10 +147,10 @@ class ManageDatabaseCommand extends Command
                 }
 
                 // Table to exclude list
-                if($table == "doctrine_migration_versions" || $isCombinedTable){
+                if( $isCombinedTable){
                     continue;
                 }
-
+                
                 $tableColumns[$table] = [];
                 
                 // Retrieving the columns of each table
@@ -201,6 +218,10 @@ class ManageDatabaseCommand extends Command
             // }
         }
 
+        if ($method === 'createTable' && !$this->existsTableOrColumn('doctrine_migration_version')) {
+            $this->createDoctrineMigrationVersionTable();
+        }
+
     }
 
     // create table
@@ -221,6 +242,19 @@ class ManageDatabaseCommand extends Command
         
         $this->databaseService->query($sql);
 
+    }
+
+    private function createDoctrineMigrationVersionTable(): void
+    {
+
+        $this->databaseService->query('
+            CREATE TABLE doctrine_migration_version (
+                version VARCHAR(191) NOT NULL,
+                executed_at DATETIME DEFAULT NULL,
+                executed_time INT DEFAULT NULL,
+                PRIMARY KEY(version)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
+        ');
     }
 
     // updates table and add relation ManyToOne, OneToOne or ManyToMany
@@ -394,7 +428,7 @@ class ManageDatabaseCommand extends Command
             'string' => sprintf('%s VARCHAR(255) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'text' => sprintf('%s TEXT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'boolean' => sprintf('%s TINYINT(1) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
-            'datetime', 'datetime_immutable' => sprintf('%s DATETIME %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
+            'datetime', 'datetime_immutable' => sprintf('%s DATETIME %s COMMENT \'(DC2Type:%s)\'', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL', $fieldMapping->type),
             'date' => sprintf('%s DATE %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'time' => sprintf('%s TIME %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'decimal' => sprintf('%s DECIMAL(10, 2) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
@@ -403,5 +437,70 @@ class ManageDatabaseCommand extends Command
             'json' => sprintf('%s JSON %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             default => throw new \InvalidArgumentException(sprintf('Unknown doctrine type "%s"', $fieldMapping->type)),
         };
+    }
+
+    private function importDatabase(string $dbName, string $filePath, SymfonyStyle $io): void
+    {
+        $this->databaseService->selectDatabase($dbName);
+        $pdo = $this->databaseService->getConnection();
+
+        // Check if there is existing data
+        $tables = $pdo->query("SHOW TABLES")->fetchAll(\PDO::FETCH_COLUMN);
+       
+        $hasData = false;
+
+        if (!empty($tables)) {
+            foreach ($tables as $table) {
+                $count = $pdo->query("SELECT COUNT(*) FROM `$table`")->fetchColumn();
+                if ($count > 0) {
+                    $hasData = true;
+                    break;
+                }
+            }
+        }
+      
+        if ($hasData) {
+            $question = new ConfirmationQuestion(
+                'La base de données contient déjà des données. Voulez-vous les écraser ? (y/n) ',
+                false
+            );
+
+            if (!$io->askQuestion($question)) {
+                $io->warning('Importation annulée par l\'utilisateur.');
+                return;
+            }
+        }
+
+        $io->info("Importation des données depuis " . basename($filePath) . " vers la base de données $dbName.");
+
+        $sql = file_get_contents($filePath);
+        $statements = explode(';', $sql);
+
+        try {
+            // Disable foreign key constraints
+            $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
+    
+            // Empty all existing tables if user confirmed
+            if ($hasData) {
+                foreach ($tables as $table) {
+                    $pdo->exec("TRUNCATE TABLE `$table`");
+                }
+                $io->info("Toutes les tables ont été vidées.");
+            }
+    
+            foreach ($statements as $statement) {
+                $statement = trim($statement);
+                if (!empty($statement)) {
+                    $pdo->exec($statement);
+                }
+            }
+    
+            $io->success("Les données ont été importées avec succès.");
+        } catch (\PDOException $e) {
+            $io->error("Erreur lors de l'importation des données : " . $e->getMessage());
+        } finally {
+            // Re-enable foreign key constraints
+            $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+        }
     }
 }

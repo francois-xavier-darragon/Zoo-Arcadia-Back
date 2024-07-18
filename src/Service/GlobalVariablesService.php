@@ -2,8 +2,10 @@
 
 namespace App\Service;
 
+use App\Entity\USER;
 use App\Repository\HabitatRepository;
 use App\Repository\NoticeRepository;
+use App\Repository\UserRepository;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Twig\Environment;
 
@@ -12,7 +14,8 @@ class GlobalVariablesService
     public function __construct(
         private Environment $twig,
         private HabitatRepository $habitatRepository,
-        private NoticeRepository $noticeRepository
+        private NoticeRepository $noticeRepository,
+        private UserRepository $userRepository
     )
     {}
 
