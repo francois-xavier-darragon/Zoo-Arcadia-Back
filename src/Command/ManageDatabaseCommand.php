@@ -150,10 +150,7 @@ class ManageDatabaseCommand extends Command
                 if( $isCombinedTable){
                     continue;
                 }
-                // if($table == "doctrine_migration_versions" || $isCombinedTable){
-                //     continue;
-                // }
-
+                
                 $tableColumns[$table] = [];
                 
                 // Retrieving the columns of each table
@@ -221,6 +218,10 @@ class ManageDatabaseCommand extends Command
             // }
         }
 
+        if ($method === 'createTable' && !$this->existsTableOrColumn('doctrine_migration_version')) {
+            $this->createDoctrineMigrationVersionTable();
+        }
+
     }
 
     // create table
@@ -241,6 +242,19 @@ class ManageDatabaseCommand extends Command
         
         $this->databaseService->query($sql);
 
+    }
+
+    private function createDoctrineMigrationVersionTable(): void
+    {
+
+        $this->databaseService->query('
+            CREATE TABLE doctrine_migration_version (
+                version VARCHAR(191) NOT NULL,
+                executed_at DATETIME DEFAULT NULL,
+                executed_time INT DEFAULT NULL,
+                PRIMARY KEY(version)
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
+        ');
     }
 
     // updates table and add relation ManyToOne, OneToOne or ManyToMany
@@ -414,7 +428,7 @@ class ManageDatabaseCommand extends Command
             'string' => sprintf('%s VARCHAR(255) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'text' => sprintf('%s TEXT %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'boolean' => sprintf('%s TINYINT(1) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
-            'datetime', 'datetime_immutable' => sprintf('%s DATETIME %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
+            'datetime', 'datetime_immutable' => sprintf('%s DATETIME %s COMMENT \'(DC2Type:%s)\'', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL', $fieldMapping->type),
             'date' => sprintf('%s DATE %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'time' => sprintf('%s TIME %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
             'decimal' => sprintf('%s DECIMAL(10, 2) %s', $fieldMapping->columnName, $fieldMapping->nullable ? 'NULL' : 'NOT NULL'),
@@ -430,7 +444,7 @@ class ManageDatabaseCommand extends Command
         $this->databaseService->selectDatabase($dbName);
         $pdo = $this->databaseService->getConnection();
 
-        // Vérifier s'il y a des données existantes
+        // Check if there is existing data
         $tables = $pdo->query("SHOW TABLES")->fetchAll(\PDO::FETCH_COLUMN);
        
         $hasData = false;
@@ -463,10 +477,10 @@ class ManageDatabaseCommand extends Command
         $statements = explode(';', $sql);
 
         try {
-            // Désactiver les contraintes de clé étrangère
+            // Disable foreign key constraints
             $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
     
-            // Vider toutes les tables existantes si l'utilisateur a confirmé
+            // Empty all existing tables if user confirmed
             if ($hasData) {
                 foreach ($tables as $table) {
                     $pdo->exec("TRUNCATE TABLE `$table`");
@@ -485,7 +499,7 @@ class ManageDatabaseCommand extends Command
         } catch (\PDOException $e) {
             $io->error("Erreur lors de l'importation des données : " . $e->getMessage());
         } finally {
-            // Réactiver les contraintes de clé étrangère
+            // Re-enable foreign key constraints
             $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
         }
     }
