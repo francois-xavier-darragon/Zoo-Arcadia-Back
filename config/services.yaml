@@ -30,6 +30,7 @@ services:
             $entityManager: '@doctrine.orm.entity_manager'
             $databaseService: '@App\Service\DatabaseService'
             $databaseUrl: '%env(resolve:DATABASE_URL)%'
+            $projectDir: '%kernel.project_dir%'
     App\Command\MakeTraitCommand:
         tags: [ 'console.command' ]
     App\Service\GlobalVariablesService:

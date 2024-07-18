@@ -83,15 +83,6 @@ class MakeCrudCommand extends Command
         $this->makeRepository();
         $this->makeFormType();
 
-        //creation des templates
-        // $templatesDirectory = $this->projectDir.'/templates/admin'. $this->variable_name;
-        // if (file_exists($templatesDirectory)) {
-        //     // Supprimer le répertoire même s'il contient des fichiers
-        //     array_map('unlink', glob($templatesDirectory . '/*.*'));
-        //     rmdir($templatesDirectory);
-        // }
-        // mkdir($templatesDirectory);
-       
         $this->makeTemplate('_delete_modal', $input);
         $this->makeTemplate('_form', $input);
         $this->makeTemplate('index', $input);
