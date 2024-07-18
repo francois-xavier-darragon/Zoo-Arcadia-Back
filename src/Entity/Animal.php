@@ -59,6 +59,9 @@ class Animal
     #[ORM\JoinColumn(nullable: false)]
     private ?Enclosure $enclosure = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -188,6 +191,18 @@ class Animal
     public function setEnclosure(?Enclosure $enclosure): static
     {
         $this->enclosure = $enclosure;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

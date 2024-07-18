@@ -2,6 +2,32 @@
 @import "~bootstrap/scss/bootstrap";
 @import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
 
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+footer {
+    margin-top: 0;
+    padding: 15px;
+    bottom: 0;
+    width: 100%;
+}
+
+.custom-col-width{
+    width: 18%;
+}
+
+.custom-col-margin{
+    margin-left: 7%;
+}
+
 .bloc-login{
     position: fixed;
     bottom: 200px;
@@ -263,3 +289,89 @@ td {
     margin-top: 5px;
 }
 
+.section-title {
+    font-size: 20px;
+}
+
+.logo-arcadia-footer {
+    width: 200px;
+    height: 200px;
+}
+
+.icons {
+    margin-right:10px ;
+    width: 40px;
+    height: 40px;
+}
+
+.card-habitat {
+    width: 400px;
+}
+
+.card-enclose {
+    height: 400px;
+}
+
+.card-notice {
+    height: 200px;
+}
+
+.customp-carousel-control {
+    height: 300px;
+    position: absolute;
+    top: 1460px;
+}
+
+.enclosure-carousel-control-prev-icon,
+.enclosure-carousel-control-next-icon {
+  height: 100px;
+  width: 100px;
+  background-image: none;
+}
+
+.enclosure-carousel-control-next-icon:after{
+  content: '->';
+  font-size: 55px;
+  color: $dark;
+}
+
+.enclosure-carousel-control-prev-icon:after {
+  content: '<-';
+  font-size: 55px;
+  color: $dark;
+}
+  
+.card-enclose, .card-notice  {
+    width: 300px;
+}
+
+.card-habitat, .card-enclose, .card-notice {
+    border: 1px solid;
+    border-color: $secondary;
+}
+
+.circle-container {
+    width: 50px; 
+    height: 50px; 
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle-container img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;
+}
+
+
+//Signin pages
+#formSignin,
+#formRegister,
+#formAccount {
+    margin:20px;
+    padding: 20px;
+    border: solid $secondary;
+    border-radius: 30px;
+}
