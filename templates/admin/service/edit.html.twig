@@ -6,7 +6,7 @@
             <div class="d-flex justify-content-center">
                 <div class="p-4 custom-border card" style="width: 100%;">
                     {% if mode == 'Ajouter' %}
-                    <h1 class=" mb-4">{{mode}}</h1>
+                    <h1 class="mb-4">{{mode}}</h1>
                         {{ include('admin/service/_form.html.twig') }}
                     {% else %}   
                       <div class="d-flex mb-4">
@@ -26,4 +26,22 @@
         {% include '/admin/service/_delete_modal.html.twig' with {'path_form' : path('app_admin_service_delete', {'id': service.id}), 'csrf_token': csrf_token, 'service': service } %}
     {% endif %}
 
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/enclosure/manage-add-enclosure-fields.js') }}"></script>
+<script>
+    manageEnclosureField()
+</script>
+<script type="module">
+import {addImgeFilds} from "/js/image/add-image-fiedls.js";
+
+    let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
+    const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
+    const divSelected = document.getElementById('service_images')
+    const entityName = 'service';
+    const filedsName = 'serviceFile';
+
+    addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) 
+</script>
 {% endblock %}

@@ -26,6 +26,9 @@ class Image
 
     #[Vich\UploadableField(mapping: 'habitat_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $habitatFile = null;
+
+    #[Vich\UploadableField(mapping: 'services_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    private ?File $serviceFile = null;
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -49,6 +52,9 @@ class Image
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     private ?Habitat $habitat = null;
+
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Service $service = null;
 
     public function __construct()
     {
@@ -161,6 +167,24 @@ class Image
         return $this;
     }
 
+   
+    public function getServiceFile(): ?File
+    {
+        return $this->serviceFile;
+    }
+
+    public function setServiceFile(?File $serviceFile): static
+    {
+        $this->serviceFile = $serviceFile;
+
+        // unset the owning side of the relation if necessary
+        if ($serviceFile === null && $this->serviceFile !== null) {
+            $this->updatedAt = new DateTimeImmutable();
+        }
+
+        return $this;
+    }
+
     public function getAnimal(): ?Animal
     {
         return $this->animal;
@@ -181,6 +205,18 @@ class Image
     public function setHabitat(?Habitat $habitat): static
     {
         $this->habitat = $habitat;
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }

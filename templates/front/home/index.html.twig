@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 mb-4 mb-md-0"> 
-                <img class="w-100 rounded" src="../Img/lion.jpg"/ alt="lion">
+                <img class="w-100 rounded" src="{{ randomAnimal.images|first ? uploaderHelper.asset(randomAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="{{ randomAnimal.breed }}">
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
         {% for habitat in habitats %}    
             <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
                 <div class="card card-habitat shadow-lg">
-                    <img class="card-img-top" src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="">
+                    <img class="card-img-top" src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="{{habitat.name}}">
                     <div class="card-body">
                         <h5 class="card-title card-title ">Habitat {{habitat.name}}</h5>
                         <p class="card-text card-title text-dark">{{habitat.description}}</p>
@@ -72,9 +72,9 @@
                             {% for animal in batch %}
                                 <div class="animal-card col-12 mb-4 col-md-3">
                                     <div class="card card-enclose">
-                                        <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt="...">
+                                        <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt={{ animal.breed }}>
                                         <div class="card-body">
-                                            <h5 class="card-title text-dar">Enclos des {{ animal.breed }}s</h5>
+                                            <h5 class="card-title text-dark">Enclos des {{ animal.breed }}s</h5>
                                             <p class="card-text text-dark">{{ animal.description }}</p>
                                             <a href="#" class="btn btn-gradiant">Go somewhere</a>
                                         </div>
@@ -85,7 +85,6 @@
                     </div>
                     {% set previous_batch = batch %}
                 {% endfor %}
-
             </div>     
         </div>
     
@@ -147,47 +146,22 @@
             </div>
         </div>
         <div class="row justify-content-center justify-content-md-center align-items-center ">
-            <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                <div class="card card-notice shadow-lg">
-                    <div class="d-flex m-2">
-                        <div class="circle-container">
-                            <img src="../Img/elephant.jpg" class="rounded-circle" alt="">
+        {% for notice in notices %}
+            {% if notice.status == 1 %}
+                <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                    <div class="card card-notice shadow-lg">
+                        <div class="d-flex m-2">
+                            <div class="circle-container">
+                                <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+                            </div>
+                            <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
                         </div>
-                        <h5 class="card-title text-dark ms-3">Nom Prénom</h5>
+                        <div class="card-body">
+                            <p class="card-text card-title text-dark">{{ notice.comment}} </p>
+                        </div>               
                     </div>
-                    
-                    <div class="card-body">
-                        <p class="card-text card-title text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>               
                 </div>
-            </div>
-            <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                <div class="card card-notice shadow-lg">
-                    <div class="d-flex m-2">
-                        <div class="circle-container">
-                            <img src="../Img/caiman.jpg" class="rounded-circle" alt="">
-                        </div>
-                        <h5 class="card-title text-dark ms-3">Nom Prénom</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text card-title text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>               
-                </div>
-            </div>
-            <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                <div class="card card-notice shadow-lg">
-                    <div class="d-flex m-2">
-                        <div class="circle-container">
-                            <img src="../Img/lion.jpg" class="rounded-circle" alt="">
-                        </div>
-                        <h5 class="card-title text-dark ms-3">Nom Prénom</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text card-title text-dark">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>               
-                </div>
-            </div>
-        </div>
-    </div>
+            {% endif %}
+        {% endfor %}
 </article>
 {% endblock %}
