@@ -6,8 +6,6 @@ use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ImageRepository;
 use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -27,7 +25,7 @@ class Image
     #[Vich\UploadableField(mapping: 'habitat_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $habitatFile = null;
 
-    #[Vich\UploadableField(mapping: 'services_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    #[Vich\UploadableField(mapping: 'service_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $serviceFile = null;
     
     #[ORM\Id]
@@ -79,7 +77,6 @@ class Image
         return $this;
     }
 
-   
     public function getUserAvatarFile(): ?File
     {
         return $this->userAvatarFile;

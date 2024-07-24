@@ -67,7 +67,7 @@ class AnimalController extends AbstractController
                 $animal->setBreed($breed);
             
             }
-
+            
             $animalRepository->saveAnimal($animal, true);
 
             return $this->redirectToRoute('app_admin_animal_index', [], Response::HTTP_SEE_OTHER);
@@ -82,7 +82,7 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_animal_show', methods: ['GET'])]
-    public function read(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage): Response
+    public function read(Request $request, Animal $animal, AnimalRepository $animalRepository,  CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
         $csrfTokenVeterinaryReport = $csrfTokenManager->getToken('delete-veterinaryReport' . $animal->getId())->getValue();

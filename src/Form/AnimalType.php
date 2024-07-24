@@ -75,6 +75,7 @@ class AnimalType extends AbstractType
         ;
 
         $countBreeds = $options['countBreeds'];
+        
         if(!$countBreeds){
             $builder
                 ->add('breed', EntityType::class, [

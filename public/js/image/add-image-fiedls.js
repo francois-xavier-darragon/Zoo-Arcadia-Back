@@ -22,6 +22,8 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
         let animalId
         let habitatDataElement
         let habitatId
+        let serviceDataElement
+        let serviceId
         let url
 
         if(entityName === 'animal') {
@@ -36,6 +38,13 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             habitatId = habitatDataElement.dataset.habitatId;
             url = habitatDataElement.dataset.removeImageUrl;
             url = url.replace('HABITAT_ID', habitatId);
+        }
+
+        if(entityName === 'service'){
+            serviceDataElement = document.getElementById('service-data');
+            serviceId = serviceDataElement.dataset.habitatId;
+            url = serviceDataElement.dataset.removeImageUrl;
+            url = url.replace('SERVICE_ID', serviceId);
         }
         
         addImageBtn.addEventListener('click', function() {
@@ -86,11 +95,13 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
 
             if(entityName === 'animal') {
                 removeExistingImage(btnTrash, animalId, url, defaultImagePath, btnEdit, img)
-            } else {
+            } else if(entityName === 'habitat') {
                 removeExistingImage(btnTrash, habitatId, url, defaultImagePath, btnEdit, img)
+            } else {
+                removeExistingImage(btnTrash, serviceId, url, defaultImagePath, btnEdit, img)
             }
            
-            if(animalId === null || habitatId === null){
+            if(animalId === null || habitatId === null || serviceId){
                 btnDnone(btnTrash)
             } else if(index < existingImages.length ) {
                 btnDnone(btnEdit)
