@@ -113,12 +113,11 @@
                 
                 <div id="service-carousel" class="carousel slide col-12 col-md-6 mb-4 mb-md-0" data-ride="carousel">
                     <div class="carousel-inner">
-                    {% for service in services %}
-                      <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img class="w-100 rounded" src="../Img/boutique.jpg"/ alt="">
-                        <img src="{{ service.images|first ? uploaderHelper.asset(service.images|first, 'serviceFile') : asset('images/default/default.png') }}" class="card-img-top w-100 rounded" alt="">
-                      </div>
-                     {% endfor %}  
+                        {% for service in services %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ service.images|first ? uploaderHelper.asset(service.images|first, 'serviceFile') : asset('images/default/default.png') }}" class="card-img-top w-100 rounded" alt="image des services">
+                        </div>
+                        {% endfor %}  
                     </div>
                     <button class="carousel-control-prev customp-carousel-control" type="button" data-bs-target="#service-carousel" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -143,22 +142,23 @@
             </div>
         </div>
         <div class="row justify-content-center justify-content-md-center align-items-center ">
-        {% for notice in notices %}
-            {% if notice.status == 1 %}
-                <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                    <div class="card card-notice shadow-lg">
-                        <div class="d-flex m-2">
-                            <div class="circle-container">
-                                <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+            {% for notice in notices %}
+                {% if notice.status == 1 %}
+                    <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                        <div class="card card-notice shadow-lg">
+                            <div class="d-flex m-2">
+                                <div class="circle-container">
+                                    <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+                                </div>
+                                <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
                             </div>
-                            <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
+                            <div class="card-body">
+                                <p class="card-text card-title text-dark">{{ notice.comment}} </p>
+                            </div>               
                         </div>
-                        <div class="card-body">
-                            <p class="card-text card-title text-dark">{{ notice.comment}} </p>
-                        </div>               
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
 </article>
 {% endblock %}

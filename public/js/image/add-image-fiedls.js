@@ -18,33 +18,26 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
            index = currentImageCount;
         }
         
-        let animalDataElement
-        let animalId
-        let habitatDataElement
-        let habitatId
-        let serviceDataElement
-        let serviceId
-        let url
+        let entityDataElement;
+        let entityId;
+        let url;
 
-        if(entityName === 'animal') {
-            animalDataElement = document.getElementById('animal-data');
-            animalId = animalDataElement.dataset.animalId;
-            url = animalDataElement.dataset.removeImageUrl;
-            url = url.replace('ANIMAL_ID', animalId);
-        } 
-        
-        if(entityName === 'habitat'){
-            habitatDataElement = document.getElementById('habitat-data');
-            habitatId = habitatDataElement.dataset.habitatId;
-            url = habitatDataElement.dataset.removeImageUrl;
-            url = url.replace('HABITAT_ID', habitatId);
-        }
-
-        if(entityName === 'service'){
-            serviceDataElement = document.getElementById('service-data');
-            serviceId = serviceDataElement.dataset.habitatId;
-            url = serviceDataElement.dataset.removeImageUrl;
-            url = url.replace('SERVICE_ID', serviceId);
+        switch(entityName) {
+            case 'animal':
+                entityDataElement = document.getElementById('animal-data');
+                entityId = entityDataElement.dataset.animalId;
+                url = entityDataElement.dataset.removeImageUrl.replace('ANIMAL_ID', entityId);
+                break;
+            case 'habitat':
+                entityDataElement = document.getElementById('habitat-data');
+                entityId = entityDataElement.dataset.habitatId;
+                url = entityDataElement.dataset.removeImageUrl.replace('HABITAT_ID', entityId);
+                break;
+            case 'service':
+                entityDataElement = document.getElementById('service-data');
+                entityId = entityDataElement.dataset.serviceId;
+                url = entityDataElement.dataset.removeImageUrl.replace('SERVICE_ID', entityId);
+                break;
         }
         
         addImageBtn.addEventListener('click', function() {
@@ -93,20 +86,24 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             const btnEdit = clone.getElementById(`edit-image-button-${index}`);
             newImage(btnEdit, img)
 
-            if(entityName === 'animal') {
-                removeExistingImage(btnTrash, animalId, url, defaultImagePath, btnEdit, img)
-            } else if(entityName === 'habitat') {
-                removeExistingImage(btnTrash, habitatId, url, defaultImagePath, btnEdit, img)
-            } else {
-                removeExistingImage(btnTrash, serviceId, url, defaultImagePath, btnEdit, img)
+            switch(entityName) {
+                case 'animal':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img);
+                    break;
+                case 'habitat':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img);
+                    break;
+                case 'service':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img);
+                    break;
             }
            
-            if(animalId === null || habitatId === null || serviceId){
-                btnDnone(btnTrash)
-            } else if(index < existingImages.length ) {
-                btnDnone(btnEdit)
-            } else if(index >= existingImages.length) {
-                btnDnone(btnTrash)
+            if (!entityId) {
+                btnDnone(btnTrash);
+            } else if (index < existingImages.length) {
+                btnDnone(btnEdit);
+            } else {
+                btnDnone(btnTrash);
             }
          
             if(divSelected) {

@@ -365,6 +365,38 @@ td {
     object-fit: cover;
 }
 
+.customp-carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-align: center;
+    opacity: 0.5;
+    background: none;
+    border: none;
+}
+
+.customp-carousel-control-prev {
+    left: 0;
+}
+
+.customp-carousel-control-next {
+    right: 0;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+
 
 //Signin pages
 #formSignin,

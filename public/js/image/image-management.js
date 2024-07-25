@@ -35,7 +35,7 @@ export function removeExistingImage(removeButton, id, url, path, btnToHide, exis
     removeButton.addEventListener("click", function() {
         
         const imageId = existingImg.dataset.imgId
-        
+      
         fetch(url, {
             method: 'POST',
             headers: {
