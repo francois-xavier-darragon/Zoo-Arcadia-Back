@@ -1,43 +1,33 @@
-INSERT INTO `animal` VALUES
-('1', '1', '1', '1', 'Simba', 'parfaite', '2024-07-17 11:08:07', '2024-07-17 11:08:07', NULL);
+INSERT INTO `animal` (`id`, `name`, `health`, `description`, `created_at`, `updated_at`, `deleted_at`, `breed_id`, `habitat_id`, `enclosure_id`) VALUES
+('1', 'Simba', 'En attente du rapport vétérinaire', NULL, '2024-07-24 08:28:40', '2024-07-24 08:28:40', NULL, '1', '1', '1');
 
-INSERT INTO `breed` VALUES
-('1', 'Lion', '2024-07-17 11:08:07', '2024-07-17 11:08:07', NULL);
+INSERT INTO `breed` (`id`, `name`, `created_at`, `updated_at`, `deleted_at`) VALUES
+('1', 'Lion', '2024-07-24 08:28:40', '2024-07-24 08:28:40', NULL);
 
-INSERT INTO `doctrine_migration_versions` VALUES
-('DoctrineMigrations\\Version20240716061314', '2024-07-17 09:28:26', '10551'),
-('DoctrineMigrations\\Version20240717113644', '2024-07-17 11:36:49', '15');
+INSERT INTO `enclosure` (`id`, `name`, `description`, `habitat_id`) VALUES
+('1', 'Enclos des lions', 'qfsfsqfsf', '1'),
+('2', 'Enclos des jaguars', 'sqqdqvd', '2'),
+('3', 'Enclos des caïmans', 'sdvsdvdvdv', '3');
 
-INSERT INTO `enclosure` VALUES
-('1', '1', 'Enclos des lions', 'ddvdvdsv'),
-('2', '2', 'Enclos des caïmans', 'dsbsb'),
-('3', '3', 'Enclos des jaguars', 'vdsvds');
+INSERT INTO `habitat` (`id`, `name`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
+('1', 'Savane', 'qfqssffsf', '2024-07-24 08:13:19', '2024-07-24 08:13:19', NULL),
+('2', 'Forêt tropical', 'qsfsfqs', '2024-07-24 08:15:34', '2024-07-24 08:15:34', NULL),
+('3', 'Marécage', 'sdvsdvdvssv', '2024-07-24 08:15:53', '2024-07-24 08:15:53', NULL);
 
-INSERT INTO `habitat` VALUES
-('1', 'Savane', 'fbfbf', '2024-07-17 09:36:54', '2024-07-17 09:36:54', NULL),
-('2', 'Marécage', 'dvsdvdsv', '2024-07-17 10:37:13', '2024-07-17 10:37:13', NULL),
-('3', 'Tropical', 'ddvsvdv', '2024-07-17 10:38:34', '2024-07-17 10:38:34', NULL);
+INSERT INTO `image` (`id`, `name`, `original_name`, `size`, `mime_type`, `created_at`, `updated_at`, `animal_id`, `habitat_id`, `service_id`) VALUES
+('1', 'avatar-159236-640-66a0b7680c518998943783.png', 'avatar-159236_640.png', '27424', 'image/png', '2024-07-24 08:12:23', '2024-07-24 08:12:23', NULL, NULL, NULL),
+('3', 'foret-tropical-66a0b826315e6325045385.jpg', 'foret-tropical.jpg', '224822', 'image/jpeg', '2024-07-24 08:15:34', '2024-07-24 08:15:34', NULL, '2', NULL),
+('4', 'marecage-66a0b839bd27c921110822.jpg', 'marecage.jpg', '193079', 'image/jpeg', '2024-07-24 08:15:53', '2024-07-24 08:15:53', NULL, '3', NULL),
+('5', 'lion-500x750-66a0bb38ec316593006673.jpg', 'lion 500x750.jpg', '70123', 'image/jpeg', '2024-07-24 08:28:40', '2024-07-24 08:28:40', '1', NULL, NULL),
+('6', 'boutique-1-66a0c916ce833523079984.jpg', 'boutique (1).jpg', '127980', 'image/jpeg', '2024-07-24 09:27:50', '2024-07-24 09:27:50', NULL, NULL, '2'),
+('7', 'boutique-1-66a0c92d8ac99560734489.jpg', 'boutique (1).jpg', '127980', 'image/jpeg', '2024-07-24 09:28:13', '2024-07-24 09:28:13', NULL, NULL, '3'),
+('8', 'portrait-young-businessman-with-mustache-glasses-3d-rendering-1-66a1deb97faea749847864.jpg', 'portrait-young-businessman-with-mustache-glasses-3d-rendering (1).jpg', '153955', 'image/jpeg', '2024-07-25 05:12:25', '2024-07-25 05:12:25', NULL, NULL, NULL),
+('9', 'savane-66a1df71162c7479712380.jpg', 'Savane.jpg', '138401', 'image/jpeg', '2024-07-25 05:15:29', '2024-07-25 05:15:29', NULL, '1', NULL);
 
-INSERT INTO `image` VALUES
-('1', NULL, NULL, 'portrait-young-businessman-with-mustache-glasses-3d-rendering-1-6697903be383f130466077.jpg', 'portrait-young-businessman-with-mustache-glasses-3d-rendering (1).jpg', '153955', 'image/jpeg', '2024-07-17 09:34:51', '2024-07-17 09:34:51'),
-('2', NULL, '1', 'savane-669790b6202c0432633604.jpg', 'Savane.jpg', '138401', 'image/jpeg', '2024-07-17 09:36:54', '2024-07-17 09:36:54'),
-('3', NULL, '2', 'marecage-66979ed97ff84751919330.jpg', 'marecage.jpg', '193079', 'image/jpeg', '2024-07-17 10:37:13', '2024-07-17 10:37:13'),
-('4', NULL, '3', 'foret-tropical-66979f2a48a5b913554164.jpg', 'foret-tropical.jpg', '224822', 'image/jpeg', '2024-07-17 10:38:34', '2024-07-17 10:38:34'),
-('5', '1', NULL, 'lion-500x750-6697a617a53fd521742226.jpg', 'lion 500x750.jpg', '70123', 'image/jpeg', '2024-07-17 11:08:07', '2024-07-17 11:08:07'),
-('6', NULL, NULL, 'portrait-young-businessman-with-mustache-glasses-3d-rendering-1-6697a77cd4f9e994210721.jpg', 'portrait-young-businessman-with-mustache-glasses-3d-rendering (1).jpg', '153955', 'image/jpeg', '2024-07-17 11:14:04', '2024-07-17 11:14:04');
+INSERT INTO `service` (`id`, `name`, `description`, `created_at`, `updated_at`, `deleted_at`) VALUES
+('2', 'Restaurant', 'dqqqsvsv', '2024-07-24 09:24:50', '2024-07-24 09:24:50', NULL),
+('3', 'Boutique', 'fsdbsfbfd', '2024-07-24 09:28:13', '2024-07-24 09:28:13', NULL);
 
-INSERT INTO `notice` VALUES
-('1', '2', 'test', 'sg', '0', '2024-07-17 11:15:22', '2024-07-17 11:15:22', NULL),
-('2', '2', 'test', 'sg', '0', '2024-07-17 11:47:20', '2024-07-17 11:47:20', NULL),
-('3', '1', 'test', 'sg', '1', '2024-07-17 12:36:29', '2024-07-17 12:36:29', NULL);
-
-INSERT INTO `service` VALUES
-('1', 'Restaurant', 'fbdsbbfbbfbfb', '2024-07-17 11:15:37', '2024-07-17 11:15:37', NULL);
-
-INSERT INTO `user` VALUES
-('1', '1', 'fxd15130@gmail.com', 'darragon', 'darragon', '[\"ROLE_ADMIN\"]', '$2y$13$nLslxNhY2ogM161tcygqAudXiNyzMu5tnSYshYR.jfuUXI2U2o7OS', '667879458', '{\"zip\": \"15130\", \"city\": \"YTRAC\", \"street\": \"Rue du Puy de Peyre Arse\", \"complement\": null}', NULL, '2024-07-17 09:34:51', '2024-07-17 09:34:51', NULL),
-('2', '6', 'fxd@gmail.com', 'darragon', 'ff', '[\"ROLE_VETERINARY\"]', '$2y$13$4JhdGUfpEt.eQ.srYQFUmOtPOXN1E5TPJ6owAkmdH7WXrkUSEBAYe', '667879458', '{\"zip\": \"15130\", \"city\": \"YTRAC\", \"street\": \"Rue du Puy de Peyre Arse\", \"complement\": null}', NULL, '2024-07-17 11:14:04', '2024-07-17 11:14:04', NULL);
-
-INSERT INTO `veterinary_report` VALUES
-('1', NULL, '1', 'bsfbsfbsfsfbsfdbbssbsfsbbs', '2024-07-17 11:14:48', '2024-07-17 11:14:48', NULL);
+INSERT INTO `user` (`id`, `email`, `first_name`, `last_name`, `roles`, `password`, `phone`, `address`, `api_token`, `created_at`, `updated_at`, `deleted_at`, `avatar_id`) VALUES
+('2', 'fxd@gmail.com', 'darragon', 'darragon', '[\"ROLE_ADMIN\"]', '$2y$13$T03dnXDYdj.9.QvLyIGJC.Pw4N5nmBfRrqbbAt6C81UUie9ZCYYsO', '667879458', '{\"zip\": \"15130\", \"city\": \"YTRAC\", \"street\": \"Rue du Puy de Peyre Arse\", \"complement\": null}', NULL, '2024-07-25 05:12:25', '2024-07-25 05:12:25', NULL, '8');
 

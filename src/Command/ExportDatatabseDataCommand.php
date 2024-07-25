@@ -12,6 +12,7 @@ class ExportDatatabseDataCommand extends Command
 {
     protected static $defaultName = 'app:export-database-data';
     private $dbService;
+    private $excludedTables = ['doctrine_migration_versions'];
 
     public function __construct(DatabaseService $dbService)
     {
@@ -59,12 +60,21 @@ class ExportDatatabseDataCommand extends Command
         $file = fopen($filePath, 'w');
 
         foreach ($tables as $table) {
+            // Skip excluded tables
+            if (in_array($table, $this->excludedTables)) {
+                $io->writeln("La table '$table' a été exclue de l'export.");
+                continue;
+            }
+
+            // Get column names
+            $columns = $this->dbService->query("SHOW COLUMNS FROM `$table`")->fetchAll(\PDO::FETCH_COLUMN);
+
             // Export data from each table
             $rows = $this->dbService->query("SELECT * FROM `$table`")->fetchAll(\PDO::FETCH_ASSOC);
             
             if (!empty($rows)) {
-                fwrite($file, "INSERT INTO `$table` VALUES\n");
-                
+                fwrite($file, "INSERT INTO `$table` (`" . implode("`, `", $columns) . "`) VALUES\n");
+               
                 $rowCount = count($rows);
                 foreach ($rows as $i => $row) {
                     $values = array_map(function ($value) {
