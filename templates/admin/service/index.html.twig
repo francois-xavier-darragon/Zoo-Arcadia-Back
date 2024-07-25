@@ -9,6 +9,7 @@
         <table class="table custom-table">
             <thead>
                 <tr>
+                    <th class="text-start">Image</th>
                     <th class="text-start">Nom</th>
                     <th class="text-center">Description</th>
                     <th class="text-end">actions</th>
@@ -17,6 +18,9 @@
             <tbody>
             {% for service in services %}
                 <tr>
+                     <td class="text-start">
+                        <img src="{{ service.images|first ? uploaderHelper.asset(service.images|first, 'serviceFile') : asset('images/default/default.png') }}" alt="première image de la liste" width="70" height="50">
+                    </td>
                     <td class="text-start">{{ service.name }}</td>
                     <td class="text-center">{{ service.description }}</td>
                     <td class="text-end">

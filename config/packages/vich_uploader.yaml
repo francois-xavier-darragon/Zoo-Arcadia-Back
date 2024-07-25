@@ -16,4 +16,8 @@ vich_uploader:
         habitat_file:
             uri_prefix: /uploads/images/habitats
             upload_destination: '%kernel.project_dir%/public/uploads/images/habitats'
-            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer    
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer 
+        service_file:
+            uri_prefix: /uploads/images/services
+            upload_destination: '%kernel.project_dir%/public/uploads/images/services'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer   

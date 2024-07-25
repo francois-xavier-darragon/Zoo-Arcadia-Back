@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Service;
 use App\Form\ServiceType;
+use App\Repository\ImageRepository;
 use App\Repository\ServiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,6 +43,7 @@ class ServiceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $serviceRepository->saveService($service, true);
 
             return $this->redirectToRoute('app_admin_service_index', [], Response::HTTP_SEE_OTHER);
@@ -73,6 +76,22 @@ class ServiceController extends AbstractController
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
 
+        $existingImages = [];
+
+        $reflectionClass = new \ReflectionClass($service);
+
+        $entitiName = strtolower($reflectionClass->getShortName()).'s';
+
+        $images = $service->getImages();
+        foreach ($images as $image) {
+
+            $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
+            $existingImages[] = [
+                'id' => $image->getId(),
+                'path' => $path
+            ];
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $serviceRepository->saveService($service, true);
 
@@ -85,6 +104,7 @@ class ServiceController extends AbstractController
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
+            'existingImages' => json_encode($existingImages)
         ]);
     }
 
@@ -106,5 +126,29 @@ class ServiceController extends AbstractController
 
         $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet service, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_service_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{service}/remove-service-image/', name: 'app_admin_service_remove_image', methods: ['POST'])]
+    public function removeAnimalImage(Request $request, Service $service, ServiceRepository $serviceRepository, ImageRepository $imageRepository): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+        $imageId = ($data['imgId']) ?? null;
+
+        if ($imageId === null) {
+            return new JsonResponse(['status' => 'error', 'message' => 'ID de l\'image manquant'], 400);
+        }
+     
+        $image = $imageRepository->findOneById($imageId);
+
+        if (!$image) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Image non trouvée'], 404);
+        }
+
+        $service->removeImage($image);
+        $serviceRepository->saveService($service, true);
+
+        $imageRepository->removeImage($image, true);
+
+        return new JsonResponse(['status' => 'success'], 200);
     }
 }

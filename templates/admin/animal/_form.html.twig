@@ -12,13 +12,14 @@
         </div>
     </div>
 
+    
     <button id="addBreedBtn" type="button" class="btn btn-secondary mt-4 mb-3 me-3">Ajouter une nouvelle race</button>
     <div id="addBreedField" style="display: none;">
         {{ form_row(form.addbreed) }}
     </div>
 
     {% if animal.breed is not null  %}
-       <div id="selectBreedFields"  style="display: block;">
+        <div id="selectBreedFields"  style="display: block;">
             {{ form_row(form.breed) }}
         </div>
     {% elseif countBreeds != true %}

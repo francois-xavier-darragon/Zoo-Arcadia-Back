@@ -1,0 +1,164 @@
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+<article class="bg-info p-4">
+    <div class="container p-4">
+        <div class="row row-cols-2 align-items-center">
+            <div class="col-12 col-md-6 mb-4 mb-md-0">
+                <h2 class=" text-start text-dark">Bienvenue au Parc Animalier Arcadia</h2>
+                <div class="text-start pt-4">
+                   <p class="text-dark">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio nihil, porro dicta sequi repudiandae aut magni numquam. Excepturi vero eius ea beatae quos odit autem laboriosam minus ipsam, itaque illum nesciunt fugit veniam reiciendis vel, dicta provident quia quae sint aliquam cum? Est natus sapiente odit ipsam porro recusandae vel soluta enim. Iure aspernatur maxime sunt omnis optio deleniti, soluta, odio ea magnam eius fuga illum! Neque corrupti, repudiandae expedita alias et dolores, quis voluptate quo vel molestiae nobis beatae rem sint? Doloribus, accusamus vero ipsa quaerat molestiae, soluta, rerum doloremque ab qui sed nulla voluptate asperiores dolore maiores aliquam.</p>
+                </div>
+                <div class="text-start pt-4">
+                    <a href="#" class="btn btn-gradiant">En savoir plus</a>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mb-4 mb-md-0"> 
+                <img class="w-100 rounded" src="{{ randomAnimal.images|first ? uploaderHelper.asset(randomAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="{{ randomAnimal.breed }}">
+            </div>
+        </div>
+    </div>
+</article>
+
+<article class="m-4">
+    <div class="container p-4">
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <h2 class="text-dark">Découvrez nos habitats</p>
+            </div>
+            <div class="col-12">
+                <p class="text-dark section-title">Explorez les différents habitats de notre parc animalier.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center">    
+        {% for habitat in habitats %}    
+            <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                <div class="card card-habitat shadow-lg">
+                    <img class="card-img-top" src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="{{habitat.name}}">
+                    <div class="card-body">
+                        <h5 class="card-title card-title ">Habitat {{habitat.name}}</h5>
+                        <p class="card-text card-title text-dark">{{habitat.description}}</p>
+                    </div>
+                    <div class="card-body">
+                        <a href="#" class="btn btn-gradiant">Consulter</a>
+                    </div>
+                </div>
+            </div>  
+        {% endfor %}    
+        </div>
+</article>
+
+<article class="bg-info p-4">
+    <div id="enclosure-carousel-animal" class="container">
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <h2 class="text-dark">Découvrez nos enclos</p>
+            </div>
+            <div class="col-12">
+                <p class="text-dark section-title">Venez explorer les différents enclos de notre parc animalier.</p>
+            </div>
+        </div>
+        <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
+            <div class="carousel-inner">
+               {% set animals_batches = animals|batch(4) %}
+               {% set previous_batch = [] %}
+
+               {% for batch in animals_batches %}
+                    {% if previous_batch and batch|length < 4 %}
+                        {% set batch = batch|merge(previous_batch|slice(0, 4 - batch|length)) %}
+                    {% endif %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="row">
+                            {% for animal in batch %}
+                                <div class="animal-card col-12 mb-4 col-md-3">
+                                    <div class="card card-enclose">
+                                        <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt={{ animal.breed }}>
+                                        <div class="card-body">
+                                            <h5 class="card-title text-dark">Enclos des {{ animal.breed }}s</h5>
+                                            <p class="card-text text-dark">{{ animal.description }}</p>
+                                            <a href="#" class="btn btn-gradiant">Go somewhere</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% set previous_batch = batch %}
+                {% endfor %}
+            </div>     
+        </div>
+    
+        <button class="carousel-control-prev customp-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="prev">
+            <span class="enclosure-carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next customp-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="next">
+            <span class="enclosure-carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+</article>
+
+<article class="m-4">
+    <div class="container p-4">
+        <div class="row justify-content-center">
+            <div class="row row-cols-2 align-items-center">
+                <div class="col-12 col-md-6 mb-4 mb-md-0">
+                    <h2 class=" text-start text-dark">Découvrez les services que nous proposons.</h2>
+                    <div class="text-start pt-4">
+                       <p class="text-dark">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio nihil, porro dicta sequi repudiandae aut magni numquam. Excepturi vero eius ea beatae quos odit autem laboriosam minus ipsam, itaque illum nesciunt fugit veniam reiciendis vel, dicta provident quia quae sint aliquam cum? Est natus sapiente odit ipsam porro recusandae vel soluta enim. Iure aspernatur maxime sunt omnis optio deleniti, soluta, odio ea magnam eius fuga illum! Neque corrupti, repudiandae expedita alias et dolores, quis voluptate quo vel molestiae nobis beatae rem sint? Doloribus, accusamus vero ipsa quaerat molestiae, soluta, rerum doloremque ab qui sed nulla voluptate asperiores dolore maiores aliquam.</p>
+                    </div>
+                    <div class="text-start pt-4">
+                        <a href="#" class="btn btn-gradiant">En savoir plus</a>
+                    </div>
+                </div>
+                
+                <div id="service-carousel" class="carousel slide col-12 col-md-6 mb-4 mb-md-0" data-ride="carousel">
+                    <div class="carousel-inner">
+                    {% for service in services %}
+                      <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <img class="w-100 rounded" src="../Img/boutique.jpg"/ alt="">
+                        <img src="{{ service.images|first ? uploaderHelper.asset(service.images|first, 'serviceFile') : asset('images/default/default.png') }}" class="card-img-top w-100 rounded" alt="">
+                      </div>
+                     {% endfor %}  
+                    </div>
+                    <button class="carousel-control-prev customp-carousel-control" type="button" data-bs-target="#service-carousel" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
+                    <button class="carousel-control-next customp-carousel-control" type="button" data-bs-target="#service-carousel" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+
+<article class="bg-info p-4">
+    <div class="container p-4">
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <h2 class="text-dark">Nos visiteurs témoignent</p>
+            </div>
+            <div class="col-12">
+                <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center justify-content-md-center align-items-center ">
+        {% for notice in notices %}
+            {% if notice.status == 1 %}
+                <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                    <div class="card card-notice shadow-lg">
+                        <div class="d-flex m-2">
+                            <div class="circle-container">
+                                <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+                            </div>
+                            <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text card-title text-dark">{{ notice.comment}} </p>
+                        </div>               
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+</article>
+{% endblock %}
