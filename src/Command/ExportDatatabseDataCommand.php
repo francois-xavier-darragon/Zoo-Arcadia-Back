@@ -40,7 +40,6 @@ class ExportDatatabseDataCommand extends Command
         }
         $filePath = $exportDir . $fileName . '.sql';
 
-        // Check if file already exists
         $counter = 1;
         $originalFilePath = $filePath;
         while (file_exists($filePath)) {

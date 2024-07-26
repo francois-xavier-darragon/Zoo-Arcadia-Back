@@ -36,6 +36,16 @@ class HabitatType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
+            ->add('shortdescription', TextType::class, [
+                'required' => true,
+                'label' => 'Description court',
+                'label_attr' => [
+                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+                ],
+                'attr' => [
+                    'class' => 'form-control form-control-solid',
+                ]
+            ])
             ->add('description', TextareaType::class, [
                 'required' => true,
                 'label' => 'Description',

@@ -18,7 +18,7 @@ class Enclosure
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "text",nullable: true)]
     private ?string $description = null;
 
     /**
@@ -30,6 +30,9 @@ class Enclosure
     #[ORM\ManyToOne(inversedBy: 'enclosures')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Habitat $habitat = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $shortDescription = null;
 
     public function __construct()
     {
@@ -108,6 +111,18 @@ class Enclosure
     public function setHabitat(?Habitat $habitat): static
     {
         $this->habitat = $habitat;
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(string $shortDescription): static
+    {
+        $this->shortDescription = $shortDescription;
 
         return $this;
     }

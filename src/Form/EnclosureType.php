@@ -24,6 +24,16 @@ class EnclosureType extends AbstractType
                 'class' => 'form-control form-control-solid',
             ]
         ])
+        ->add('shortdescription', TextType::class, [
+            'required' => true,
+            'label' => 'Description court',
+            'label_attr' => [
+                'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+            ],
+            'attr' => [
+                'class' => 'form-control form-control-solid',
+            ]
+        ])
         ->add('description', TextareaType::class, [
             'required' => true,
             'label' => 'Description de l\'enclos',
@@ -33,8 +43,7 @@ class EnclosureType extends AbstractType
             'attr' => [
                 'class' => 'form-control form-control-solid',
             ]
-        ])
-        ;
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

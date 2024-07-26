@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -38,7 +39,7 @@ class ManageDatabaseCommand extends Command
     {
         $this
             ->setDescription('Creates, drops, updates the database, or imports SQL data.')
-            ->addArgument('action', InputArgument::REQUIRED, 'The action to perform: create, drop, update, or import')
+            ->addArgument('action', InputArgument::OPTIONAL, 'The action to perform: create, drop, update, or import')
             ->addArgument('filename', InputArgument::OPTIONAL, 'The name of the SQL file to import (without path, required for import action)');
     }
 
@@ -47,8 +48,22 @@ class ManageDatabaseCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $action = $input->getArgument('action');
 
-        if (!in_array($action, ['create', 'drop', 'update', 'import'])) {
-            throw new InvalidArgumentException('Invalid action. Use "create", "drop", "update", or "import".');
+        if (!$action) {
+            $question = new ChoiceQuestion(
+                'Veuillez sélectionner l\'action à effectuer',
+                ['create', 'drop', 'update', 'import'],
+                0
+            );
+            $question->setErrorMessage('L\'action %s n\'est pas valide.');
+    
+            $action = $io->askQuestion($question);
+            $input->setArgument('action', $action);
+        }
+    
+        
+        if ($action === 'import' && !$input->getArgument('filename')) {
+            $filename = $io->ask('Saisissez le nom du fichier SQL à importer (sans chemin)');
+            $input->setArgument('filename', $filename);
         }
 
         $dbopts = parse_url($this->databaseUrl);

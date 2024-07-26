@@ -7,7 +7,10 @@
             <div class="col-12 col-md-6 mb-4 mb-md-0">
                 <h2 class=" text-start text-dark">Bienvenue au Parc Animalier Arcadia</h2>
                 <div class="text-start pt-4">
-                   <p class="text-dark">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio nihil, porro dicta sequi repudiandae aut magni numquam. Excepturi vero eius ea beatae quos odit autem laboriosam minus ipsam, itaque illum nesciunt fugit veniam reiciendis vel, dicta provident quia quae sint aliquam cum? Est natus sapiente odit ipsam porro recusandae vel soluta enim. Iure aspernatur maxime sunt omnis optio deleniti, soluta, odio ea magnam eius fuga illum! Neque corrupti, repudiandae expedita alias et dolores, quis voluptate quo vel molestiae nobis beatae rem sint? Doloribus, accusamus vero ipsa quaerat molestiae, soluta, rerum doloremque ab qui sed nulla voluptate asperiores dolore maiores aliquam.</p>
+                   <p class="text-dark">La où magie de la nature et la préservation écologique se rencontrent ! Situé à proximité de la légendaire forêt de Brocéliande, notre parc vous offre une expérience unique pour découvrir la richesse de la faune et de la flore dans un cadre enchanteur.
+                   <p class="text-dark">Nous sommes fiers de mettre en valeur les merveilles de notre environnement local tout en promouvant des pratiques écologiques durables. En explorant nos sentiers ombragés et nos enclos soigneusement conçus, vous aurez l'occasion d'observer une grande diversité d'espèces animales, chacune vivant dans des habitats recréés avec soin pour respecter leurs besoins naturels.</p>
+                   <p class="text-dark">Notre engagement envers l'écologie se manifeste à travers nos initiatives de conservation, notre utilisation de ressources renouvelables, et nos programmes éducatifs visant à sensibiliser petits et grands à l'importance de protéger notre planète. Nous invitons chaque visiteur à se connecter avec la nature et à participer activement à sa préservation.</p>
+                   <p class="text-dark">Merci de rejoindre notre mission de sauvegarde de la biodiversité et de célébrer avec nous la beauté du monde naturel. Nous vous souhaitons une visite inoubliable au cœur de la nature et de la légende.</p></p>
                 </div>
                 <div class="text-start pt-4">
                     <a href="#" class="btn btn-gradiant">En savoir plus</a>
@@ -32,15 +35,15 @@
         </div>
         <div class="row justify-content-center">    
         {% for habitat in habitats %}    
-            <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                <div class="card card-habitat shadow-lg">
+            <div class="col-12 col-md-4 mb-4 d-flex">
+                <div class="card card-habitat shadow-lg h-100 d-flex flex-column">
                     <img class="card-img-top" src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="{{habitat.name}}">
-                    <div class="card-body">
-                        <h5 class="card-title card-title ">Habitat {{habitat.name}}</h5>
-                        <p class="card-text card-title text-dark">{{habitat.description}}</p>
-                    </div>
-                    <div class="card-body">
-                        <a href="#" class="btn btn-gradiant">Consulter</a>
+                     <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Habitat {{habitat.name}}</h5>
+                        <p class="card-text text-dark flex-grow-1">{{habitat.shortdescription}}</p>
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-gradiant">Consulter</a>
+                        </div>
                     </div>
                 </div>
             </div>  
@@ -75,7 +78,11 @@
                                         <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt={{ animal.breed }}>
                                         <div class="card-body">
                                             <h5 class="card-title text-dark">Enclos des {{ animal.breed }}s</h5>
-                                            <p class="card-text text-dark">{{ animal.description }}</p>
+                                            {% if animal.enclosure %}
+                                                <p class="card-text text-dark">{{ animal.enclosure.shortDescription }}</p>
+                                            {% else %}
+                                                <p class="card-text text-dark">Description non disponible</p>
+                                            {% endif %}
                                             <a href="#" class="btn btn-gradiant">Go somewhere</a>
                                         </div>
                                     </div>

@@ -12,13 +12,20 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
+    public function __construct(
+        private HabitatRepository $habitatRepository,
+        private AnimalRepository $animalRepository, 
+        private NoticeRepository $noticeRepository, 
+        private ServiceRepository $serviceRepository,
+    ){}
+
     #[Route('/accueil', name: 'app_home')]
-    public function index(HabitatRepository $habitatRepository, AnimalRepository $animalRepository, NoticeRepository $noticeRepository, ServiceRepository $serviceRepository): Response
+    public function index(): Response
     {
-        $habitats = $habitatRepository->findAllHabitat();
-        $animals = $animalRepository->findAllAnimal();
-        $notice = $noticeRepository->findAllNotice();
-        $services = $serviceRepository->findAllService();
+        $habitats = $this->habitatRepository->findAllHabitat();
+        $animals = $this->animalRepository->findAllAnimal();
+        $notice = $this->noticeRepository->findAllNotice();
+        $services = $this->serviceRepository->findAllService();
 
         $randomAnimal = $animals[array_rand($animals)];
 
@@ -27,7 +34,7 @@ class HomeController extends AbstractController
             'animals'        => $animals,
             'notices'        => $notice,
             'randomAnimal'   => $randomAnimal,
-            'services'       => $services
+            'services'       => $services,
         ]);
     }
 }
