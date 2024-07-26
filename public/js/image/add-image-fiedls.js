@@ -45,7 +45,6 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 const newImageField = createImageField(index, defaultImagePath, imgId);
                 imageFieldsList.appendChild(newImageField);
                 index++;
-                updateIndex();
                 ensureUniqueImgIds();  
                 errorMessage.textContent = '';
                 errorBloc.classList.add('d-none')
@@ -85,7 +84,6 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
 
             img.setAttribute('data-img-id', imgId || index)
             input.name = `${entityName}[images][${index}][${filedsName}]`;
-            console.log(input)
             label.setAttribute('id', `edit-image-button-${index}`);
             button.setAttribute('id', `remove-image-button-${index}`);
             
@@ -96,13 +94,13 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
 
             switch(entityName) {
                 case 'animal':
-                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, updateIndex, div);
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;
                 case 'habitat':
-                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, updateIndex, div);
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;
                 case 'service':
-                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img,updateIndex, div);
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;
             }
            
@@ -117,24 +115,6 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             }
 
             return clone;
-        }
-
-        function updateIndex() {
-            const fields = imageFieldsList.children;
-    
-            Array.from(fields).forEach((field, idx) => {
-                const img = field.querySelector('img');
-                const input = field.querySelector('input[type="file"]');
-                const label = field.querySelector('label');
-                const button = field.querySelector('button');
-                
-                img.id = `balise-Img-${idx}`;
-                img.setAttribute('data-img-id', imgId || index);
-                input.name = `${entityName}[images][${idx}][${filedsName}]`;
-                label.setAttribute('id', `edit-image-button-${idx}`);
-                button.setAttribute('id', `remove-image-button-${idx}`);
-            });
-            index = fields.length;
         }
 
         function ensureUniqueImgIds() {
