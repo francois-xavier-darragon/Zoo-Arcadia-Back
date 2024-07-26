@@ -107,6 +107,20 @@ footer {
     justify-content: center !important;
 }
 
+.sidebar-logo img {
+    max-width: 100%;
+    height: auto;
+    transition: all 0.3s ease;
+    position:absolute;
+    bottom: 0px;
+}
+
+.notice-number-collapsed {
+    position: absolute;
+    top: 10px;
+    left: 18px;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
