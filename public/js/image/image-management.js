@@ -13,25 +13,24 @@ export function btnDnone(btnToHide) {
     }
 }
 
-export function newImage(btnEdit, imgElement){
+export function newImage(btnEdit, imgElement, editUrl){
    
     btnEdit.addEventListener('change', function(event) {
         const files = event.target.files;
-        
+        const imageContainer = document.querySelector('.image-container'); 
         if (files.length > 0 ) {
-            const imageContainer = document.querySelector('.image-container'); 
+            
             imageContainer.innerHTML = '';
 
-            Array.from(files).forEach(file => {
+            Array.from(files).forEach((file) => {
                const imageUrl = URL.createObjectURL(file);
-               imgElement.src = imageUrl; 
+               imgElement.src = imageUrl;
             });
         }
-       
     });
 }
 
-export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
+export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg, updateIndex, div) {
     removeButton.addEventListener("click", function() {
         
         const imageId = existingImg.dataset.imgId
@@ -54,9 +53,18 @@ export function removeExistingImage(removeButton, id, url, path, btnToHide, exis
             if (data.status === 'success') {
                 
                 existingImg.src = path
+                
+                existingImg.removeAttribute('data-img-id');
+
+                if (btnToHide) {
+                    btnToHide.value = '';
+                }
+
                 btnToHide.classList.remove('d-none');
                 removeButton.classList.add('d-none');
-                
+
+                div.remove();
+                updateIndex();
             } else {
                 alert(data.message);
             }

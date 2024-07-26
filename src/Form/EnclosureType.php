@@ -16,7 +16,7 @@ class EnclosureType extends AbstractType
         $builder
         ->add('name', TextType::class, [
             'required' => true,
-            'label' => 'Non de l\'enclos',
+            'label' => 'Nom de l\'enclos',
             'label_attr' => [
                 'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
             ],

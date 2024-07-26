@@ -44,7 +44,7 @@ class HabitatController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+                     
             foreach ($habitat->getEnclosures() as $enclosure) {
                 $enclosure->setHabitat($habitat);
             }
@@ -98,6 +98,7 @@ class HabitatController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+        
             $habitatRepository->saveHabitat($habitat, true);
 
             return $this->redirectToRoute('app_admin_habitat_index', [], Response::HTTP_SEE_OTHER);
@@ -136,6 +137,7 @@ class HabitatController extends AbstractController
     #[Route('/{habitat}/remove-habitat-image/', name: 'app_admin_habitat_remove_image', methods: ['POST'])]
     public function removeAnimalImage(Request $request, Habitat $habitat, HabitatRepository $habitatRepository, ImageRepository $imageRepository): JsonResponse
     {
+     
         $data = json_decode($request->getContent(), true);
         $imageId = ($data['imgId']) ?? null;
 
@@ -156,4 +158,5 @@ class HabitatController extends AbstractController
 
         return new JsonResponse(['status' => 'success'], 200);
     }
+
 }

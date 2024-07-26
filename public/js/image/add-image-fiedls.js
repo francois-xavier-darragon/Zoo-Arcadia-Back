@@ -45,6 +45,8 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 const newImageField = createImageField(index, defaultImagePath, imgId);
                 imageFieldsList.appendChild(newImageField);
                 index++;
+                updateIndex();
+                ensureUniqueImgIds();  
                 errorMessage.textContent = '';
                 errorBloc.classList.add('d-none')
             } else {
@@ -57,10 +59,11 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
         if (currentImageCount > 0) {
             existingImages.forEach(function(image, idx) {
                 const imagePath = image.path ? image.path : defaultImagePath;
-                imgId = image.id ? image.id :null;
+                imgId = image.id ? image.id : idx;
                 const imageField = createImageField(idx, imagePath, imgId);
                 imageFieldsList.appendChild(imageField);
             });
+            ensureUniqueImgIds();
         } else {
             const defaultImageField = createImageField(index, defaultImagePath, imgId);
             imageFieldsList.appendChild(defaultImageField);
@@ -69,41 +72,44 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
     
         function createImageField(index, imagePath, imgId) {
             const clone = template.content.cloneNode(true);
+            const div = clone.querySelector('.image-card');
             const img = clone.querySelector('img');
             const input = clone.querySelector('input[type="file"]');
             const label = clone.querySelector('label');
             const button = clone.querySelector('button');
-   
+        
             img.src = imagePath;
            
             img.id = `balise-Img-${index}`;
-            img.setAttribute('data-img-id', imgId)
+            div.id = `div-Img-${index}`;
+
+            img.setAttribute('data-img-id', imgId || index)
             input.name = `${entityName}[images][${index}][${filedsName}]`;
+            console.log(input)
             label.setAttribute('id', `edit-image-button-${index}`);
             button.setAttribute('id', `remove-image-button-${index}`);
             
             const btnTrash = clone.getElementById(`remove-image-button-${index}`);
             const btnEdit = clone.getElementById(`edit-image-button-${index}`);
             newImage(btnEdit, img)
+            ensureUniqueImgIds();
 
             switch(entityName) {
                 case 'animal':
-                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img);
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, updateIndex, div);
                     break;
                 case 'habitat':
-                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img);
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, updateIndex, div);
                     break;
                 case 'service':
-                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img);
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img,updateIndex, div);
                     break;
             }
            
-            if (!entityId) {
+            if(img.src == "/images/default/default-750x500.png") {
                 btnDnone(btnTrash);
-            } else if (index < existingImages.length) {
+            } else{
                 btnDnone(btnEdit);
-            } else {
-                btnDnone(btnTrash);
             }
          
             if(divSelected) {
@@ -111,6 +117,41 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             }
 
             return clone;
+        }
+
+        function updateIndex() {
+            const fields = imageFieldsList.children;
+    
+            Array.from(fields).forEach((field, idx) => {
+                const img = field.querySelector('img');
+                const input = field.querySelector('input[type="file"]');
+                const label = field.querySelector('label');
+                const button = field.querySelector('button');
+                
+                img.id = `balise-Img-${idx}`;
+                img.setAttribute('data-img-id', imgId || index);
+                input.name = `${entityName}[images][${idx}][${filedsName}]`;
+                label.setAttribute('id', `edit-image-button-${idx}`);
+                button.setAttribute('id', `remove-image-button-${idx}`);
+            });
+            index = fields.length;
+        }
+
+        function ensureUniqueImgIds() {
+            const images = document.querySelectorAll('.image-card img');
+            
+            const seenIds = new Set();
+            
+            images.forEach((img, index) => {
+                const currentId = img.getAttribute('data-img-id');
+                
+                if (seenIds.has(currentId)) {
+                    img.setAttribute('data-img-id', index);
+                } else {
+
+                    seenIds.add(currentId);
+                }
+            });
         }
     });
 }

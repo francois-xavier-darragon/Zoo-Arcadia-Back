@@ -1,7 +1,6 @@
 
 {{ form_start(form) }}
-     <div id="habitat-data" data-habitat-id="{{ habitat.id|default('') }}"
-     data-remove-image-url="{{ path('app_admin_habitat_remove_image', { 'habitat': 'HABITAT_ID' }) }}">
+    <div id="habitat-data" data-habitat-id="{{ habitat.id|default('') }}" data-remove-image-url="{{ path('app_admin_habitat_remove_image', { 'habitat': 'HABITAT_ID' }) }}">
         <button id="add-image-btn" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image</button>
         <div id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"></div>
         <div class="d-flex text-danger mt-3 d-none" id="image-error-bloc">
@@ -9,7 +8,7 @@
             <div id="image-error-message" class="text-danger ms-2"></div>
         </div>
     </div>
-
+    
     {{ form_row(form.name) }}
     {{ form_row(form.description) }}
     <div id="enclosures-container" data-prototype="{{ form_widget(form.enclosures.vars.prototype)|e('html_attr') }}">
@@ -18,7 +17,7 @@
         <div class="row enclosure-item mt-2">
             {{ form_row(enclosureForm.name) }}
             {{ form_row(enclosureForm.description) }}
-            <a type='button' class="text-danger remove-enclosure text-end pt-2" title="Supprimer">
+            <a type='button' class="text-danger remove-enclosure text-end pt-2" title="Supprimer un enclos">
                 {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
             </a>
         </div>
