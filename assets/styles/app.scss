@@ -330,31 +330,12 @@ td {
     height: 200px;
 }
 
-.customp-carousel-control {
+.custom-carousel-control {
     height: 300px;
     position: absolute;
     top: 1460px;
 }
 
-.enclosure-carousel-control-prev-icon,
-.enclosure-carousel-control-next-icon {
-  height: 100px;
-  width: 100px;
-  background-image: none;
-}
-
-.enclosure-carousel-control-next-icon:after{
-  content: '->';
-  font-size: 55px;
-  color: $dark;
-}
-
-.enclosure-carousel-control-prev-icon:after {
-  content: '<-';
-  font-size: 55px;
-  color: $dark;
-}
-  
 .card-enclose, .card-notice  {
     width: 300px;
 }
@@ -379,30 +360,6 @@ td {
     object-fit: cover;
 }
 
-.customp-carousel-control {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 5%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    text-align: center;
-    opacity: 0.5;
-    background: none;
-    border: none;
-}
-
-.customp-carousel-control-prev {
-    left: 0;
-}
-
-.customp-carousel-control-next {
-    right: 0;
-}
-
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
     background-color: rgba(0, 0, 0, 0.5);
@@ -411,6 +368,24 @@ td {
     height: 30px;
 }
 
+.custom-carousel-control {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-carousel-control.carousel-control-prev {
+    left: 10px;
+}
+
+.custom-carousel-control.carousel-control-next {
+    right: 10px;
+}
 
 //Signin pages
 #formSignin,
