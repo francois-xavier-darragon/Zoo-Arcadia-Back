@@ -9,14 +9,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class AdminAccessService
 {
-    private $security;
-    private $router;
-
-    public function __construct(Security $security, RouterInterface $router)
-    {
-        $this->security = $security;
-        $this->router = $router;
-    }
+    public function __construct(
+        private Security $security, 
+        private RouterInterface $router)
+    {}
 
     public function onKernelRequest(RequestEvent $event)
     {
