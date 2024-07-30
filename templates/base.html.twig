@@ -15,9 +15,14 @@
     {% if app.user and (is_granted('ROLE_ADMIN') or is_granted('ROLE_VETERINARY') or is_granted('ROLE_WORKER')) %}
         {% include "_include/navbar/_nav_top.html.twig" %}
         {% include "_include/navbar/_nav_lateral.html.twig" %}
-        <div class="container p-0">
-            {% block body %}{% endblock %}
-        </div> 
+        <div class="page-wrapper">
+            <div class="content-wrapper">
+                <div class="container p-0">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+            {% include "_include/footer/_footer.html.twig" %}
+        </div>
     {% endif %}
 
     {% block javascripts %}

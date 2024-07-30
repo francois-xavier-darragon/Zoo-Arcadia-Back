@@ -12,17 +12,7 @@ security:
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
-        visitor:
-            pattern: ^/visitor
-            lazy: true
-            provider: app_user_provider
-            form_login:
-                login_path: app_visitor_login
-                check_path: app_visitor_login
-                enable_csrf: true
-            logout:
-                path: app_visitor_logout        
+            security: false  
         main:
             lazy: true
             provider: app_user_provider
@@ -31,7 +21,8 @@ security:
                 check_path: app_login
                 enable_csrf: true
             logout:
-                path: app_logout    
+                path: app_logout
+                target: app_home    
                 # where to redirect after logout
                 # target: app_any_route
   
@@ -45,6 +36,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_VETERINARY, 'ROLE_WORKER'] }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
