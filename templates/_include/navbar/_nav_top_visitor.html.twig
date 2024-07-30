@@ -11,11 +11,35 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/accueil">Accueil</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/habitats">habitats</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        habitats
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for habitat in habitats %}
+                            <li><a class="dropdown-item text-white" href="#">{{ habitat.name }} </a></li>
+                        {% endfor %}
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/services">services</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Enclos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for enclosure in enclosures %}
+                            <li><a class="dropdown-item text-white" href="#">{{ enclosure.name }} </a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                          {% for service in services %}
+                            <li><a class="dropdown-item text-white" href="#">{{ service.name }} </a></li>
+                        {% endfor %}
+                    </ul>
                 </li>
                 <li class="nav-item" data-show="visitor">
                     <a class="nav-link text-white" href="/contact">nous contacter</a>
@@ -29,7 +53,7 @@
                 </li>
                 {% else %}
                  <li class="nav-item" data-show="disconnected">
-                    <a class="nav-link text-white" href="/signin">Connexion</a>
+                    <a class="nav-link text-white" href="/login">Connexion/Inscription</a>
                 </li>
                 {% endif %}
             </ul>

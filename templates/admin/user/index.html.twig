@@ -26,16 +26,21 @@
                     <td class="text-center">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.firstName }}</td>
                     {% for role in user.roles %}
-                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER'  %}
+                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER' or role == 'ROLE_VISITOR' %}
                             {% set roleName = allRoles[role] %}
                             <td class="text-center">{{ roleName }}</td>
                         {% endif %}
                     {% endfor %}
                     <td class="text-center">{{ user.email }}</td>
                     <td class="text-end">
-                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
-                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
-                        </a>
+                        {% for role in user.roles %}
+                            {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER' %}
+                                {% set roleName = allRoles[role] %}
+                                <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
+                                {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                            </a>
+                            {% endif %}
+                        {% endfor %}
                         <a type='button' class="text-danger me-3 mb-2" data-token="{{ csrf_tokens[user.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}" title="Supprimer">
                              {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>

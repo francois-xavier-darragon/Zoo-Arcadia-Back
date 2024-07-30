@@ -307,6 +307,11 @@ td {
     font-size: 20px;
 }
 
+
+.dropdown-menu {
+    background-color: $dark; 
+}
+
 .logo-arcadia-footer {
     width: 200px;
     height: 200px;
@@ -407,6 +412,7 @@ td {
 #formSignin,
 #formRegister,
 #formAccount {
+    background-color: white;
     margin:20px;
     padding: 20px;
     border: solid $secondary;
