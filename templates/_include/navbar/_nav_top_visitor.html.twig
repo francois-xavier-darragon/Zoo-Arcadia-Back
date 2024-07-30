@@ -20,15 +20,18 @@
                 <li class="nav-item" data-show="visitor">
                     <a class="nav-link text-white" href="/contact">nous contacter</a>
                 </li>
+                {% if app.user and (is_granted('ROLE_VISITOR')) %}
                 <li class="nav-item" data-show="connected">
                     <a class="nav-link text-white" href="/account">Mon compte</a>
-                </li>
-                <li class="nav-item" data-show="disconnected">
-                    <a class="nav-link text-white" href="/signin">Connexion</a>
                 </li>
                 <li class="nav-item" data-show="connected">
                     <button class="nav-link text-white" id="btn-signout">Deconnexion</button>
                 </li>
+                {% else %}
+                 <li class="nav-item" data-show="disconnected">
+                    <a class="nav-link text-white" href="/signin">Connexion</a>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>  
