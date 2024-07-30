@@ -7,7 +7,10 @@
             <div class="col-12 col-md-6 mb-4 mb-md-0">
                 <h2 class=" text-start text-dark">Bienvenue au Parc Animalier Arcadia</h2>
                 <div class="text-start pt-4">
-                   <p class="text-dark">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio nihil, porro dicta sequi repudiandae aut magni numquam. Excepturi vero eius ea beatae quos odit autem laboriosam minus ipsam, itaque illum nesciunt fugit veniam reiciendis vel, dicta provident quia quae sint aliquam cum? Est natus sapiente odit ipsam porro recusandae vel soluta enim. Iure aspernatur maxime sunt omnis optio deleniti, soluta, odio ea magnam eius fuga illum! Neque corrupti, repudiandae expedita alias et dolores, quis voluptate quo vel molestiae nobis beatae rem sint? Doloribus, accusamus vero ipsa quaerat molestiae, soluta, rerum doloremque ab qui sed nulla voluptate asperiores dolore maiores aliquam.</p>
+                   <p class="text-dark">La où magie de la nature et la préservation écologique se rencontrent ! Situé à proximité de la légendaire forêt de Brocéliande, notre parc vous offre une expérience unique pour découvrir la richesse de la faune et de la flore dans un cadre enchanteur.
+                   <p class="text-dark">Nous sommes fiers de mettre en valeur les merveilles de notre environnement local tout en promouvant des pratiques écologiques durables. En explorant nos sentiers ombragés et nos enclos soigneusement conçus, vous aurez l'occasion d'observer une grande diversité d'espèces animales, chacune vivant dans des habitats recréés avec soin pour respecter leurs besoins naturels.</p>
+                   <p class="text-dark">Notre engagement envers l'écologie se manifeste à travers nos initiatives de conservation, notre utilisation de ressources renouvelables, et nos programmes éducatifs visant à sensibiliser petits et grands à l'importance de protéger notre planète. Nous invitons chaque visiteur à se connecter avec la nature et à participer activement à sa préservation.</p>
+                   <p class="text-dark">Merci de rejoindre notre mission de sauvegarde de la biodiversité et de célébrer avec nous la beauté du monde naturel. Nous vous souhaitons une visite inoubliable au cœur de la nature et de la légende.</p></p>
                 </div>
                 <div class="text-start pt-4">
                     <a href="#" class="btn btn-gradiant">En savoir plus</a>
@@ -32,15 +35,15 @@
         </div>
         <div class="row justify-content-center">    
         {% for habitat in habitats %}    
-            <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                <div class="card card-habitat shadow-lg">
+            <div class="col-12 col-md-4 mb-4 d-flex">
+                <div class="card card-habitat shadow-lg h-100 d-flex flex-column">
                     <img class="card-img-top" src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="{{habitat.name}}">
-                    <div class="card-body">
-                        <h5 class="card-title card-title ">Habitat {{habitat.name}}</h5>
-                        <p class="card-text card-title text-dark">{{habitat.description}}</p>
-                    </div>
-                    <div class="card-body">
-                        <a href="#" class="btn btn-gradiant">Consulter</a>
+                     <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">Habitat {{habitat.name}}</h5>
+                        <p class="card-text text-dark flex-grow-1">{{habitat.shortdescription}}</p>
+                        <div class="mt-auto">
+                            <a href="#" class="btn btn-gradiant">Consulter</a>
+                        </div>
                     </div>
                 </div>
             </div>  
@@ -70,13 +73,15 @@
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="row">
                             {% for animal in batch %}
-                                <div class="animal-card col-12 mb-4 col-md-3">
-                                    <div class="card card-enclose">
+                                <div class="animal-card col-12 col-md-3 mb-4 d-flex">
+                                    <div class="card card-enclose h-100 d-flex flex-column">
                                         <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt={{ animal.breed }}>
-                                        <div class="card-body">
-                                            <h5 class="card-title text-dark">Enclos des {{ animal.breed }}s</h5>
-                                            <p class="card-text text-dark">{{ animal.description }}</p>
-                                            <a href="#" class="btn btn-gradiant">Go somewhere</a>
+                                         <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">Enclos des {{ animal.breed }}s</h5>
+                                            <p class="card-text text-dark flex-grow-1">{{animal.enclosure.shortdescription}}</p>
+                                            <div class="mt-auto">
+                                                <a href="#" class="btn btn-gradiant">Consulter</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -88,11 +93,11 @@
             </div>     
         </div>
     
-        <button class="carousel-control-prev customp-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="prev">
-            <span class="enclosure-carousel-control-prev-icon" aria-hidden="true"></span>
+        <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
-        <button class="carousel-control-next customp-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="next">
-            <span class="enclosure-carousel-control-next-icon" aria-hidden="true"></span>
+        <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
     </div>
 </article>
@@ -104,7 +109,11 @@
                 <div class="col-12 col-md-6 mb-4 mb-md-0">
                     <h2 class=" text-start text-dark">Découvrez les services que nous proposons.</h2>
                     <div class="text-start pt-4">
-                       <p class="text-dark">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Odio nihil, porro dicta sequi repudiandae aut magni numquam. Excepturi vero eius ea beatae quos odit autem laboriosam minus ipsam, itaque illum nesciunt fugit veniam reiciendis vel, dicta provident quia quae sint aliquam cum? Est natus sapiente odit ipsam porro recusandae vel soluta enim. Iure aspernatur maxime sunt omnis optio deleniti, soluta, odio ea magnam eius fuga illum! Neque corrupti, repudiandae expedita alias et dolores, quis voluptate quo vel molestiae nobis beatae rem sint? Doloribus, accusamus vero ipsa quaerat molestiae, soluta, rerum doloremque ab qui sed nulla voluptate asperiores dolore maiores aliquam.</p>
+                       <p class="text-dark">Nous nous engageons à offrir une expérience inoubliable à nos visiteurs tout en promouvant la conservation et l’éducation.</p>
+                       <p class="text-dark">Nous proposons des visites guidées animées par nos experts, qui partagent leur passion et leurs connaissances sur les animaux et leurs habitats naturels. Des ateliers interactifs et des conférences sont régulièrement organisés pour sensibiliser petits et grands à la préservation de la faune et de la flore.</p>
+                       <p class="text-dark">Notre parc participe activement à des programmes de reproduction en captivité, visant à réintroduire des espèces menacées dans la nature. Nous collaborons avec diverses organisations de conservation pour soutenir des initiatives locales et internationales. Nous avons également des cliniques vétérinaires pour assurer les meilleurs soins possibles à nos animaux.</p>
+                       <p class="text-dark">Nous offrons une vue rapprochée des animaux dans des environnements naturels recréés. Mais aussi, des aires de jeux pour enfants, des zones de pique-nique et des restaurants avec des vues panoramiques sur les enclos.</p>
+                       <p class="text-dark">Nous sommes ravis de vous accueillir et de partager avec vous la beauté et la diversité de la nature. Ensemble, nous pouvons faire une différence pour la préservation de notre environnement. Bonne visite au Parc Animalier Arcadia</p>
                     </div>
                     <div class="text-start pt-4">
                         <a href="#" class="btn btn-gradiant">En savoir plus</a>
@@ -113,17 +122,16 @@
                 
                 <div id="service-carousel" class="carousel slide col-12 col-md-6 mb-4 mb-md-0" data-ride="carousel">
                     <div class="carousel-inner">
-                    {% for service in services %}
-                      <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img class="w-100 rounded" src="../Img/boutique.jpg"/ alt="">
-                        <img src="{{ service.images|first ? uploaderHelper.asset(service.images|first, 'serviceFile') : asset('images/default/default.png') }}" class="card-img-top w-100 rounded" alt="">
-                      </div>
-                     {% endfor %}  
+                        {% for service in services %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <img src="{{ service.images|first ? uploaderHelper.asset(service.images|first, 'serviceFile') : asset('images/default/default.png') }}" class="card-img-top w-100 rounded" alt="image des services">
+                        </div>
+                        {% endfor %}  
                     </div>
-                    <button class="carousel-control-prev customp-carousel-control" type="button" data-bs-target="#service-carousel" data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#service-carousel" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     </button>
-                    <button class="carousel-control-next customp-carousel-control" type="button" data-bs-target="#service-carousel" data-bs-slide="next">
+                    <button class="carousel-control-next" type="button" data-bs-target="#service-carousel" data-bs-slide="next">
                       <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     </button>
                 </div>
@@ -132,7 +140,7 @@
     </div>
 </article>
 
-<article class="bg-info p-4">
+{# <article class="bg-info p-4">
     <div class="container p-4">
         <div class="row text-center mb-3">
             <div class="col-12">
@@ -142,23 +150,78 @@
                 <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc.</p>
             </div>
         </div>
-        <div class="row justify-content-center justify-content-md-center align-items-center ">
-        {% for notice in notices %}
-            {% if notice.status == 1 %}
-                <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
-                    <div class="card card-notice shadow-lg">
-                        <div class="d-flex m-2">
-                            <div class="circle-container">
-                                <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+        <div class="row" style="margin-left:70px;">
+            {% for notice in notices %}
+                {% if notice.status == 1 %}
+                    <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                        <div class="card card-notice shadow-lg">
+                            <div class="d-flex m-2">
+                                <div class="circle-container">
+                                    <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+                                </div>
+                                <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
                             </div>
-                            <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
+                            <div class="card-body">
+                                <p class="card-text card-title text-dark">{{ notice.comment}} </p>
+                            </div>               
                         </div>
-                        <div class="card-body">
-                            <p class="card-text card-title text-dark">{{ notice.comment}} </p>
-                        </div>               
                     </div>
-                </div>
-            {% endif %}
-        {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+</article> #}
+
+<article class="bg-info p-4">
+    <div id="notice-carousel-group" class="container">
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <h2 class="text-dark">Nos visiteurs témoignent</h2>
+            </div>
+            <div class="col-12">
+                <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc.</p>
+            </div>
+        </div>
+        <div id="notice-carousel" class="carousel slide" data-bs-interval="false">   
+            <div class="carousel-inner">
+               {% set notices_groups = notices|batch(3) %}
+               {% set previous_group = [] %}
+
+               {% for group in notices_groups %}
+                    {% if previous_batch and group|length < 3 %}
+                        {% set group = group|merge(previous_group|slice(0, 3 - group|length)) %}
+                    {% endif %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="row justify-content-center">
+                            {% for notice in group %}
+                               {% if notice.status == 1 %}
+                                    <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                                        <div class="card card-notice w-100">
+                                            <div class="d-flex m-2">
+                                                <div class="circle-container">
+                                                    <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+                                                </div>
+                                                <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text card-title text-dark">{{ notice.comment}} </p>
+                                            </div>               
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% set previous_group = group %}
+                {% endfor %}
+            </div>     
+        </div>
+    
+        <button class="carousel-control-prev custom-carousel-control-notice" type="button" data-bs-target="#notice-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next custom-carousel-control-notice" type="button" data-bs-target="#notice-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
 </article>
 {% endblock %}

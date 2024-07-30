@@ -24,7 +24,7 @@ class Habitat
     #[ORM\Column(length: 50)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $description = null;
 
     /**
@@ -44,6 +44,9 @@ class Habitat
      */
     #[ORM\OneToMany(targetEntity: Enclosure::class, mappedBy: 'habitat', orphanRemoval: true, cascade: ['persist'])]
     private Collection $enclosures;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shortDescription = null;
 
     public function __construct()
     {
@@ -202,6 +205,18 @@ class Habitat
                 $enclosure->setHabitat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(?string $shortDescription): static
+    {
+        $this->shortDescription = $shortDescription;
 
         return $this;
     }
