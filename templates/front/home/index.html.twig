@@ -140,7 +140,7 @@
     </div>
 </article>
 
-<article class="bg-info p-4">
+{# <article class="bg-info p-4">
     <div class="container p-4">
         <div class="row text-center mb-3">
             <div class="col-12">
@@ -169,6 +169,59 @@
                 {% endif %}
             {% endfor %}
         </div>
-</article>
+</article> #}
 
+<article class="bg-info p-4">
+    <div id="notice-carousel-group" class="container">
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <h2 class="text-dark">Nos visiteurs témoignent</h2>
+            </div>
+            <div class="col-12">
+                <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc.</p>
+            </div>
+        </div>
+        <div id="notice-carousel" class="carousel slide" data-bs-interval="false">   
+            <div class="carousel-inner">
+               {% set notices_groups = notices|batch(3) %}
+               {% set previous_group = [] %}
+
+               {% for group in notices_groups %}
+                    {% if previous_batch and group|length < 3 %}
+                        {% set group = group|merge(previous_group|slice(0, 3 - group|length)) %}
+                    {% endif %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="row justify-content-center">
+                            {% for notice in group %}
+                               {% if notice.status == 1 %}
+                                    <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
+                                        <div class="card card-notice w-100">
+                                            <div class="d-flex m-2">
+                                                <div class="circle-container">
+                                                    <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
+                                                </div>
+                                                <h5 class="card-title text-dark ms-3">{{ notice.nickname }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-text card-title text-dark">{{ notice.comment}} </p>
+                                            </div>               
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% set previous_group = group %}
+                {% endfor %}
+            </div>     
+        </div>
+    
+        <button class="carousel-control-prev custom-carousel-control-notice" type="button" data-bs-target="#notice-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next custom-carousel-control-notice" type="button" data-bs-target="#notice-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+</article>
 {% endblock %}
