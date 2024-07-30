@@ -12,10 +12,14 @@ class SecurityController extends AbstractController
     #[Route(path: '/', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
-            return $this->redirectToRoute('app_admin_notice_index');
+        if($this->getUser()) {
+            if (in_array('ROLE_VISITOR',$this->getUser()->getRoles())) {
+                return $this->redirectToRoute('app_home');
+            } else {
+                return $this->redirectToRoute('app_admin_notice_index');
+            }
         }
-
+    
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 

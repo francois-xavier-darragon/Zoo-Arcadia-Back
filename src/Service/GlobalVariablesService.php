@@ -3,8 +3,10 @@
 namespace App\Service;
 
 use App\Entity\USER;
+use App\Repository\EnclosureRepository;
 use App\Repository\HabitatRepository;
 use App\Repository\NoticeRepository;
+use App\Repository\ServiceRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Twig\Environment;
@@ -15,7 +17,9 @@ class GlobalVariablesService
         private Environment $twig,
         private HabitatRepository $habitatRepository,
         private NoticeRepository $noticeRepository,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private EnclosureRepository $enclosureRepository,
+        private ServiceRepository $serviceRepository
     )
     {}
 
@@ -28,6 +32,12 @@ class GlobalVariablesService
 
         $habitats = $this->habitatRepository->findAll();
         $this->twig->addGlobal('habitats', $habitats);
+
+        $enclosures = $this->enclosureRepository->findAll();
+        $this->twig->addGlobal('enclosures', $enclosures);
+
+        $services = $this->serviceRepository->findAll();
+        $this->twig->addGlobal('services', $services);
 
         $pendingNoticesCount = $this->noticeRepository->countPendingNotices();
         $this->twig->addGlobal('pending_notices_count', $pendingNoticesCount);

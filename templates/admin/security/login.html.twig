@@ -29,12 +29,15 @@
                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 </div>
             </div>
+
+            <div class="text-center pt-5">
+                <a href="/signin" class="text-white">Vous n'avez pas de compte ? inscrivez-vous ici !</a>
+            </div>
             
             <div class="d-flex justify-content-end">
                 <button class="btn btn-lg btn-primary mt-4" type="submit">
                     Connexion
                 </button>
             </div>
-
     </form>
 {% endblock %}

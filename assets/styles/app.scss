@@ -12,8 +12,21 @@ body {
     padding: 0;
     box-sizing: border-box;
 }
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-footer {
+.content-wrapper {
+    flex: 1 0 auto;
+}
+
+.footer-back {
+    flex-shrink: 0;
+}
+
+.footer-front {
     margin-top: 0;
     padding: 15px;
     bottom: 0;
@@ -307,6 +320,11 @@ td {
     font-size: 20px;
 }
 
+
+.dropdown-menu {
+    background-color: $dark; 
+}
+
 .logo-arcadia-footer {
     width: 200px;
     height: 200px;
@@ -407,6 +425,7 @@ td {
 #formSignin,
 #formRegister,
 #formAccount {
+    background-color: white;
     margin:20px;
     padding: 20px;
     border: solid $secondary;

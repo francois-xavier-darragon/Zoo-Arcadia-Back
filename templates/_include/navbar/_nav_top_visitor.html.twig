@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
     <div class="container-fluid ">
-        <a class="navbar-brand text-white" href="/">
+        <a class="navbar-brand text-white" href="/accueil">
             <img src="{{asset('images/ARCADIA.png')}}" class="w-15" alt="log-parc-animalier-arcadia">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,25 +11,49 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" href="/accueil">Accueil</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/habitats">habitats</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        habitats
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for habitat in habitats %}
+                            <li><a class="dropdown-item text-white" href="#">{{ habitat.name }} </a></li>
+                        {% endfor %}
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="/services">services</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        Enclos
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        {% for enclosure in enclosures %}
+                            <li><a class="dropdown-item text-white" href="#">{{ enclosure.name }} </a></li>
+                        {% endfor %}
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        services
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                          {% for service in services %}
+                            <li><a class="dropdown-item text-white" href="#">{{ service.name }} </a></li>
+                        {% endfor %}
+                    </ul>
                 </li>
                 <li class="nav-item" data-show="visitor">
                     <a class="nav-link text-white" href="/contact">nous contacter</a>
                 </li>
-                {% if app.user and (is_granted('ROLE_VISITOR')) %}
+                {% if app.user %}
                 <li class="nav-item" data-show="connected">
                     <a class="nav-link text-white" href="/account">Mon compte</a>
                 </li>
                 <li class="nav-item" data-show="connected">
-                    <button class="nav-link text-white" id="btn-signout">Deconnexion</button>
+                    <a class="nav-link text-white" href="/logout">Déconnexion</a>
                 </li>
                 {% else %}
                  <li class="nav-item" data-show="disconnected">
-                    <a class="nav-link text-white" href="/signin">Connexion</a>
+                    <a class="nav-link text-white" href="/">Connexion/Inscription</a>
                 </li>
                 {% endif %}
             </ul>
