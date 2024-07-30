@@ -28,7 +28,17 @@ class HabitatType extends AbstractType
             ])
             ->add('name', TextType::class, [
                 'required' => true,
-                'label' => 'Non de l\'habitat',
+                'label' => 'Nom de l\'habitat',
+                'label_attr' => [
+                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+                ],
+                'attr' => [
+                    'class' => 'form-control form-control-solid',
+                ]
+            ])
+            ->add('shortdescription', TextType::class, [
+                'required' => true,
+                'label' => 'Description court',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                 ],

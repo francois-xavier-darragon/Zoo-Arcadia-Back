@@ -59,7 +59,7 @@ class Animal
     #[ORM\JoinColumn(nullable: false)]
     private ?Enclosure $enclosure = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $description = null;
 
     public function __construct()

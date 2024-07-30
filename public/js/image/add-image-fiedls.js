@@ -18,33 +18,26 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
            index = currentImageCount;
         }
         
-        let animalDataElement
-        let animalId
-        let habitatDataElement
-        let habitatId
-        let serviceDataElement
-        let serviceId
-        let url
+        let entityDataElement;
+        let entityId;
+        let url;
 
-        if(entityName === 'animal') {
-            animalDataElement = document.getElementById('animal-data');
-            animalId = animalDataElement.dataset.animalId;
-            url = animalDataElement.dataset.removeImageUrl;
-            url = url.replace('ANIMAL_ID', animalId);
-        } 
-        
-        if(entityName === 'habitat'){
-            habitatDataElement = document.getElementById('habitat-data');
-            habitatId = habitatDataElement.dataset.habitatId;
-            url = habitatDataElement.dataset.removeImageUrl;
-            url = url.replace('HABITAT_ID', habitatId);
-        }
-
-        if(entityName === 'service'){
-            serviceDataElement = document.getElementById('service-data');
-            serviceId = serviceDataElement.dataset.habitatId;
-            url = serviceDataElement.dataset.removeImageUrl;
-            url = url.replace('SERVICE_ID', serviceId);
+        switch(entityName) {
+            case 'animal':
+                entityDataElement = document.getElementById('animal-data');
+                entityId = entityDataElement.dataset.animalId;
+                url = entityDataElement.dataset.removeImageUrl.replace('ANIMAL_ID', entityId);
+                break;
+            case 'habitat':
+                entityDataElement = document.getElementById('habitat-data');
+                entityId = entityDataElement.dataset.habitatId;
+                url = entityDataElement.dataset.removeImageUrl.replace('HABITAT_ID', entityId);
+                break;
+            case 'service':
+                entityDataElement = document.getElementById('service-data');
+                entityId = entityDataElement.dataset.serviceId;
+                url = entityDataElement.dataset.removeImageUrl.replace('SERVICE_ID', entityId);
+                break;
         }
         
         addImageBtn.addEventListener('click', function() {
@@ -52,6 +45,7 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 const newImageField = createImageField(index, defaultImagePath, imgId);
                 imageFieldsList.appendChild(newImageField);
                 index++;
+                ensureUniqueImgIds();  
                 errorMessage.textContent = '';
                 errorBloc.classList.add('d-none')
             } else {
@@ -64,10 +58,11 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
         if (currentImageCount > 0) {
             existingImages.forEach(function(image, idx) {
                 const imagePath = image.path ? image.path : defaultImagePath;
-                imgId = image.id ? image.id :null;
+                imgId = image.id ? image.id : idx;
                 const imageField = createImageField(idx, imagePath, imgId);
                 imageFieldsList.appendChild(imageField);
             });
+            ensureUniqueImgIds();
         } else {
             const defaultImageField = createImageField(index, defaultImagePath, imgId);
             imageFieldsList.appendChild(defaultImageField);
@@ -76,15 +71,18 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
     
         function createImageField(index, imagePath, imgId) {
             const clone = template.content.cloneNode(true);
+            const div = clone.querySelector('.image-card');
             const img = clone.querySelector('img');
             const input = clone.querySelector('input[type="file"]');
             const label = clone.querySelector('label');
             const button = clone.querySelector('button');
-   
+        
             img.src = imagePath;
            
             img.id = `balise-Img-${index}`;
-            img.setAttribute('data-img-id', imgId)
+            div.id = `div-Img-${index}`;
+
+            img.setAttribute('data-img-id', imgId || index)
             input.name = `${entityName}[images][${index}][${filedsName}]`;
             label.setAttribute('id', `edit-image-button-${index}`);
             button.setAttribute('id', `remove-image-button-${index}`);
@@ -92,21 +90,24 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             const btnTrash = clone.getElementById(`remove-image-button-${index}`);
             const btnEdit = clone.getElementById(`edit-image-button-${index}`);
             newImage(btnEdit, img)
+            ensureUniqueImgIds();
 
-            if(entityName === 'animal') {
-                removeExistingImage(btnTrash, animalId, url, defaultImagePath, btnEdit, img)
-            } else if(entityName === 'habitat') {
-                removeExistingImage(btnTrash, habitatId, url, defaultImagePath, btnEdit, img)
-            } else {
-                removeExistingImage(btnTrash, serviceId, url, defaultImagePath, btnEdit, img)
+            switch(entityName) {
+                case 'animal':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
+                    break;
+                case 'habitat':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
+                    break;
+                case 'service':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
+                    break;
             }
            
-            if(animalId === null || habitatId === null || serviceId){
-                btnDnone(btnTrash)
-            } else if(index < existingImages.length ) {
-                btnDnone(btnEdit)
-            } else if(index >= existingImages.length) {
-                btnDnone(btnTrash)
+            if(img.src == "/images/default/default-750x500.png") {
+                btnDnone(btnTrash);
+            } else{
+                btnDnone(btnEdit);
             }
          
             if(divSelected) {
@@ -114,6 +115,23 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
             }
 
             return clone;
+        }
+
+        function ensureUniqueImgIds() {
+            const images = document.querySelectorAll('.image-card img');
+            
+            const seenIds = new Set();
+            
+            images.forEach((img, index) => {
+                const currentId = img.getAttribute('data-img-id');
+                
+                if (seenIds.has(currentId)) {
+                    img.setAttribute('data-img-id', index);
+                } else {
+
+                    seenIds.add(currentId);
+                }
+            });
         }
     });
 }
