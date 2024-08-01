@@ -1,0 +1,37 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<article class="bg-info p-4">
+    <div class="container p-4 d-flex">
+        <div class="dropdown " style="left: -100px; top: 0;">
+            <button class="btn btn-gradiant dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                Animaux de l'enclos
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                {% for animal in enclosure.animals %}
+                    <li><a class="dropdown-item text-white" href="{{path('app_animal_show', {'id': animal.id})}}">{{ animal.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="row ">
+            <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
+                <h2 class="text-dark mb-3">{{enclosure.name}}</h2>
+                <div class="scrollable-text">
+                    <p>{{ enclosure.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 mb-4 mb-md-0"> 
+                {% set allImages = [] %}
+                {% for animal in enclosure.animals %}
+                    {% set allImages = allImages|merge(animal.images) %}
+                {% endfor %}
+
+                <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'animalFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}">
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

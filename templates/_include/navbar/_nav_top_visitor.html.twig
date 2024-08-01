@@ -27,7 +27,8 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {% for enclosure in enclosures %}
-                            <li><a class="dropdown-item text-white" href="#">{{ enclosure.name }} </a></li>
+
+                            <li><a class="dropdown-item text-white" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }} </a></li>
                         {% endfor %}
                     </ul>
                 </li>

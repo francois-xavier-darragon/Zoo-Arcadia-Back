@@ -19,7 +19,7 @@ class VeterinaryReport
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: "text", nullable: true)]
     private ?string $detail = null;
 
     #[ORM\ManyToOne(inversedBy: 'veterinaryReports')]

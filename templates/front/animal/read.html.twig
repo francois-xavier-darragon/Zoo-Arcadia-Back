@@ -1,0 +1,35 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+<article class="bg-info p-4">
+    <div class="container p-4 d-flex">
+        <div class="row ">
+            <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
+                <h2 class="text-dark mb-3">{{ animal.name }}</h2>
+                <div class="scrollable-text">
+                    <p>Etat de santé : {{ animal.health|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }} au {{ animal.updatedAt|date('m-d-Y') }} </p>
+                    <p>{{ animal.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
+                    {% for veterinaryreport in animal.veterinaryreports %}
+                        {% if animal.veterinaryreports is not empty %}
+                            {% set lastReport = animal.veterinaryreports|last %}
+                            <p> Dernier rapport vétérinaire : {{ lastReport.createdAt|date('m-d-Y') }}</p>
+                            <p>{{ lastReport.detail|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 mb-4 mb-md-0"> 
+                {% set allImages = [] %}
+                {% for image in animal.images %}
+                    {% set allImages = allImages|merge(animal.images) %}
+                {% endfor %}
+
+                <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'animalFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}">
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

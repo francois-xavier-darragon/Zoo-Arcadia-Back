@@ -35,9 +35,10 @@ class VeterinaryReportController extends AbstractController
 
         $animal->addVeterinaryReport($veterinaryReport);
         $veterinaryreportRepository->saveVeterinaryReport($veterinaryReport, true);
+        
+        $animal->setUpdatedAt($veterinaryReport->getUpdatedAt());
         $animalRepository->saveAnimal($animal, true);
        
-        
         return new Response(json_encode([
             'status' => 'success',
             'health' => $checkHealth,
@@ -80,6 +81,8 @@ class VeterinaryReportController extends AbstractController
         $veterinaryReport->setDetail($datas['veterinaryReport']);
 
         $veterinaryreportRepository->saveVeterinaryReport($veterinaryReport, true);
+      
+        $animal->setUpdatedAt($veterinaryReport->getUpdatedAt());
         $animalRepository->saveAnimal($animal, true);
        
         return new Response(json_encode([
