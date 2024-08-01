@@ -80,7 +80,7 @@
                                             <h5 class="card-title">Enclos des {{ animal.breed }}s</h5>
                                             <p class="card-text text-dark flex-grow-1">{{animal.enclosure.shortdescription}}</p>
                                             <div class="mt-auto">
-                                                <a href="#" class="btn btn-gradiant">Consulter</a>
+                                                <a href="{{path('app_enclosure_show', {'id': animal.id})}}" class="btn btn-gradiant">Consulter</a>
                                             </div>
                                         </div>
                                     </div>
