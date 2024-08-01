@@ -42,7 +42,7 @@
                         <h5 class="card-title">Habitat {{habitat.name}}</h5>
                         <p class="card-text text-dark flex-grow-1">{{habitat.shortdescription}}</p>
                         <div class="mt-auto">
-                            <a href="#" class="btn btn-gradiant">Consulter</a>
+                            <a href="{{path('app_habitat_show', {'id': habitat.id})}}" class="btn btn-gradiant">Consulter</a>
                         </div>
                     </div>
                 </div>
