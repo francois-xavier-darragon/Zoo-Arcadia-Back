@@ -431,3 +431,27 @@ td {
     border: solid $secondary;
     border-radius: 30px;
 }
+
+//habitat front 
+.scrollable-text {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.scrollable-text::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollable-text::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.scrollable-text::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.scrollable-text::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
