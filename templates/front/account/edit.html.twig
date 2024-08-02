@@ -1,0 +1,39 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+ <div class="row justify-content-center bg-info">
+        <div class="col-lg-8 mt-5 mb-5">
+            <div class="d-flex justify-content-center">
+                <div class="p-4 custom-border card" style="width: 60%;">
+                    <div class="d-flex mb-4">
+                        <h1 class="me-4">Mon compte</h1>
+                        <a type='button' class="text-danger pt-2" data-token="{{ csrf_token }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}" title="Supprimer">
+                            {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                        </a>
+                    </div>  
+                    {{ include('front/account/_form.html.twig', {'delete_btn': true, 'uploaderHelper': uploaderHelper, }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% if delete_btn is defined %}
+    {% include '/front/account/_delete_modal.html.twig' with {'path_form' : path('app_account_delete', {'id': user.id}), 'csrf_token': csrf_token, 'user': user } %}
+{% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/password/toggle-password-fields.js') }}" ></script>
+<script type="module"> 
+import {manageAvatar} from "/js/image/avatar-management.js";
+   
+    const userAvatar =  {{ user.avatar ? user.avatar|json_encode() : 'null'}}
+    const path = "{{ asset('images/default/default.png') }}";
+
+    manageAvatar(userAvatar, path)
+</script>
+{% endblock %}
