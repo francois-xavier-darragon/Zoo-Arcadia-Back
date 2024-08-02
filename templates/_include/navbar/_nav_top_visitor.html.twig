@@ -32,15 +32,10 @@
                         {% endfor %}
                     </ul>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{path('app_service_show')}}" role="button" aria-expanded="false">
                         services
                     </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                          {% for service in services %}
-                            <li><a class="dropdown-item text-white" href="#">{{ service.name }} </a></li>
-                        {% endfor %}
-                    </ul>
                 </li>
                 <li class="nav-item" data-show="visitor">
                     <a class="nav-link text-white" href="/contact">nous contacter</a>

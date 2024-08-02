@@ -1,0 +1,33 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+ <h2 class=" bg-info text-center text-dark pt-2 m-0">Les différents services que nous proposons.</h2>
+
+{% for service in services %}
+    <article class="{{ loop.index is odd ? 'bg-info' : '' }} p-4">
+        <div class="container p-4">
+            <div class="row">
+                {% set imageClass = loop.index is even ? 'order-md-1 ps-0' : 'pe-0' %}
+                {% set textClass = loop.index is even ? 'order-md-2' : '' %}
+
+                <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description {{ textClass }} ">
+                    <h2 class=" text-start text-dark">{{service.name}} </h2>
+                    <div class="text-start pt-4 scrollable-text">
+                        <p>{{ service.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 mb-4 mb-md-0 {{ imageClass }}"> 
+                    {% set allImages = [] %}
+                    {% for images in service.images %}
+                        {% set allImages = allImages|merge(service.images) %}
+                    {% endfor %}
+                    <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'serviceFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}">
+                </div>
+            </div>
+        </div>
+    </article>
+{% endfor %}
+
+{% endblock %}

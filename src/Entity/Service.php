@@ -36,6 +36,9 @@ class Service
     #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'service', cascade: ['persist'])]
     private Collection $images;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $shortDescription = null;
+
     public function __construct()
     {
         $this->createdAt = new DateTimeImmutable();
@@ -99,6 +102,18 @@ class Service
                 $image->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getShortDescription(): ?string
+    {
+        return $this->shortDescription;
+    }
+
+    public function setShortDescription(?string $shortDescription): static
+    {
+        $this->shortDescription = $shortDescription;
 
         return $this;
     }
