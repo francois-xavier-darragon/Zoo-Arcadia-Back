@@ -1,0 +1,16 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center bg-info">
+        <div class="col-lg-8 mt-5 mb-5">
+            <div class="d-flex justify-content-center">
+                <div class="p-4 custom-border card" style="width: 60%;">
+                    <h1 class="mb-4">Nous contacter</h1>
+                        {{ include('front/contact/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

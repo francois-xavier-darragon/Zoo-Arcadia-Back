@@ -1,0 +1,13 @@
+
+{{ form_start(form) }}
+
+{{ form_row(form.lastname) }}
+{{ form_row(form.firstname) }}
+{{ form_row(form.email) }}
+{{ form_row(form.message) }}
+
+<div class= "d-flex justify-content-end mt-4">
+    <button class="btn btn-secondary" href="{{ path('app_admin_service_index') }}" title="valider">Envoyer</button>
+</div>
+        
+{{ form_end(form) }}
