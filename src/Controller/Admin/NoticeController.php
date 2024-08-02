@@ -37,8 +37,11 @@ class NoticeController extends AbstractController
     #[Route('/new', name: 'app_admin_notice_new', methods: ['GET', 'POST'])]
     public function new(Request $request, NoticeRepository $noticeRepository): Response
     {
+        $user =  $this->getUser();
+        $roles = $user->getRoles();
+
         $notice = new Notice();
-        $form = $this->createForm(NoticeType::class, $notice);
+        $form = $this->createForm(NoticeType::class, $notice, ['roles' => $roles]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
