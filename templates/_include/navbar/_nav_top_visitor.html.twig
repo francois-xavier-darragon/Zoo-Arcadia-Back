@@ -27,7 +27,6 @@
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {% for enclosure in enclosures %}
-
                             <li><a class="dropdown-item text-white" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }} </a></li>
                         {% endfor %}
                     </ul>
@@ -41,9 +40,12 @@
                     <a class="nav-link text-white" href="/contact">nous contacter</a>
                 </li>
                 {% if app.user %}
-                <li class="nav-item" data-show="connected">
-                    <a class="nav-link text-white" href="/account">Mon compte</a>
-                </li>
+                    {% set role = 'ROLE_VISITOR' %}
+                    {% if role in app.user.roles %}
+                        <li class="nav-item" data-show="connected">
+                            <a class="nav-link text-white" href="{{path('app_account_show', {'id': app.user.id})}}">Mon compte</a>
+                        </li>
+                    {% endif %}
                 <li class="nav-item" data-show="connected">
                     <a class="nav-link text-white" href="/logout">Déconnexion</a>
                 </li>
