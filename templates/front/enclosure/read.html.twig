@@ -29,7 +29,9 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
             {% for animal in enclosure.animals %}
+                {% for veterinaryReport in animal.veterinaryReports %}
                 <li><a type="button"  class="dropdown-item text-white animal-button" data-animal-id="{{ animal.id }}">{{ animal.name }}</a></li>
+                {% endfor %}
             {% endfor %}
         </ul>
     </div>
