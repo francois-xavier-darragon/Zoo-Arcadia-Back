@@ -46,7 +46,7 @@ class ContactType extends AbstractType
                 ]
             ])
             ->add('message', TextareaType::class, [
-                'label' => 'message',
+                'label' => 'Message',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                 ],
