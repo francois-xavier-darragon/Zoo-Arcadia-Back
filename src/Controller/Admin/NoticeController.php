@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Notice;
 use App\Form\NoticeType;
 use App\Repository\NoticeRepository;
+use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,10 +16,13 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 #[Route('/admin/notices')]
 class NoticeController extends AbstractController
 {
-    #[Route('/', name: 'app_admin_notice_index', methods: ['GET'])]
-    public function index(NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    #[Route('/{page<\d+>?1}', name: 'app_admin_notice_index', methods: ['GET'])]
+    public function index(NoticeRepository $noticeRepository, int $page = 1, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
+      
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
+        $itemsPerPage = 10;
+        $paginationData = $paginationService->paginate($notices, $page, $itemsPerPage);
         $csrfTokens = [];
 
         foreach ($notices as $notice) {
@@ -26,7 +30,11 @@ class NoticeController extends AbstractController
         }
 
         return $this->render('admin/notice/index.html.twig', [
-            'notices' => $noticeRepository->findAllNotice(),
+            'notices' => $paginationData['items'],
+            'currentPage' => $paginationData['currentPage'],
+            'totalPages' => $paginationData['totalPages'],
+            'totalItems' => $paginationData['totalItems'],
+            'itemsPerPage' => $itemsPerPage,
             'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
             'uploaderHelper' => $uploaderHelper,
