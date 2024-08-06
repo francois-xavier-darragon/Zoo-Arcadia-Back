@@ -2,13 +2,29 @@ import { btnDnone, newImage, removeExistingImage } from './image-management.js';
 
 export function addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) {
     document.addEventListener('DOMContentLoaded', function() {
-        const addImageBtn = document.getElementById('add-image-btn');
-        const imageFieldsList = document.getElementById('image-fields-list');
-        const errorMessage = document.getElementById('image-error-message');
-        const errorBloc = document.getElementById('image-error-bloc');
-    
+
+        let addImageBtn 
+        let imageFieldsList 
+        let errorMessage 
+        let errorBloc 
+        let template 
+
+        if(entityName != 'enclosure' ) {
+             addImageBtn = document.getElementById('add-image-btn');
+             imageFieldsList = document.getElementById('image-fields-list');
+             errorMessage = document.getElementById('image-error-message');
+             errorBloc = document.getElementById('image-error-bloc');
+             template = document.getElementById('image-field-template')
+        } else {
+            addImageBtn = document.getElementById('add-image-enclosure-btn');
+             imageFieldsList = document.getElementById('image-enclosure-fields-list');
+             errorMessage = document.getElementById('image-error-message');
+             errorBloc = document.getElementById('image-error-bloc');
+             template = document.getElementById('image-field-template')
+        }
+
         let index = imageFieldsList.children.length;
-        const template = document.getElementById('image-field-template')
+        
         const maxImages = 8
         let imgId = null;
 
@@ -28,6 +44,11 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 entityId = entityDataElement.dataset.animalId;
                 url = entityDataElement.dataset.removeImageUrl.replace('ANIMAL_ID', entityId);
                 break;
+            case 'enclosure':
+                entityDataElement = document.getElementById('enclosure-data');
+                entityId = entityDataElement.dataset.enclosureId;
+                url = entityDataElement.dataset.removeImageUrl.replace('ENCLOSURE_ID', entityId);
+                break;    
             case 'habitat':
                 entityDataElement = document.getElementById('habitat-data');
                 entityId = entityDataElement.dataset.habitatId;
@@ -96,6 +117,9 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 case 'animal':
                     removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;
+                case 'enclosure':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
+                    break;    
                 case 'habitat':
                     removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;

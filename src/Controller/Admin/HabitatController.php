@@ -85,18 +85,38 @@ class HabitatController extends AbstractController
 
         $reflectionClass = new \ReflectionClass($habitat);
 
-        $entitiName = strtolower($reflectionClass->getShortName()).'s';
+        $entityName = strtolower($reflectionClass->getShortName()).'s';
 
         $images = $habitat->getImages();
         foreach ($images as $image) {
 
-            $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
+            $path =  '/uploads/images/'. $entityName .'/'. $image->getName();
             $existingImages[] = [
                 'id' => $image->getId(),
                 'path' => $path
             ];
         }
 
+        $enclosures = [];
+        $enclosureName = null;
+        foreach($habitat->getEnclosures() as $enclosure) {
+            $enclosureName = new \ReflectionClass($enclosure);
+            $enclosures [$enclosure->getId()] = $enclosure->getImages();
+        }
+
+        $enclosureImage = [];
+
+        foreach($enclosures as $images) {
+            foreach($images as $image) {
+                $path =  '/uploads/images/'. $enclosureName .'/'. $image->getName();
+                $enclosureImage[] = [
+                    'id' => $image->getId(),
+                    'path' => $path
+                ];
+            }
+        }
+
+      
         if ($form->isSubmitted() && $form->isValid()) {
         
             $habitatRepository->saveHabitat($habitat, true);
@@ -110,7 +130,8 @@ class HabitatController extends AbstractController
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
-            'existingImages' => json_encode($existingImages)
+            'existingImages' => json_encode($existingImages),
+            'enclosureImage' => json_encode($enclosureImage),
         ]);
     }
 

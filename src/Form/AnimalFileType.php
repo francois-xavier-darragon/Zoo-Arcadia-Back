@@ -31,7 +31,7 @@ class AnimalFileType extends AbstractType
                         "maxWidth" => 750,
                         "minHeight" => 500,
                         "maxHeight" => 500,
-                        "maxSizeMessage" => "L'image doit respecter les dimensions suivantes : 500x500.",
+                        "maxSizeMessage" => "L'image doit respecter les dimensions suivantes : 750x500.",
                         "mimeTypes" => [
                             "image/jpeg",
                             "image/png",

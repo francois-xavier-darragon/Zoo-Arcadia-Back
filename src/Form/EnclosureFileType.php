@@ -9,12 +9,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class HabitatFileType extends AbstractType
+class EnclosureFileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add("habitatFile", FileType::class, [
+            ->add("enclosureFile", FileType::class, [
                 "required" => false,
                 "label" => "Images",
                 "help" => "Fichiers autorisés: PNG, JPG, JPEG. Dimensions: 750x500. Taille max: 2MB.",
@@ -40,6 +40,7 @@ class HabitatFileType extends AbstractType
                     ]),
                 ],
             ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

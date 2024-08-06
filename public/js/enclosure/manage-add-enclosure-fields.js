@@ -4,6 +4,7 @@ function manageEnclosureField(){
         let addButton = document.querySelector('#add-enclosure');
         let prototype = container.getAttribute('data-prototype');
         let index = container.children.length;
+        
         let removeTemplate = document.querySelector('#remove-enclosure-template');
     
         function createRemoveLink() {
@@ -22,7 +23,7 @@ function manageEnclosureField(){
         }
     
         addButton.addEventListener('click', addEnclosureForm);
-    
+        
         container.addEventListener('click', function(e) {
             if (e.target.closest('.remove-enclosure')) {
                 e.target.closest('.enclosure-item').remove();
@@ -30,6 +31,7 @@ function manageEnclosureField(){
         });
     
         let existingEnclosures = container.querySelectorAll('.enclosure-item');
+      
         existingEnclosures.forEach(function(enclosure) {
             if (!enclosure.querySelector('.remove-enclosure')) {
                 let removeLink = createRemoveLink();
