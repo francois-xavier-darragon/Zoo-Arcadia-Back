@@ -16,9 +16,9 @@
     {% for enclosureForm in form.enclosures %}
         <hr>
         <div class="row enclosure-item mt-2">
-            <div id="enclosure-data" data-habitat-id="{{ enclosureForm.id|default('') }}" data-remove-image-url="{{ path('app_admin_enclosure_remove_image', { 'enclosure': 'ENCLOSURE_ID' }) }}">
-                <button id="add-image-enclosure-btn" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image pour l'enclos</button>
-                <div id="image-enclosure-fields-list" data-prototype="{{ form_widget(enclosureForm.images.vars.prototype)|e('html_attr') }}"></div>
+            <div id="enclosure-data-{{ enclosureForm.id.vars.value }}" data-enclosure-id="{{ enclosureForm.id.vars.value|default('') }}" data-remove-image-url="{{ path('app_admin_enclosure_remove_image', { 'enclosure': 'ENCLOSURE_ID' }) }}">
+                <button id="add-image-enclosure-btn-{{ enclosureForm.id.vars.value }}" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image pour l'enclos</button>
+                <div id="image-enclosure-fields-list-{{ enclosureForm.id.vars.value }}" data-prototype="{{ form_widget(enclosureForm.images.vars.prototype)|e('html_attr') }}"></div>
                 <div class="d-flex text-danger mt-3 d-none" id="image-error-bloc">
                     {% include '_include/_components/_icons/_help_icon_svg.html.twig' %}
                     <div id="image-error-message" class="text-danger ms-2"></div>

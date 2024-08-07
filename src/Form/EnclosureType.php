@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Enclosure;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,6 +18,7 @@ class EnclosureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('id', HiddenType::class)
             ->add('images', CollectionType::class ,[
                 'entry_type' => EnclosureFileType::class,
                 'label' => false,

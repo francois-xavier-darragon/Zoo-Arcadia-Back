@@ -45,6 +45,18 @@ import {addImgeFilds} from "/js/image/add-image-fiedls.js";
     const filedsName = 'habitatFile';
 
     addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) 
+
+    const enclosureItems = document.querySelectorAll('.enclosure-item');
+
+    let enclosureImage = {{ enclosureImage is defined ? enclosureImage|raw : '[]' }};
+    const divEnclosureSelected = document.getElementById('habitat_enclosures')
+    const entityEnclosureName = 'enclosure';
+    const filedsEnclosurName = 'enclosureFile';
+
+    enclosureItems.foreEach(function(item) {
+        const enclosureId = item.dataset.enclosureId;
+        addImgeFilds(enclosureImage, defaultImagePath, divEnclosureSelected, entityEnclosureName, filedsEnclosurName) 
+    })
 </script>
 {% endblock %}
 
