@@ -18,7 +18,6 @@ class EnclosureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('id', HiddenType::class)
             ->add('images', CollectionType::class ,[
                 'entry_type' => EnclosureFileType::class,
                 'label' => false,
