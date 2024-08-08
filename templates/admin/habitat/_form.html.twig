@@ -19,9 +19,9 @@
             <div id="enclosure-data-{{ enclosureForm.id.vars.value }}" data-enclosure-id="{{ enclosureForm.id.vars.value|default('') }}" data-remove-image-url="{{ path('app_admin_enclosure_remove_image', { 'enclosure': 'ENCLOSURE_ID' }) }}">
                 <button id="add-image-enclosure-btn-{{ enclosureForm.id.vars.value }}" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image pour l'enclos</button>
                 <div id="image-enclosure-fields-list-{{ enclosureForm.id.vars.value }}" data-prototype="{{ form_widget(enclosureForm.images.vars.prototype)|e('html_attr') }}"></div>
-                <div class="d-flex text-danger mt-3 d-none" id="image-error-bloc">
+                <div class="d-flex text-danger mt-3 d-none" id="image-enclosure-error-bloc-{{ enclosureForm.id.vars.value }}">
                     {% include '_include/_components/_icons/_help_icon_svg.html.twig' %}
-                    <div id="image-error-message" class="text-danger ms-2"></div>
+                    <div id="image-enclosure-error-message" class="text-danger ms-2"></div>
                 </div>
             </div>
 
@@ -57,6 +57,12 @@
 <template id="image-field-template" style="display: none;">
      {% include '_include/_components/_forms/_image-multi-upload-input.html.twig' %}
 </template>
+
+{% for enclosureForm in form.enclosures %}
+<template id="image-enclosure-field-template-{{ enclosureForm.id.vars.value }}" style="display: none;">
+     {% include '_include/_components/_forms/_image-multi-upload-input.html.twig' %}
+</template>
+{% endfor %}
 
 <template id="remove-enclosure-template">
     <div class="enclosure-wrapper">

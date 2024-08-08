@@ -9,18 +9,28 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
         let errorBloc 
         let template 
 
-        if(entityName != 'enclosure' ) {
-             addImageBtn = document.getElementById('add-image-btn');
-             imageFieldsList = document.getElementById('image-fields-list');
-             errorMessage = document.getElementById('image-error-message');
-             errorBloc = document.getElementById('image-error-bloc');
-             template = document.getElementById('image-field-template')
+        if(entityName == 'enclosure' ) {
+            //  enclosureItems = document.querySelectorAll('.enclosure-item');
+      
+            //  enclosureItems.forEach(function(item) {
+
+            //     enclosureId = item.dataset.enclosureId;
+            //     addImageBtn = document.getElementById('add-image-enclosure-btn-' + enclosureId);
+            //     imageFieldsList = document.getElementById('image-enclosure-fields-list-' + enclosureId);
+                
+            //     errorMessage = document.getElementById('image-enclosure-error-message-' + enclosureId);
+            //     errorBloc = document.getElementById('image-enclosure-error-bloc-' + enclosureId);
+            //     template = document.getElementById('image-enclosure-field-template' + enclosureId)
+
+            //  })
+            addImgeSeveralFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName)
+             
         } else {
             addImageBtn = document.getElementById('add-image-enclosure-btn');
-             imageFieldsList = document.getElementById('image-enclosure-fields-list');
-             errorMessage = document.getElementById('image-error-message');
-             errorBloc = document.getElementById('image-error-bloc');
-             template = document.getElementById('image-field-template')
+            imageFieldsList = document.getElementById('image-enclosure-fields-list');
+            errorMessage = document.getElementById('image-error-message');
+            errorBloc = document.getElementById('image-error-bloc');
+            template = document.getElementById('image-field-template')
         }
 
         let index = imageFieldsList.children.length;
@@ -159,3 +169,20 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
         }
     });
 }
+
+
+ function addImgeSeveralFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName){
+    let enclosureItems = document.querySelectorAll('.enclosure-item');
+      
+        enclosureItems.forEach(function(item) {
+
+        let enclosureId = item.dataset.enclosureId;
+        let addImageBtn = document.getElementById('add-image-enclosure-btn-' + enclosureId);
+        let imageFieldsList = document.getElementById('image-enclosure-fields-list-' + enclosureId);
+        
+        let errorMessage = document.getElementById('image-enclosure-error-message-' + enclosureId);
+        let errorBloc = document.getElementById('image-enclosure-error-bloc-' + enclosureId);
+        let template = document.getElementById('image-enclosure-field-template' + enclosureId)
+
+        })
+ }
