@@ -36,7 +36,7 @@
     manageEnclosureField()
 </script>
 <script type="module">
-import {addImgeFilds} from "/js/image/add-image-fiedls.js";
+import {addImgeFilds, addImgeSeveralFilds} from "/js/image/add-image-fiedls.js";
 
     let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
     const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
@@ -52,7 +52,7 @@ import {addImgeFilds} from "/js/image/add-image-fiedls.js";
     const divEnclosureSelected = document.getElementById('habitat_enclosures')
     const entityEnclosureName = 'enclosure';
     const filedsEnclosurName = 'enclosureFile';
-    addImgeFilds(enclosureImage, defaultImagePath, divEnclosureSelected, entityEnclosureName, filedsEnclosurName) 
+    addImgeSeveralFilds(enclosureImage, defaultImagePath, divEnclosureSelected, entityEnclosureName, filedsEnclosurName) 
     {# enclosureItems.foreEach(function(item) {
         const enclosureId = item.dataset.enclosureId;
         addImgeFilds(enclosureImage, defaultImagePath, divEnclosureSelected, entityEnclosureName, filedsEnclosurName) 
