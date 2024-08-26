@@ -15,27 +15,27 @@ class NoticeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $roles = $options['roles'];
-        // dd($roles);
-        $builder
-            ->add('nickname', TextType::class, [
-                'required' => true,
-                'label' => 'Pseudo',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ])        
-            ->add('comment', TextareaType::class, [
-                'label' => 'Description',
-                'label_attr' => [
-                    'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
-                ],
-                'attr' => [
-                    'class' => 'form-control form-control-solid',
-                ]
-            ]);
+        
+        // $builder
+        //     ->add('nickname', TextType::class, [
+        //         'required' => true,
+        //         'label' => 'Pseudo',
+        //         'label_attr' => [
+        //             'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+        //         ],
+        //         'attr' => [
+        //             'class' => 'form-control form-control-solid',
+        //         ]
+        //     ])        
+        //     ->add('comment', TextareaType::class, [
+        //         'label' => 'Description',
+        //         'label_attr' => [
+        //             'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
+        //         ],
+        //         'attr' => [
+        //             'class' => 'form-control form-control-solid',
+        //         ]
+        //     ]);
 
 
             if(in_array('ROLE_ADMIN',$roles)){

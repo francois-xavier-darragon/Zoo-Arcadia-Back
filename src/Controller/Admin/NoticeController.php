@@ -16,8 +16,9 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 #[Route('/admin/notices')]
 class NoticeController extends AbstractController
 {
-    #[Route('/{page<\d+>?1}', name: 'app_admin_notice_index', methods: ['GET'])]
-    public function index(NoticeRepository $noticeRepository, int $page = 1, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    #[Route('/page/{page<\d+>?1}', name: 'app_admin_notice_index', methods: ['GET'])]
+    // #[Route('/', name: 'app_admin_notice_index', methods: ['GET'])]
+    public function index(NoticeRepository $noticeRepository, int $page = 1,  PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
     {
       
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
@@ -66,11 +67,13 @@ class NoticeController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_admin_notice_show', methods: ['GET','POST'])]
-    public function read(Request $request, Notice $notice,NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    public function read(Request $request, Notice $notice, NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-notice' . $notice->getId())->getValue();
 
-        $form = $this->createForm(NoticeType::class, $notice);
+        $roles = $this->getUser()->getRoles();
+
+        $form = $this->createForm(NoticeType::class, $notice, ['roles'=>$roles]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
