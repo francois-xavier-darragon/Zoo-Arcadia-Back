@@ -1,0 +1,14 @@
+<div class="image-card text-white">
+    <div class="d-flex">
+        <img src="{{ uploaderHelper }}" class="rounded defaut-img image-container" data-img-id="{{ imgId }}"  alt="" id="balise-img"/>
+        <div class="button-avatar-container ms-auto">
+            <label class="btn btn-outline-light" id="edit-avatar-button">
+                {% include '_include/_components/_icons/_edit_image_icon_svg.html.twig' %}
+                {{ form_widget(inputFile, { 'attr': {'class': 'custom-file-input'} }) }}
+            </label>
+            <button type="button" class="btn btn-outline-light" id="remove-avatar-button">
+                {% include '_include/_components/_icons/_delete_image_con_svg.html.twig' %}
+            </button>
+        </div>
+    </div>
+</div>

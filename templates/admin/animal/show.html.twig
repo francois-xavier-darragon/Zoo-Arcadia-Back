@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Animal{% endblock %}
+
+{% block body %}
+{% set sortedReports = animal.veterinaryReports|sort((a, b) => b.createdAt.timestamp <=> a.createdAt.timestamp) %}
+
+{{ form_start(form) }}  
+ <div id="animal-data" data-animal-id="{{ animal.id|default('') }}"
+     data-new-url="{{ path('app_admin_veterinaryreport_new', { 'id': 'ANIMAL_ID'}) }}" 
+     class="container mt-5 custom-border">
+        <div class="row m-4 card">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="">Habitat :</h2>
+            <h2 class="ms-1">{{ animal.habitat }}</h2>
+                <div class="card-body d-flex mb-2">
+                <div class="ms-auto">
+                    <a class="text-secondary me-1" title="Editer" href="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
+                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                    </a>
+                    <a type='button' class="text-danger mb-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ animal.id }}" title="Supprimer">
+                        {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start mb-2">
+            <div class="d-flex mb-2 me-3">
+                <h4 class="">Nom :</h4>
+                <h4 class="ms-1">{{ animal.name }}</h4>
+            </div>
+            <div class="d-flex mb-2">
+                <h4 class="">Race :</h4>
+                <h4 class="ms-1">{{ animal.breed }}</h4>
+            </div>
+        </div>
+        <div class="d-flex justify-content-betweestartn align-items-center mb-4" >
+            {% if animal.images|length > 0 %}
+                <div id="btn-gallery" class="me-4">
+                    <button type="button" class="btn btn-secondary galerie-photos" title="galerie photos">Galerie photos</button>
+                </div>
+            {% endif %}
+            <div id="btn-veterinaryReports">
+                <button type="button" class="btn btn-secondary veterinaryReports" title="rapports vétérinaire">
+                {% if animal.veterinaryReports|length > 0 %}
+                    Rapports vétérinaire 
+                {% else %} 
+                    Ajouter un nouveaux rapports vétérinaire
+                {% endif %}</button>
+            </div>
+        </div>
+        <div id="gallery" class="d-none">
+            <div class="row">
+            {% for image in animal.images %}
+                <div  class="col-3 mb-3">
+                    <img src="{{ image ? uploaderHelper.asset(image, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top rounded" alt="Animal-Image" style="width: 100%; height: auto;">
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        <div id="veterinaryReports" class="col-md-12 d-none">
+            <div class="card p-4 mb-4">
+                <div class="d-flex flex-column mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h3 class="">Rapports vétérinaire :</h3>
+                        {% if is_granted('ROLE_VETERINARY') %}
+                             <a id="new-rapport" type="button" class='text-primary' title="Nouveau rapport vétérinaire">
+                                {% include "_include/_components/_icons/_add_repport_icon_svg.html.twig" %}
+                            </a>
+                        {% endif %}
+                    </div>
+                    {{ form_start(form, {'attr': {'id': 'form-id'}}) }}
+                    <div class="d-flex mt-1 mb-2">
+                        <h5 class="mt-1 health">Santé :</h5>
+                        {% if  is_granted('ROLE_VETERINARY') %}
+                            <h5 class="ms-1 health"> {{ form_row(form.health) }}</h5>
+                        {% else %}
+                            <h5 class="mt-1 ms-1 health">{{ animal.health }}</h5>
+                        {% endif %}
+                    </div>
+                    <hr>
+                    <div id="rapport-create" class="mt-1"></div>
+                    <div id="add-rapport" class="mt-1 d-none">
+                        {% if is_granted('ROLE_VETERINARY') %}
+                            <p class="text-muted mb-0" >{{ form_row(form.veterinaryReports) }}</p>
+                        {% endif %}
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-secondary submit-report" title="valider">Valider</button>
+                        </div>
+                    </div>
+                    {% for veterinaryReport in sortedReports  %}
+                        <hr>
+                        <div class="ms-1 veterinaryreport-data" data-veterinaryreport-id="{{ veterinaryReport.id|default('') }}"
+                        data-edit-url="{{ path('app_admin_veterinaryreport_edit', { 'id': 'ANIMAL_ID' }) }}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="text-muted mb-0">le : {{ veterinaryReport.createdAt|date('d/m/Y')}}</p> 
+                                {% if is_granted('ROLE_VETERINARY') %}
+                                <div>
+                                    <a type="button" class="text-secondary edit-report" title="Editer"> 
+                                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                                    </a>
+                                    <a type='button' class="text-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ veterinaryReport.id }}" title="Supprimer">
+                                        {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                                    </a>
+                                </div>
+                                    {% if delete_btn is defined %}
+                                        {% include '/admin/veterinaryreport/_delete_modal.html.twig' with {'path_form' : path('app_admin_veterinaryreport_delete', {'id': animal.id, 'veterinaryreport': veterinaryReport.id}), 'csrf_token_VeterinaryReport': csrf_token_VeterinaryReport, 'veterinaryreport': veterinaryReport} %}
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <p id="veterinaryreport-{{ veterinaryReport.id }}" class="text-dark">{{ veterinaryReport.detail }}</p>
+                        </div>
+                        <br> 
+                        <hr>  
+                    {% endfor %}
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    {% if delete_btn is defined %}
+        {% include '/admin/animal/_delete_modal.html.twig' with {'path_form' : path('app_admin_animal_delete', {'id': animal.id}), 'csrf_token': csrf_token, 'animal': animal } %}
+    {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/animal/manage-show-animal-fields.js') }}"></script>
+<script>
+    const url = "{{ path('app_admin_veterinaryreport_new', {'id': animal.id}) }}"
+    showData(url)
+    manageEditeReport()
+</script>
+
+{% endblock %}

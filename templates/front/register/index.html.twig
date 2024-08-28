@@ -1,0 +1,41 @@
+{% extends 'base_front.html.twig' %}
+
+{% block body %}
+
+<div class="bg-info p-4">
+    <div class="connexion text-center text-darck">
+        <div class="connexion-content mt-4">
+            <h1>Connexion</h1>
+        </div>
+    </div>
+    <div class="row mt-4 mb-5 justify-content-center">
+        <div class="d-flex justify-content-center">
+            <form id="formSignin" class="p-4 custom-border card" style="width: 30%;" method="post">
+             {% if error %}
+                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+
+                <div class="mb-3">
+                    <label for="username" class="col-lg-4 col-form-label required fw-semibold fs-6">Adresse email</label>
+                    <input type="email" class="form-control form-control-solid" value="{{ last_username }}" name="_username" id="username" autocomplete="email" required autofocus>
+                    <div class="invalid-feedback">
+                    Le mail et le mot de passe ne correspondent pas
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="passWordInput" class="col-lg-4 col-form-label required fw-semibold fs-6">Mot de passe</label>
+                    <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <div class="text-center pt-5">
+                    <button type="submit" class="btn btn-gradiant" id="btn-signin">Connexion</button>
+                </div>
+                <div class="text-center pt-5">
+                    <a href="/signin">Vous n'avez pas de compte ? inscrivez-vous ici !</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

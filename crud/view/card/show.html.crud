@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ENTITY_NAME }}{% endblock %}
+
+{% block body %}
+  
+ <div class="container mt-5 custom-card">
+        <div class="row m-4 ">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <img src="" class="card-img-top" alt="User Image">
+                    <div class="card-body text-start mb-2">
+                        <a class="text-secondary" title="Editer" href="{{ path('app_admin_{{ VARIABLE_NAME }}_edit', {'id': {{ VARIABLE_NAME }}.id}) }}">
+                            {% include "_include/components/icons/edit_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class="text-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="Supprimer">
+                             {% include "_include/components/icons/delete_icon_svg.html.twig" %}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        {{ SHOW_DIV }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if delete_btn is defined %}
+        {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_{{ VARIABLE_NAME }}_delete', {'id': {{ VARIABLE_NAME }}.id}), 'csrf_token': csrfToken, '{{ VARIABLE_NAME }}': {{ VARIABLE_NAME }} } %}
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,109 @@
+<?php
+
+namespace App\Controller\Admin;
+
+use App\Entity\{{ ENTITY_NAME }};
+use App\Form\{{ ENTITY_NAME }}Type;
+use App\Repository\{{ ENTITY_NAME }}Repository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+
+#[Route('/admin/{{ VARIABLE_NAME }}s')]
+class {{ ENTITY_NAME }}Controller extends AbstractController
+{
+    #[Route('/', name: 'app_admin_{{ VARIABLE_NAME }}_index', methods: ['GET'])]
+    public function index({{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        ${{ VARIABLE_NAME }}s = ${{ VARIABLE_NAME }}Repository->findAll{{ VARIABLE_NAME }}();
+        $csrfTokens = [];
+
+        foreach (${{ VARIABLE_NAME }}s as ${{ VARIABLE_NAME }}) {
+            $csrfTokens[${{ VARIABLE_NAME }}->getId()] = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
+        }
+
+        return $this->render('admin/{{ VARIABLE_NAME }}/index.html.twig', [
+            '{{ VARIABLE_NAME }}s' => ${{ VARIABLE_NAME }}Repository->findAll{{ ENTITY_NAME }}(),
+            'csrf_tokens'    => $csrfTokens,
+            'delete_btn'    => true,
+        ]);
+    }
+
+    #[Route('/new', name: 'app_admin_{{ VARIABLE_NAME }}_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
+    {
+        ${{ VARIABLE_NAME }} = new {{ ENTITY_NAME }}();
+        $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            ${{ VARIABLE_NAME }}Repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/{{ VARIABLE_NAME }}/edit.html.twig', [
+            '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+            'form' => $form,
+            'mode' => 'Ajouter',
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_admin_{{ VARIABLE_NAME }}_show', methods: ['GET'])]
+    public function read({{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
+
+        return $this->render('admin/{{ VARIABLE_NAME }}/show.html.twig', [
+            'csrf_token'  => $csrfToken,
+            '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+            'delete_btn' => true,
+        ]);
+    }
+
+    #[Route('/{id}/edit', name: 'app_admin_{{ VARIABLE_NAME }}_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        $csrfToken = $csrfTokenManager->getToken('delete-{{ VARIABLE_NAME }}' . ${{ VARIABLE_NAME }}->getId())->getValue();
+
+        $form = $this->createForm({{ ENTITY_NAME }}Type::class, ${{ VARIABLE_NAME }});
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            ${{ VARIABLE_NAME }}Repository->save{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('admin/{{ VARIABLE_NAME }}/edit.html.twig', [
+            'csrf_token'  => $csrfToken,
+            '{{ VARIABLE_NAME }}' => ${{ VARIABLE_NAME }},
+            'form' => $form,
+            'mode'=> 'Modifier',
+            'delete_btn' => true,
+        ]);
+    }
+
+    #[Route('/{id}/delete', name: 'app_admin_{{ VARIABLE_NAME }}_delete', methods: ['POST'])]
+    public function delete(Request $request, {{ ENTITY_NAME }} ${{ VARIABLE_NAME }}, {{ ENTITY_NAME }}Repository ${{ VARIABLE_NAME }}Repository): Response
+    {
+        if(${{ VARIABLE_NAME }}->getDeletedAt()){
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index');
+        }
+
+        $submittedToken = $request->request->get('token');
+        
+        if ($this->isCsrfTokenValid('delete-{{ VARIABLE_NAME }}'.${{ VARIABLE_NAME }}->getId(), $submittedToken)) {
+            ${{ VARIABLE_NAME }}Repository->remove{{ ENTITY_NAME }}(${{ VARIABLE_NAME }}, true);
+
+            $this->addFlash('success', 'Le utilisateur "'.${{ VARIABLE_NAME }}->getName().'" a été supprimé avec succès.');
+            return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index');
+        }
+
+        $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet {{ VARIABLE_NAME }}, veuillez réessayer.');
+        return $this->redirectToRoute('app_admin_{{ VARIABLE_NAME }}_index', [], Response::HTTP_SEE_OTHER);
+    }
+}

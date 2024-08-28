@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Habitat{% endblock %}
+
+{% block body %}
+
+<div class="container mt-5 custom-border">
+    <div class="row m-4 card">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <h2 class="">Nom :</h2>
+            <h2 class="ms-1">{{ habitat.name }}</h2>
+                <div class="card-body d-flex mb-2">
+                <div class="ms-auto">
+                    <a class="text-secondary me-1" title="Editer" href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}">
+                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                    </a>
+                    <a type='button' class="text-danger mb-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ habitat.id }}" title="Supprimer">
+                        {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    <div>
+    <div>
+        <h2>Description :</h2>
+        <div class="card p-4 mb-2" >
+            <p class="text-muted mb-0" >{{habitat.description}}</p>
+        </div>
+    </div>
+    <div>
+        <h2>Gallerie :</h2>
+        <div class="row">
+        {% for image in habitat.images %}
+            <div  class="col-3 mb-3">
+                <img src="{{ image ? uploaderHelper.asset(image, 'habitatFile') : asset('images/default/default.png') }}" class="card-img-top rounded" alt="habitat-Image" style="width: 100%; height: auto;">
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+    {% if delete_btn is defined %}
+        {% include '/admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'csrf_token': csrf_token, 'habitat': habitat } %}
+    {% endif %}
+
+{% endblock %}

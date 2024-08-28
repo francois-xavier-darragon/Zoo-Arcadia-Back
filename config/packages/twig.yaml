@@ -1,6 +1,8 @@
 twig:
     file_name_pattern: '*.twig'
-
+    globals:
+        uploaderHelper: '@Vich\UploaderBundle\Templating\Helper\UploaderHelper'
+        
 when@test:
     twig:
         strict_variables: true

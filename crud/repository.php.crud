@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\{{ ENTITY_NAME }};
+use App\Service\GenericRepositoryService;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<{{ ENTITY_NAME }}>
+ */
+class {{ ENTITY_NAME }}Repository extends ServiceEntityRepository
+{
+    public function __construct(
+        private ManagerRegistry $registry,
+        private GenericRepositoryService $genericRepository,
+    )
+    {
+        parent::__construct($registry, {{ ENTITY_NAME }}::class);
+    }
+
+    // method to find a {{ ENTITY_NAME }} by their identifier (ID)
+    public function find{{ ENTITY_NAME }}ById(int $id): ?{{ ENTITY_NAME }}
+    {
+        return $this->genericRepository->findOneBy(['id' => $id], {{ ENTITY_NAME }}::class);
+    }
+
+    // Method to find a {{ ENTITY_NAME }} by specific criteria
+    public function findOne{{ ENTITY_NAME }}By(array $criteria): ?{{ ENTITY_NAME }}
+    {
+        return $this->genericRepository->findOneBy($criteria, {{ ENTITY_NAME }}::class);
+    }
+
+    // Method to find all {{ ENTITY_NAME }}
+    public function findAll{{ ENTITY_NAME }}(): array
+    {
+        return $this->genericRepository->findAll({{ ENTITY_NAME }}::class);
+    }
+
+    // Method to find {{ ENTITY_NAME }} with paging and sorting
+    public function find{{ ENTITY_NAME }}By(array $criteria, array $orderBy = null, int $limit = null, int $offset = null): array
+    {
+        return $this->genericRepository->findBy($criteria, {{ ENTITY_NAME }}::class, $orderBy, $limit, $offset);
+    }
+
+    // Method to save a user
+    public function save{{ ENTITY_NAME }}({{ ENTITY_NAME }} $entity, bool $flush = false)
+    {
+        $this->genericRepository->save({{ ENTITY_NAME }}::class, $entity, $flush);
+    }
+
+    // Method to delete a user
+    public function remove{{ ENTITY_NAME }}({{ ENTITY_NAME }} $entity, bool $flush = false)
+    {
+        $this->genericRepository->remove({{ ENTITY_NAME }}::class, $entity, $flush);
+    }
+}

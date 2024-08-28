@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<div class='row mt-5 mb-5'>
+    <div class='col-sm-12 p-4 custom-border card'> 
+        <div class= "col-sm-12 d-flex justify-content-between mb-5">
+            <h1>Utilisateurs</h1>
+            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_user_new') }}" title="Ajouter un user">Ajouter un utilisateur</a>
+        </div>
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th class="text-start">avatar</th>
+                    <th class="text-center">nom</th>
+                    <th class="text-center">prénom</th>
+                    <th class="text-center">roles</th>
+                    <th class="text-center">email</th>
+                    <th class="text-end">actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td class="text-start">
+                        <img class="rounded-circle" src="{{ user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="50" height="50">
+                    </td>
+                    <td class="text-center">{{ user.lastName }}</td>
+                    <td class="text-center">{{ user.firstName }}</td>
+                    {% for role in user.roles %}
+                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER' or role == 'ROLE_VISITOR' %}
+                            {% set roleName = allRoles[role] %}
+                            <td class="text-center">{{ roleName }}</td>
+                        {% endif %}
+                    {% endfor %}
+                    <td class="text-center">{{ user.email }}</td>
+                    <td class="text-end">
+                        {% if is_granted("ROLE_ADMIN") %}
+                            <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
+                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                        </a>
+                        {% endif %}
+                        <a type='button' class="text-danger me-3 mb-2" data-token="{{ csrf_tokens[user.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{ user.id }}" title="Supprimer">
+                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                        </a>
+                    </td>
+                </tr>
+
+                {% if delete_btn is defined %}
+                    {% include '/admin/user/_delete_modal.html.twig' with {'path_form' : path('app_admin_user_delete', {'id': user.id}), 'csrf_tokens': csrf_tokens[user.id], 'user': user } %}
+                {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div> 
+</div>
+
+{% endblock %}

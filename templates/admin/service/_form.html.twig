@@ -1,0 +1,44 @@
+
+{{ form_start(form) }}
+    <div id="service-data" data-service-id="{{ service.id|default('') }}" data-remove-image-url="{{ path('app_admin_service_remove_image', { 'service': 'SERVICE_ID' }) }}">
+        <button id="add-image-btn" type="button" class="btn btn-secondary mb-4 me-3">Ajouter une image</button>
+        <div id="image-fields-list" data-prototype="{{ form_widget(form.images.vars.prototype)|e('html_attr') }}"></div>
+        <div class="d-flex text-danger mt-3 d-none" id="image-error-bloc">
+            {% include '_include/_components/_icons/_help_icon_svg.html.twig' %}
+            <div id="image-error-message" class="text-danger ms-2"></div>
+        </div>
+    </div>
+    
+    {{ form_row(form.name) }}
+    {{ form_row(form.shortdescription) }}
+    {{ form_row(form.description) }}
+    <button id="add-enclosure" type="button" class="btn btn-secondary mt-4">Ajouter un enclos</button>
+    
+<div class="mt-4 d-flex justify-content-between">
+    <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_service_index') }}">Revenir à la liste</a>
+
+    {% if mode == 'Ajouter' %} 
+        <button class="btn btn-primary" title="Valider">Valider</button>
+    {% elseif mode == "Modifier" %}
+        <button class="btn btn-primary" title="Valider">Valider</button>
+    {% else %}
+        <div class= "d-flex">
+            <button class="btn btn-secondary" href="{{ path('app_admin_service_index') }}" title="valider">Valider</button>
+            <button type='button' class="btn btn-danger me-3 mb-2"  data-bs-toggle="modal" data-bs-target="#deleteModal" title="supprimer">
+                supprimer
+            </button>
+        </div>
+    {% endif %}  
+</div>
+
+<template id="image-field-template" style="display: none;">
+     {% include '_include/_components/_forms/_image-multi-upload-input.html.twig' %}
+</template>
+
+{{ form_end(form) }}
+
+<div class="col-12 pt-2">
+    {% if delete_btn is defined %}
+        {% include '/admin/service/_delete_modal.html.twig' with {'path_form' : path('app_admin_service_delete', {'id': service.id}), 'csrf_token': csrf_token, 'service': service } %}
+    {% endif %}
+</div>

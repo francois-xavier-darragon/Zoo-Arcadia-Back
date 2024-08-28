@@ -1,0 +1,26 @@
+<div class="modal fade p-5" id="deleteModal{{ notice.id }}" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title">Suppression d'un notice</h5>
+                <button type="button" class="btn text-danger" data-bs-dismiss="modal" aria-label="Close">
+                    {% include "_include/_components/_icons/_close_icon_svg.html.twig" %}
+                </button>
+            </div>
+            <div class="modal-body">
+                Attention êtes-vous sur de vouloir supprimer l' notice : {{ notice.nickname }} ?
+            </div>
+            <div class="modal-footer-modal d-flex m-4">
+                <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>
+                <form method="post" action="{{ path('app_admin_notice_delete', {'id': notice.id}) }}">
+                    {% if csrf_tokens is defined %}
+                        <input type="hidden" name="token" value="{{ csrf_tokens }}">
+                    {% elseif csrf_token is defined %}
+                        <input type="hidden" name="token" value="{{ csrf_token }}">
+                    {% endif %}
+                    <button type="submit" class="btn btn-danger" title="Supprimer">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

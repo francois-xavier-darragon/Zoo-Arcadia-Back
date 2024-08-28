@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ENTITY_NAME }}{% endblock %}
+
+{% block body %}
+
+{% for {{ VARIABLE_NAME }} in {{ VARIABLE_NAME }}s %}
+    <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ VARIABLE_NAME }}</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a class="btn btn-info" href="{{ path('{{ VARIABLE_NAME }}_read', {'id': {{ VARIABLE_NAME }}.id}) }}" title="{{ 'form.detail.read_title'|trans }}">{{ 'form.detail.read'|trans|raw }}</a>
+                    <a class="btn btn-success" href="{{ path('{{ VARIABLE_NAME }}_edit', {'id': {{ VARIABLE_NAME }}.id}) }}" title="{{ 'form.detail.edit_title'|trans }}">{{ 'form.detail.edit'|trans|raw }}</a>
+        </div>
+    </div>
+  {% endfor %}
+
+    <a class="btn btn-primary" href="{{ path('{{ VARIABLE_NAME }}_add') }}" title="{{ 'form.detail.add_title'|trans }}">{{ "form.detail.add"|trans|raw }}</a>
+{% endblock %}

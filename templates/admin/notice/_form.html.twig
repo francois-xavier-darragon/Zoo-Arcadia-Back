@@ -1,0 +1,16 @@
+
+{{ form_start(form) }}
+    {{ form_row(form.status) }}
+    {{ form_row(form.nickname) }}
+    {{ form_row(form.comment) }}
+    <div class="mt-4 d-flex justify-content-between">
+        <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_home') }}">Revenir à l'accueil'</a>
+        <button class="btn btn-primary" title="Valider">Valider</button>
+    </div>
+{{ form_end(form) }}
+
+<div class="col-12 pt-2">
+    {% if delete_btn is defined %}
+        {% include '/admin/notice/_delete_modal.html.twig' with {'path_form' : path('app_admin_notice_delete', {'id': notice.id}), 'csrf_token': csrf_token, 'notice': notice } %}
+    {% endif %}
+</div>
