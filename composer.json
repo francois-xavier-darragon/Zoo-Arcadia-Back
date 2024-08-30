@@ -85,7 +85,7 @@
         "symfony/polyfill-php80": "*",
         "symfony/polyfill-php81": "*"
     },
-    "scripts": {
+   "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
@@ -98,13 +98,10 @@
             "@auto-scripts"
         ],
         "compile": [
-            "php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader",
-            "php bin/console cache:clear"
-        ],
-        "heroku-postbuild": [
-            "php bin/console doctrine:migrations:migrate --no-interaction",
-            "php bin/console cache:clear",
-            "php bin/console assets:install public"
+            "php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader --no-scripts",
+            "php bin/console cache:clear --env=prod --no-debug",
+            "php bin/console doctrine:migrations:migrate --no-interaction --env=prod --no-debug",
+            "php bin/console assets:install public --env=prod --no-debug"
         ]
     },
     "conflict": {
@@ -115,10 +112,14 @@
             "allow-contrib": false,
             "require": "6.4.*"
         },
-        "heroku": {
-            "framework": "symfony",
-            "post-install-cmd": [
-                "php bin/console doctrine:migrations:migrate --no-interaction"
+        "paas": {
+            "php-config": [
+                "date.timezone=UTC",
+                "memory_limit=256M",
+                "opcache.memory_consumption=256",
+                "opcache.max_accelerated_files=20000",
+                "realpath_cache_size=4096K",
+                "realpath_cache_ttl=600"
             ]
         }
     },
