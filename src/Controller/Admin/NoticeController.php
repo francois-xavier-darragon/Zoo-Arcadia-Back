@@ -17,7 +17,7 @@ use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
 class NoticeController extends AbstractController
 {
     #[Route('/{page<\d+>?1}', name: 'app_admin_notice_index', methods: ['GET'])]
-    public function index(NoticeRepository $noticeRepository, int $page = 1, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper): Response
+    public function index(NoticeRepository $noticeRepository, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper, int $page = 1,): Response
     {
       
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);

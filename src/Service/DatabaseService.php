@@ -12,10 +12,28 @@ class DatabaseService
     private $user;
     private $password;
 
-    public function __construct(string $databaseUrl)
+    public function __construct(string $databaseUrl, string $environment)
     {
         $dbopts = parse_url($databaseUrl);
-        $this->dsn = sprintf('mysql:host=%s;port=%d;', $dbopts['host'], $dbopts['port']);
+        
+        if ($environment === 'prod') {
+            // Configuration for PostgreSQL (Heroku)
+            $this->dsn = sprintf(
+                'pgsql:host=%s;port=%d;dbname=%s',
+                $dbopts['host'],
+                $dbopts['port'],
+                ltrim($dbopts['path'], '/')
+            );
+        } else {
+            // Configuration for MySQL (local development)
+            $this->dsn = sprintf(
+                'mysql:host=%s;port=%d;dbname=%s',
+                $dbopts['host'],
+                $dbopts['port'] ?? 3306,
+                ltrim($dbopts['path'], '/')
+            );
+        }
+        
         $this->user = $dbopts['user'];
         $this->password = $dbopts['pass'];
 
