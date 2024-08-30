@@ -25,7 +25,6 @@ services:
     App\Service\DatabaseService:
         arguments:
             $databaseUrl: '%env(resolve:DATABASE_URL)%'  
-            $environment: '%kernel.environment%'
     App\Command\ManageDatabaseCommand:
         arguments:
             $entityManager: '@doctrine.orm.entity_manager'
