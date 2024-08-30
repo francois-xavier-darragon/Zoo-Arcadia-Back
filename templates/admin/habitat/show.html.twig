@@ -4,12 +4,12 @@
 
 {% block body %}
 
-<div class="container mt-5 custom-border">
+<div class="container mt-5 mb-5 custom-border">
     <div class="row m-4 card">
         <div class="d-flex justify-content-between align-items-center mb-2">
             <h2 class="">Nom :</h2>
             <h2 class="ms-1">{{ habitat.name }}</h2>
-                <div class="card-body d-flex mb-2">
+            <div class="card-body d-flex mb-2">
                 <div class="ms-auto">
                     <a class="text-secondary me-1" title="Editer" href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}">
                         {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
@@ -20,7 +20,6 @@
                 </div>
             </div>
         </div>
-    <div>
     <div>
         <h2>Description :</h2>
         <div class="card p-4 mb-2" >
