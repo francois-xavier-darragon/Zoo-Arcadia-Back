@@ -98,9 +98,14 @@
             "@auto-scripts"
         ],
         "compile": [
-            "php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader"
+            "php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader",
+            "php bin/console cache:clear"
         ],
-        "heroku-postbuild": "node_modules/.bin/encore production"
+        "heroku-postbuild": [
+            "php bin/console doctrine:migrations:migrate --no-interaction",
+            "php bin/console cache:clear",
+            "php bin/console assets:install public"
+        ]
     },
     "conflict": {
         "symfony/symfony": "*"
