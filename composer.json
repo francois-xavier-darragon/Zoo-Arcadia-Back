@@ -98,8 +98,7 @@
             "@auto-scripts"
         ],
         "compile": [
-        "php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader",
-        "php -d memory_limit=-1 $(which composer) require symfony/debug-bundle symfony/web-profiler-bundle --dev"
+            "php -d memory_limit=-1 $(which composer) install --no-dev --optimize-autoloader"
         ],
         "heroku-postbuild": "node_modules/.bin/encore production"
     },
@@ -110,6 +109,12 @@
         "symfony": {
             "allow-contrib": false,
             "require": "6.4.*"
+        },
+        "heroku": {
+            "framework": "symfony",
+            "post-install-cmd": [
+                "php bin/console doctrine:migrations:migrate --no-interaction"
+            ]
         }
     },
     "require-dev": {
