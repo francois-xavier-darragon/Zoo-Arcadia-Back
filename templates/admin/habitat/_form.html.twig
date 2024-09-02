@@ -13,7 +13,7 @@
     {{ form_row(form.name) }}
     {{ form_row(form.shortdescription) }}
     {{ form_row(form.description) }}
-    <div id="enclosures-container" data-prototype="{{ form_widget(form.enclosures.vars.prototype)|e('html_attr') }}">
+    {# <div id="enclosures-container" data-prototype="{{ form_widget(form.enclosures.vars.prototype)|e('html_attr') }}">
     {% for enclosureForm in form.enclosures %}
         <hr>
         <div class="row enclosure-item mt-2">
@@ -25,10 +25,10 @@
             </a>
         </div>
     {% endfor %}
-    </div>
+    </div> #}
 
     <div class="d-flex align-items-center mt-4">
-    <button id="add-enclosure" type="button" class="btn btn-secondary me-3">Ajouter un enclos</button>
+    <a href="{{ path('app_admin_enclosure_new') }}" id="add-enclosure" type="button" class="btn btn-secondary me-3">Ajouter un enclos</a>
     
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -67,7 +67,7 @@
      {% include '_include/_components/_forms/_image-multi-upload-input.html.twig' %}
 </template>
 
-<template id="remove-enclosure-template">
+{# <template id="remove-enclosure-template">
     <div class="enclosure-wrapper">
         <hr>
         <div class="enclosure-content">
@@ -79,7 +79,7 @@
             </a>
         </div>
     </div>
-</template>
+</template> #}
 
 {{ form_end(form) }}
 

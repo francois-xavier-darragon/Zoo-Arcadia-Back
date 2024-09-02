@@ -5,20 +5,21 @@ namespace App\Controller\Admin;
 use App\Entity\Enclosure;
 use App\Form\EnclosureType;
 use App\Repository\EnclosureRepository;
+use App\Repository\ImageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-#[Route('/admin/habitat/{id}')]
+#[Route('/admin/enclosure')]
 class EnclosureController extends AbstractController
 {
 
     #[Route('/enclosure/new', name: 'app_admin_enclosure_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EnclosureRepository $enclosureRepository): Response
     {
-        
         $enclosure = new Enclosure();
 
         $form = $this->createForm(EnclosureType::class, $enclosure);
@@ -28,11 +29,12 @@ class EnclosureController extends AbstractController
                      
             $enclosureRepository->saveEnclosure($enclosure, true);
 
-            return $this->redirectToRoute('app_admin_enclosure_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_enclosure_show', ['id'=> $enclosure->getHabitat()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin/enclosure/edit.html.twig', [
             'enclosure' => $enclosure,
+            'habitat' => $enclosure->getHabitat(),
             'form' => $form,
             'mode' => 'Ajouter',
         ]);
@@ -97,5 +99,30 @@ class EnclosureController extends AbstractController
 
         $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet enclosure, veuillez réessayer.');
         return $this->redirectToRoute('app_admin_enclosure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{enclosure}/remove-enclosure-image/', name: 'app_admin_enclosure_remove_image', methods: ['POST'])]
+    public function removeAnimalImage(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository, ImageRepository $imageRepository): JsonResponse
+    {
+     
+        $data = json_decode($request->getContent(), true);
+        $imageId = ($data['imgId']) ?? null;
+
+        if ($imageId === null) {
+            return new JsonResponse(['status' => 'error', 'message' => 'ID de l\'image manquant'], 400);
+        }
+     
+        $image = $imageRepository->findOneById($imageId);
+
+        if (!$image) {
+            return new JsonResponse(['status' => 'error', 'message' => 'Image non trouvée'], 404);
+        }
+
+        $enclosure->removeImage($image);
+        $enclosureRepository->saveEnclosure($enclosure, true);
+
+        $imageRepository->removeImage($image, true);
+
+        return new JsonResponse(['status' => 'success'], 200);
     }
 }
