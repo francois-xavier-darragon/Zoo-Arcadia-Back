@@ -11,30 +11,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-#[Route('/admin/enclosures/{id}')]
+#[Route('/admin/habitat/{id}')]
 class EnclosureController extends AbstractController
 {
-    #[Route('/enclosure', name: 'app_enclosure_show', methods: ['GET'])]
-    public function index(Enclosure $enclosure): Response
-    {
-        return $this->render('front/enclosure/read.html.twig', [
-            'enclosure' => $enclosure,
-        ]);
-    }
 
     #[Route('/enclosure/new', name: 'app_admin_enclosure_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EnclosureRepository $enclosureRepository): Response
     {
+        
         $enclosure = new Enclosure();
+
         $form = $this->createForm(EnclosureType::class, $enclosure);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
                      
-            // foreach ($enclosure->getEnclosures() as $enclosure) {
-            //     $enclosure->setEnclosure($enclosure);
-            // }
-            
             $enclosureRepository->saveEnclosure($enclosure, true);
 
             return $this->redirectToRoute('app_admin_enclosure_index', [], Response::HTTP_SEE_OTHER);
@@ -47,7 +38,7 @@ class EnclosureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_admin_enclosure_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{enclosure}/', name: 'app_admin_enclosure_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-enclosure' . $enclosure->getId())->getValue();
@@ -88,12 +79,12 @@ class EnclosureController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'app_admin_enclosure_delete', methods: ['POST'])]
+    #[Route('/delete/{enclosure}/', name: 'app_admin_enclosure_delete', methods: ['POST'])]
     public function delete(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository): Response
     {
-        if($enclosure->getDeletedAt()){
-            return $this->redirectToRoute('app_admin_enclosure_index');
-        }
+        // if($enclosure->getDeletedAt()){
+        //     return $this->redirectToRoute('app_admin_enclosure_index');
+        // }
 
         $submittedToken = $request->request->get('token');
         
