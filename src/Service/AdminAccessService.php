@@ -21,7 +21,7 @@ class AdminAccessService
 
         if (strpos($path, '/admin') === 0) {
     
-            if (!$this->security->isGranted('ROLE_ADMIN') && !$this->security->isGranted('ROLE_VETERINARY') && !$this->security->isGranted('ROLE_WORKER')) {
+            if (!$this->security->isGranted('ROLE_ADMIN') && !$this->security->isGranted('ROLE_VETERINARY') && !$this->security->isGranted('ROLE_HEALER')) {
                 $event->setResponse(new RedirectResponse($this->router->generate('app_home')));
             }
         }
