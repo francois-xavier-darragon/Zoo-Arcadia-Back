@@ -43,6 +43,18 @@ class EnclosureController extends AbstractController
         ]);
     }
 
+    #[Route('/{enclosure}', name: 'app_admin_enclosure_show', methods: ['GET'])]
+    public function read(Enclosure $enclosure, CsrfTokenManagerInterface $csrfTokenManager): Response
+    {
+        $csrfToken = $csrfTokenManager->getToken('delete-habitat' . $enclosure->getId())->getValue();
+
+        return $this->render('admin/habitat/show.html.twig', [
+            'csrf_token'  => $csrfToken,
+            'enclosure' => $enclosure,
+            'delete_btn' => true,
+        ]);
+    }
+
     #[Route('/enclosure/edit/{enclosure}/', name: 'app_admin_enclosure_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {

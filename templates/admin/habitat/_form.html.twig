@@ -24,13 +24,24 @@
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
             {% if habitat.enclosures|length > 0 %}
                 {% for enclosure in habitat.enclosures %}
-                    <li><a class="dropdown-item" title="modifier" href="{{path('app_admin_enclosure_edit',{'enclosure': enclosure.id})}}">{{ enclosure.name }}</a></li>
+                    <li>
+                        <div class"ms-2"> {{ enclosure.name }} </div>
+                        <a class="dropdown-item" href="{{path('app_admin_enclosure_edit',{'enclosure': enclosure.id})}}" title="éditer">
+                             {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                        </a>
+                        <a class="dropdown-item" href="{{path('app_admin_enclosure_show',{'enclosure': enclosure.id})}}" title="voir">
+                             {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
+                        </a>
+                    </li>
                 {% endfor %}
             {% else %}
                 <li><a class="dropdown-item" >Aucun enclos disponible</a></li>
             {% endif %}
         </ul>
     </div>
+
+
+
 </div>
     
 <div class="mt-4 d-flex justify-content-between">
