@@ -13,22 +13,9 @@
     {{ form_row(form.name) }}
     {{ form_row(form.shortdescription) }}
     {{ form_row(form.description) }}
-    {# <div id="enclosures-container" data-prototype="{{ form_widget(form.enclosures.vars.prototype)|e('html_attr') }}">
-    {% for enclosureForm in form.enclosures %}
-        <hr>
-        <div class="row enclosure-item mt-2">
-            {{ form_row(enclosureForm.name) }}
-            {{ form_row(enclosureForm.shortdescription) }}
-            {{ form_row(enclosureForm.description) }}
-            <a type='button' class="text-danger remove-enclosure text-end pt-2" title="Supprimer un enclos">
-                {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-            </a>
-        </div>
-    {% endfor %}
-    </div> #}
-
+    
     <div class="d-flex align-items-center mt-4">
-    <a href="{{ path('app_admin_enclosure_new') }}" id="add-enclosure" type="button" class="btn btn-secondary me-3">Ajouter un enclos</a>
+    <a href="{{ path('app_admin_enclosure_new',{'id':habitat.id}) }}" id="add-enclosure" type="button" class="btn btn-secondary me-3">Ajouter un enclos</a>
     
     <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
@@ -37,10 +24,10 @@
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
             {% if habitat.enclosures|length > 0 %}
                 {% for enclosure in habitat.enclosures %}
-                    <li><a class="dropdown-item" href="#">{{ enclosure.name }}</a></li>
+                    <li><a class="dropdown-item" title="modifier" href="{{path('app_admin_enclosure_edit',{'enclosure': enclosure.id})}}">{{ enclosure.name }}</a></li>
                 {% endfor %}
             {% else %}
-                <li><a class="dropdown-item" href="#">Aucun enclos disponible</a></li>
+                <li><a class="dropdown-item" >Aucun enclos disponible</a></li>
             {% endif %}
         </ul>
     </div>
@@ -66,20 +53,6 @@
 <template id="image-field-template" style="display: none;">
      {% include '_include/_components/_forms/_image-multi-upload-input.html.twig' %}
 </template>
-
-{# <template id="remove-enclosure-template">
-    <div class="enclosure-wrapper">
-        <hr>
-        <div class="enclosure-content">
-            <!-- The contents of the enclosure will be inserted here -->
-        </div>
-        <div class="w-100 text-end">
-            <a type='button' class="text-danger remove-enclosure pt-2" title="Supprimer">
-                {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-            </a>
-        </div>
-    </div>
-</template> #}
 
 {{ form_end(form) }}
 

@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Enclosure;
+use App\Entity\Habitat;
 use App\Form\EnclosureType;
 use App\Repository\EnclosureRepository;
 use App\Repository\ImageRepository;
@@ -13,34 +14,36 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
-#[Route('/admin/enclosure')]
+#[Route('/admin/habitat')]
 class EnclosureController extends AbstractController
 {
 
-    #[Route('/enclosure/new', name: 'app_admin_enclosure_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EnclosureRepository $enclosureRepository): Response
+    #[Route('/{id}/enclosure/new', name: 'app_admin_enclosure_new', methods: ['GET', 'POST'])]
+    public function new(Habitat $habitat, Request $request, EnclosureRepository $enclosureRepository): Response
     {
         $enclosure = new Enclosure();
 
         $form = $this->createForm(EnclosureType::class, $enclosure);
-        $form->handleRequest($request);
 
+        $form->handleRequest($request);
+        $enclosure->setHabitat($habitat); 
+        
         if ($form->isSubmitted() && $form->isValid()) {
-                     
+                   
             $enclosureRepository->saveEnclosure($enclosure, true);
 
-            return $this->redirectToRoute('app_admin_enclosure_show', ['id'=> $enclosure->getHabitat()->getId()], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_habitat_edit', ['id'=> $habitat->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin/enclosure/edit.html.twig', [
             'enclosure' => $enclosure,
-            'habitat' => $enclosure->getHabitat(),
+            'habitat' => $habitat,
             'form' => $form,
             'mode' => 'Ajouter',
         ]);
     }
 
-    #[Route('/edit/{enclosure}/', name: 'app_admin_enclosure_edit', methods: ['GET', 'POST'])]
+    #[Route('/enclosure/edit/{enclosure}/', name: 'app_admin_enclosure_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
         $csrfToken = $csrfTokenManager->getToken('delete-enclosure' . $enclosure->getId())->getValue();
@@ -54,26 +57,27 @@ class EnclosureController extends AbstractController
 
         $entitiName = strtolower($reflectionClass->getShortName()).'s';
 
-        // $images = $enclosure->getImages();
-        // foreach ($images as $image) {
+        $images = $enclosure->getImages();
+        foreach ($images as $image) {
 
-        //     $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
-        //     $existingImages[] = [
-        //         'id' => $image->getId(),
-        //         'path' => $path
-        //     ];
-        // }
+            $path =  '/uploads/images/'. $entitiName .'/'. $image->getName();
+            $existingImages[] = [
+                'id' => $image->getId(),
+                'path' => $path
+            ];
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
         
             $enclosureRepository->saveEnclosure($enclosure, true);
 
-            return $this->redirectToRoute('app_admin_enclosure_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_habitat_edit', ['id'=> $enclosure->getHabitat()->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('admin/enclosure/edit.html.twig', [
             'csrf_token'  => $csrfToken,
             'enclosure' => $enclosure,
+            'habitat' => $enclosure->getHabitat(),
             'form' => $form,
             'mode'=> 'Modifier',
             'delete_btn' => true,
@@ -81,7 +85,7 @@ class EnclosureController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{enclosure}/', name: 'app_admin_enclosure_delete', methods: ['POST'])]
+    #[Route('/enclosure/delete/{enclosure}/', name: 'app_admin_enclosure_delete', methods: ['POST'])]
     public function delete(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository): Response
     {
         // if($enclosure->getDeletedAt()){
@@ -94,14 +98,14 @@ class EnclosureController extends AbstractController
             $enclosureRepository->removeEnclosure($enclosure, true);
 
             $this->addFlash('success', 'Le utilisateur "'.$enclosure->getName().'" a été supprimé avec succès.');
-            return $this->redirectToRoute('app_admin_enclosure_index');
+            return $this->redirectToRoute('app_admin_habitat_edit',['id'=> $enclosure->getHabitat()->getId()]);
         }
 
         $this->addFlash('error', 'Un problème est survenu lors de la suppression de cet enclosure, veuillez réessayer.');
-        return $this->redirectToRoute('app_admin_enclosure_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_admin_habitat_edit',['id'=> $enclosure->getHabitat()->getId()], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{enclosure}/remove-enclosure-image/', name: 'app_admin_enclosure_remove_image', methods: ['POST'])]
+    #[Route('/enclosure/{enclosure}/remove-enclosure-image/', name: 'app_admin_enclosure_remove_image', methods: ['POST'])]
     public function removeAnimalImage(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository, ImageRepository $imageRepository): JsonResponse
     {
      

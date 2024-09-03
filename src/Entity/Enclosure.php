@@ -42,7 +42,7 @@ class Enclosure
     /**
      * @var Collection<int, Image>
      */
-    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'enclosure')]
+    #[ORM\OneToMany(targetEntity: Image::class, mappedBy: 'enclosure', cascade: ['persist'])]
     private Collection $images;
 
     public function __construct()
