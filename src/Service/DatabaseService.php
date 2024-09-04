@@ -15,7 +15,14 @@ class DatabaseService
     public function __construct(string $databaseUrl)
     {
         $dbopts = parse_url($databaseUrl);
-        $this->dsn = sprintf('mysql:host=%s;port=%d;', $dbopts['host'], $dbopts['port']);
+        
+        $this->dsn = sprintf(
+            'mysql:host=%s;port=%d;dbname=%s',
+            $dbopts['host'],
+            $dbopts['port'],
+            ltrim($dbopts['path'], '/')
+        );
+        
         $this->user = $dbopts['user'];
         $this->password = $dbopts['pass'];
 

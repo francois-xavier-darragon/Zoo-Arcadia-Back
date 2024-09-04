@@ -37,7 +37,7 @@ class HabitatController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_habitat_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, HabitatRepository $habitatRepository, EnclosureRepository $enclosureRepository): Response
+    public function new(Request $request, HabitatRepository $habitatRepository): Response
     {
         $habitat = new Habitat();
         $form = $this->createForm(HabitatType::class, $habitat);

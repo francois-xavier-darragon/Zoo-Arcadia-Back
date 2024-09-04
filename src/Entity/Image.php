@@ -25,6 +25,9 @@ class Image
     #[Vich\UploadableField(mapping: 'habitat_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $habitatFile = null;
 
+    #[Vich\UploadableField(mapping: 'enclosure_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    private ?File $enclosureFile = null;
+
     #[Vich\UploadableField(mapping: 'service_file', fileNameProperty: 'name', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
     private ?File $serviceFile = null;
     
@@ -53,6 +56,9 @@ class Image
 
     #[ORM\ManyToOne(inversedBy: 'images')]
     private ?Service $service = null;
+
+    #[ORM\ManyToOne(inversedBy: 'images')]
+    private ?Enclosure $enclosure = null;
 
     public function __construct()
     {
@@ -164,6 +170,22 @@ class Image
         return $this;
     }
 
+    public function getEnclosureFile(): ?File
+    {
+        return $this->enclosureFile;
+    }
+
+    public function setEnclosureFile(?File $enclosureFile): static
+    {
+        $this->enclosureFile = $enclosureFile;
+
+        // unset the owning side of the relation if necessary
+        if ($enclosureFile === null && $this->enclosureFile !== null) {
+            $this->updatedAt = new DateTimeImmutable();
+        }
+
+        return $this;
+    }
    
     public function getServiceFile(): ?File
     {
@@ -214,6 +236,18 @@ class Image
     public function setService(?Service $service): static
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getEnclosure(): ?Enclosure
+    {
+        return $this->enclosure;
+    }
+
+    public function setEnclosure(?Enclosure $enclosure): static
+    {
+        $this->enclosure = $enclosure;
 
         return $this;
     }

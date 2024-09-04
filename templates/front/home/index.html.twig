@@ -192,21 +192,10 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
 
-        {% set all_roles = ['ROLE_ADMIN', 'ROLE_VETERINARY', 'ROLE_WORKER'] %}
-        {% set should_hide = false %}
-
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            {% for role in all_roles %}
-                {% if is_granted(role) %}
-                    {% set should_hide = true %}
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-
-        {% if not should_hide %}
             <div class="text-start pt-4">
-            <a href="{{path('app_notice_new')}}" class="btn btn-gradiant">Laisser un avis</a>
-        </div>
+                <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
+            </div>
         {% endif %}
     </div>
 </article>

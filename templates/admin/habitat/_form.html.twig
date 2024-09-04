@@ -9,24 +9,45 @@
         </div>
     </div>
     
+    
     {{ form_row(form.name) }}
     {{ form_row(form.shortdescription) }}
     {{ form_row(form.description) }}
-    <div id="enclosures-container" data-prototype="{{ form_widget(form.enclosures.vars.prototype)|e('html_attr') }}">
-    {% for enclosureForm in form.enclosures %}
-        <hr>
-        <div class="row enclosure-item mt-2">
-            {{ form_row(enclosureForm.name) }}
-            {{ form_row(enclosureForm.shortdescription) }}
-            {{ form_row(enclosureForm.description) }}
-            <a type='button' class="text-danger remove-enclosure text-end pt-2" title="Supprimer un enclos">
-                {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-            </a>
-        </div>
-    {% endfor %}
-    </div>
+    
+    <div class="d-flex flex-wrap align-items-center mt-4">
+    <a href="{{ path('app_admin_enclosure_new',{'id':habitat.id}) }}" id="add-enclosure" type="button" class="btn btn-secondary me-3 mb-2">Ajouter un enclos</a>
 
-    <button id="add-enclosure" type="button" class="btn btn-secondary mt-4">Ajouter un enclos</button>
+    <div class="dropdown flex-grow-1">
+        <button class="btn btn-secondary dropdown-toggle mb-2" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+            Liste des enclos
+        </button>
+        <ul class="dropdown-menu light-dropdown" aria-labelledby="dropdownMenuButton2">
+            {% if habitat.enclosures|length > 0 %}
+                {% for enclosure in habitat.enclosures %}
+                    <li class="dropdown-item p-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="me-2">{{ enclosure.name }}</span>
+                            <div>
+                                <a type="button" class="text-secondary me-1" href="{{ path('app_admin_enclosure_edit', {'enclosure': enclosure.id}) }}" title="éditer">
+                                    <span class="d-inline-block">
+                                        {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                                    </span>
+                                </a>
+                                <a type="button" class="text-primary" href="{{ path('app_admin_enclosure_show', {'enclosure': enclosure.id}) }}" title="voir">
+                                    <span class="d-inline-block">
+                                        {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li><span class="dropdown-item">Aucun enclos disponible</span></li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
     
 <div class="mt-4 d-flex justify-content-between">
     <a type='button' class="btn btn-gradiant me-3 mb-2" title="revenir à la liste" href="{{ path('app_admin_habitat_index') }}">Revenir à la liste</a>
@@ -47,20 +68,6 @@
 
 <template id="image-field-template" style="display: none;">
      {% include '_include/_components/_forms/_image-multi-upload-input.html.twig' %}
-</template>
-
-<template id="remove-enclosure-template">
-    <div class="enclosure-wrapper">
-        <hr>
-        <div class="enclosure-content">
-            <!-- The contents of the enclosure will be inserted here -->
-        </div>
-        <div class="w-100 text-end">
-            <a type='button' class="text-danger remove-enclosure pt-2" title="Supprimer">
-                {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-            </a>
-        </div>
-    </div>
 </template>
 
 {{ form_end(form) }}
