@@ -26,7 +26,7 @@
                     <td class="text-center">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.firstName }}</td>
                     {% for role in user.roles %}
-                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_HEALER' or role == 'ROLE_VISITOR' %}
+                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER' or role == 'ROLE_VISITOR' %}
                             {% set roleName = allRoles[role] %}
                             <td class="text-center">{{ roleName }}</td>
                         {% endif %}
