@@ -14,11 +14,11 @@
             </div>
             <div class="col-12 col-md-6 mb-4 mb-md-0"> 
                 {% set allImages = [] %}
-                {% for animal in enclosure.animals %}
-                    {% set allImages = allImages|merge(animal.images) %}
+                {% for image in enclosure.images %}
+                    {% set allImages = allImages|merge(enclosure.images) %}
                 {% endfor %}
 
-                <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'animalFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}">
+                <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'enclosureFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}">
             </div>
         </div>
     </div>

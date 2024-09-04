@@ -325,6 +325,17 @@ td {
     background-color: $dark; 
 }
 
+.light-dropdown {
+    background-color: #fff; 
+    color: #000;
+}
+
+
+.light-dropdown .dropdown-item:hover,
+.light-dropdown .dropdown-item:focus {
+    background-color: #f8f9fa;
+}
+
 .logo-arcadia-footer {
     width: 200px;
     height: 200px;

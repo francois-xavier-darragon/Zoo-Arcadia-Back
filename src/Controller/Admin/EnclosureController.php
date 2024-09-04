@@ -46,9 +46,9 @@ class EnclosureController extends AbstractController
     #[Route('/{enclosure}', name: 'app_admin_enclosure_show', methods: ['GET'])]
     public function read(Enclosure $enclosure, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $csrfToken = $csrfTokenManager->getToken('delete-habitat' . $enclosure->getId())->getValue();
+        $csrfToken = $csrfTokenManager->getToken('delete-enclosure' . $enclosure->getId())->getValue();
 
-        return $this->render('admin/habitat/show.html.twig', [
+        return $this->render('admin/enclosure/show.html.twig', [
             'csrf_token'  => $csrfToken,
             'enclosure' => $enclosure,
             'delete_btn' => true,
