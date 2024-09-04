@@ -139,7 +139,7 @@ class ManageDatabaseCommand extends Command
         $checkVerifcation = $this->checkVerification($database);
         
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        
+
         // Step 1: Create all tables without relations
         $this->processTables($metadata, 'createTable', $checkVerifcation ,$io);
 
@@ -262,20 +262,19 @@ class ManageDatabaseCommand extends Command
     private function createTable($meta): void
     {
         $tableName = $meta->getTableName();
-        
         $columns = [];
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
             $columns[] = $this->getColumnDefinition($fieldMapping);
         }
-     
+        
         // Ensure the id column is a primary key
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
         
         $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
         
         $this->databaseService->query($sql);
-
+        dd($meta);
     }
 
     private function createDoctrineMigrationVersionTable(): void
