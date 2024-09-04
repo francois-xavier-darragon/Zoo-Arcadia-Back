@@ -18,7 +18,6 @@ class NoticeController extends AbstractController
         $user =  $this->getUser();
 
         $roles = $user->getRoles();
-
         $notice = new Notice();
         $form = $this->createForm(NoticeType::class, $notice, ['roles' => $roles]);
         $form->handleRequest($request);

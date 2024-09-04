@@ -40,6 +40,7 @@ class ManageDatabaseCommand extends Command
         $this
             ->setDescription('Creates, drops, updates the database, or imports SQL data.')
             ->addArgument('action', InputArgument::OPTIONAL, 'The action to perform: create, drop, update, or import')
+            ->addArgument('dbname', InputArgument::OPTIONAL, 'The name of the database (for create action)')
             ->addArgument('filename', InputArgument::OPTIONAL, 'The name of the SQL file to import (without path, required for import action)');
     }
 
@@ -51,7 +52,7 @@ class ManageDatabaseCommand extends Command
         if (!$action) {
             $question = new ChoiceQuestion(
                 'Veuillez sélectionner l\'action à effectuer',
-                ['create', 'drop', 'update', 'import'],
+                ['drop', 'create', 'update', 'import'],
                 0
             );
             $question->setErrorMessage('L\'action %s n\'est pas valide.');
@@ -60,7 +61,17 @@ class ManageDatabaseCommand extends Command
             $input->setArgument('action', $action);
         }
     
-        
+        if ($action === 'create') {
+            $dbName = $input->getArgument('dbname');
+            if (!$dbName) {
+                $dbName = $io->ask('Veuillez entrer le nom de la base de données à créer :');
+                $input->setArgument('dbname', $dbName);
+            }
+        } else {
+            $dbopts = parse_url($this->databaseUrl);
+            $dbName = ltrim($dbopts['path'], '/');
+        }
+
         if ($action === 'import' && !$input->getArgument('filename')) {
             $filename = $io->ask('Saisissez le nom du fichier SQL à importer (sans chemin)');
             $input->setArgument('filename', $filename);

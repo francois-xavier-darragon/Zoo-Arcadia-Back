@@ -11,6 +11,7 @@ class DatabaseService
     private $dsn;
     private $user;
     private $password;
+    private $dbname;
 
     public function __construct(string $databaseUrl)
     {
@@ -29,10 +30,14 @@ class DatabaseService
         $this->connect();
     }
 
-    private function connect()
+    public function connect($withDatabase = true)
     {
         try {
-            $this->connection = new PDO($this->dsn, $this->user, $this->password);
+            $dsn = $this->dsn;
+            if ($withDatabase) {
+                $dsn .= ';dbname=' . $this->dbname;
+            }
+            $this->connection = new PDO($dsn, $this->user, $this->password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             throw new \RuntimeException('Connection error: ' . $e->getMessage());
