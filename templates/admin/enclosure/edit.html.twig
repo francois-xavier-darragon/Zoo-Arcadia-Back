@@ -7,15 +7,15 @@
                 <div class="p-4 custom-border card" style="width: 100%;">
                     {% if mode == 'Ajouter' %}
                     <h1 class="mb-4">{{mode}}</h1>
-                        {{ include('admin/habitat/_form.html.twig') }}
+                        {{ include('admin/enclosure/_form.html.twig') }}
                     {% else %}   
                     <div class="d-flex mb-4">
                         <h1 class="me-4">{{mode}}</h1>
-                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-habitat') }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{habitat.id}}" title="Supprimer">
+                        <a type='button' class="text-danger pt-2"  data-token="{{ csrf_token('delete-enclosure') }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{enclosure.id}}" title="Supprimer">
                             {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
                         </a>
                     </div> 
-                     {{ include('admin/habitat/_form.html.twig', {'delete_btn': true }) }}
+                     {{ include('admin/enclosure/_form.html.twig', {'delete_btn': true }) }}
                     {% endif %}
                 </div>
             </div>
@@ -23,7 +23,7 @@
     </div>
 
     {% if delete_btn is defined %}
-        {% include '/admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'csrf_token': csrf_token, 'habitat': habitat } %}
+        {% include '/admin/enclosure/_delete_modal.html.twig' with {'path_form' : path('app_admin_enclosure_delete', {'enclosure': enclosure.id}), 'csrf_token': csrf_token, 'enclosure': enclosure } %}
     {% endif %}
 
 {% endblock %}
@@ -35,9 +35,9 @@ import {addImgeFilds} from "/js/image/add-image-fiedls.js";
 
     let existingImages = {{ existingImages is defined ? existingImages|raw : '[]' }};
     const defaultImagePath = "{{ asset('images/default/default-750x500.png') }}";
-    const divSelected = document.getElementById('habitat_images')
-    const entityName = 'habitat';
-    const filedsName = 'habitatFile';
+    const divSelected = document.getElementById('enclosure_images')
+    const entityName = 'enclosure';
+    const filedsName = 'enclosureFile';
 
     addImgeFilds(existingImages, defaultImagePath, divSelected, entityName, filedsName) 
 </script>

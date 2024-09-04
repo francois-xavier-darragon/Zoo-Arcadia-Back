@@ -1,14 +1,17 @@
  <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
     <div class="ms-auto me-4 mt-2">
-        <div class="d-flex align-items-center text-white">
+        <ul class="d-flex align-items-center text-white">
         {% if app.user and (is_granted('ROLE_ADMIN') or is_granted('ROLE_VETERINARY') or is_granted('ROLE_WORKER')) %}
-            <div class="mb-3">
+            <li class="mt-3 me-3">
+                <a class="nav-link text-white" href="/">Accueil Public</a>
+            </li>
+            <li class="mt-3">
                 <img src="{{ app.user.avatar ? uploaderHelper.asset(app.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="User Avatar" width="40" height="40" class="rounded-circle me-3">
-            </div>
-            <div class="mb-3">
+            </li>
+            <li class="mt-3">
                 <span class="me-3">{{ app.user.userIdentifier }}</span> <a class="btn btn-gradiant custom-transform" href="{{ path('app_logout') }}">Déconnexion</a>
-            </div>
+            </li>
         {% endif %}
-        </div>
+        </ul>
     </div>
 </nav>

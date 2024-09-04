@@ -56,14 +56,14 @@ class HabitatType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
-            ->add('enclosures', CollectionType::class, [
-                'entry_type' => EnclosureType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'by_reference' => false,
-                'prototype' => true,
-                'label' => false,
-            ])
+            // ->add('enclosures', CollectionType::class, [
+            //     'entry_type' => EnclosureType::class,
+            //     'allow_add' => true,
+            //     'allow_delete' => true,
+            //     'by_reference' => false,
+            //     'prototype' => true,
+            //     'label' => false,
+            // ])
         ;
     }
 

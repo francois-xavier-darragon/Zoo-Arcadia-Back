@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     CONST ROLES = [
         'ROLE_ADMIN'=> 'Administrateur',
         'ROLE_VETERINARY' => 'Vétérinaire',
-        'ROLE_WORKER' => 'employé',
+        'ROLE_HEALER' => 'employé',
         'ROLE_VISITOR' => 'visiteur'
     ];
     

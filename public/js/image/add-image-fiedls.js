@@ -33,6 +33,11 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 entityId = entityDataElement.dataset.habitatId;
                 url = entityDataElement.dataset.removeImageUrl.replace('HABITAT_ID', entityId);
                 break;
+            case 'enclosure':
+                entityDataElement = document.getElementById('enclosure-data');
+                entityId = entityDataElement.dataset.enclosureId;
+                url = entityDataElement.dataset.removeImageUrl.replace('ENCLOSURE_ID', entityId);
+                break;    
             case 'service':
                 entityDataElement = document.getElementById('service-data');
                 entityId = entityDataElement.dataset.serviceId;
@@ -99,6 +104,9 @@ export function addImgeFilds(existingImages, defaultImagePath, divSelected, enti
                 case 'habitat':
                     removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;
+                case 'enclosure':
+                    removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
+                    break;    
                 case 'service':
                     removeExistingImage(btnTrash, entityId, url, defaultImagePath, btnEdit, img, div);
                     break;
