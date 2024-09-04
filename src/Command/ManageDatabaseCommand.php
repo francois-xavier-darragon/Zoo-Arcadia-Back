@@ -162,6 +162,11 @@ class ManageDatabaseCommand extends Command
             $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
             
             foreach ($tables as $table) {
+
+                if($table == "doctrine_migration_version") {
+                    continue;
+                }
+
                 $isCombinedTable = false;
 
                 // check if there are join tables
@@ -199,6 +204,7 @@ class ManageDatabaseCommand extends Command
     // creation or update process
     private function processTables(array $metadata, string $method, array $checkVerifcation, SymfonyStyle $io): void
     {
+
         $entityColumns = [];
         $tablesToSkip = ['file', 'messenger_messages'];
 
@@ -227,28 +233,73 @@ class ManageDatabaseCommand extends Command
             foreach($entityColumns as $key => $table) {
                 $countNumberByTableEntityColumns[$key] = count($table);
             }
+
             $countNumberByTableCheckVerifcation = [];
             foreach($checkVerifcation as $key => $table) {
                 $countNumberByTableCheckVerifcation[$key] = count($table);
             }
 
+            $orderedCountNumberByTableEntityColumns = [];
+            foreach ($checkVerifcation as $key => $table) {
+                if (isset($countNumberByTableEntityColumns[$key])) {
+                    $orderedCountNumberByTableEntityColumns[$key] = $countNumberByTableEntityColumns[$key];
+                }
+            }
+
+            // $result = [];
+            // $toCreate = [];
+            // $toUpdate = [];
+
+            // foreach ($countNumberByTableCheckVerifcation as $key => $value) {
+            //     $result[$key] = $value;
+            //     if (!isset($countNumberByTableEntityColumns[$key])) {
+            //         $toCreate[$key] = $value;
+            //     }
+            // }
+            
+            // foreach ($countNumberByTableEntityColumns as $key => $value) {
+            //     if (!isset($result[$key])) {
+            //         $result[$key] = $value;
+            //         $toCreate[$key] = $value;
+            //     }
+            // }
+
+            
+// // // dd($meta);
+            // dump( $result,  $toCreate, $toUpdate);
+
+            // $filteredMetadata = array_filter($metadata, function ($meta) use ($toCreate, $toUpdate) {
+            //     $tableName = $meta->getTableName();
+
+            //     return isset($toCreate[$tableName]) || isset($toUpdate[$tableName]);
+            // });
+            
+            // foreach ($filteredMetadata as $filteredMeta) {
+            //     $tableName = $filteredMeta->getTableName();
+                
+            //     // Par exemple, vous pouvez maintenant créer ou mettre à jour en fonction de $toCreate et $toUpdate
+            //     if (isset($toCreate[$tableName])) {
+            //         // dd($filteredMeta );
+            //         $this->createTable($filteredMeta);
+            //     }
+        
+            //     if (isset($toUpdate[$tableName])) {
+            //         $this->updateTable($filteredMeta);
+            //     }
+            // }
+            
+           
+
          //TODO à modifier car les nouvelles colonnes ne sont pas ajouté
             // Check if the number of tables to process matches the verification array
             // if(count($entityColumns) != count($checkVerifcation)) {
                 
-                // if ($method === 'createTable') {
-                //     $this->createTable($meta);
-                // } elseif ($method === 'updateTable'){
-                //     $this->updateTable($meta);
-                // }
                 if ($method === 'createTable') {
-                    if (!isset($checkVerification[$tableName])) {
-                        $this->createTable($meta);
-                        $io->info("Created new table: $tableName");
-                    }
-                } elseif ($method === 'updateTable') {
-                    $this->updateTable($meta, $checkVerification[$tableName] ?? [], $io);
+                    $this->createTable($meta);
+                } elseif ($method === 'updateTable'){
+                    $this->updateTable($meta);
                 }
+                
             // }
         }
 
@@ -261,7 +312,9 @@ class ManageDatabaseCommand extends Command
     // create table
     private function createTable($meta): void
     {
+        
         $tableName = $meta->getTableName();
+        
         $columns = [];
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
@@ -272,9 +325,9 @@ class ManageDatabaseCommand extends Command
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
         
         $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
-        
+        // dd($tableName);
         $this->databaseService->query($sql);
-        dd($meta);
+        
     }
 
     private function createDoctrineMigrationVersionTable(): void
