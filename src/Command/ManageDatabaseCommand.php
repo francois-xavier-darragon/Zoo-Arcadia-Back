@@ -197,7 +197,7 @@ class ManageDatabaseCommand extends Command
     }
 
     // creation or update process
-    private function processTables(array $metadata, string $method, array $checkVerifcation): void
+    private function processTables(array $metadata, string $method, array $checkVerifcation, SymfonyStyle $io): void
     {
         $entityColumns = [];
         $tablesToSkip = ['file', 'messenger_messages'];
@@ -236,10 +236,18 @@ class ManageDatabaseCommand extends Command
             // Check if the number of tables to process matches the verification array
             // if(count($entityColumns) != count($checkVerifcation)) {
                 
+                // if ($method === 'createTable') {
+                //     $this->createTable($meta);
+                // } elseif ($method === 'updateTable'){
+                //     $this->updateTable($meta);
+                // }
                 if ($method === 'createTable') {
-                    $this->createTable($meta);
-                } elseif ($method === 'updateTable'){
-                    $this->updateTable($meta);
+                    if (!isset($checkVerification[$tableName])) {
+                        $this->createTable($meta);
+                        $io->info("Created new table: $tableName");
+                    }
+                } elseif ($method === 'updateTable') {
+                    $this->updateTable($meta, $checkVerification[$tableName] ?? [], $io);
                 }
             // }
         }
