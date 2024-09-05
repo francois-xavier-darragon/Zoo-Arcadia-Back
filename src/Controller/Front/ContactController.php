@@ -23,7 +23,6 @@ class ContactController extends AbstractController
          
             $mail = new MailService($params);
 
-            // $content = "Bonjour " . $data['lastname']." ".$data['firstname']."<br/> Merci Lorem ipsum dolor sit amet,"." ".$data['email'];
             $variables = [
                 'firstname' => $data['firstname'],
                 'lastname' => $data['lastname'],
@@ -37,8 +36,6 @@ class ContactController extends AbstractController
             } else {
                 $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi du message.');
             }
-
-            // return $this->redirectToRoute('app_home');
         }
 
         return $this->render('front/contact/index.html.twig', [
