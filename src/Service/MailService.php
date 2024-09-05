@@ -35,9 +35,7 @@ class MailService
                     'TemplateID' => 6265311,
                     'TemplateLanguage' => true,
                     'Subject' => $subject,
-                    'Variables' => [
-                        'content' => $content,
-                        ]
+                    'Variables' => $content
                 ]
             ]
         ];
