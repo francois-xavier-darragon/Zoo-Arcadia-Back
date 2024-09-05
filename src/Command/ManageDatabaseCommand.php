@@ -206,7 +206,7 @@ class ManageDatabaseCommand extends Command
     {
 
         $entityColumns = [];
-        $tablesToSkip = ['file', 'messenger_messages'];
+        $tablesToSkip = ['file'];
 
         // Step 1: Collect column names for each table, skipping specified tables
         foreach ($metadata as $meta) {
@@ -252,49 +252,34 @@ class ManageDatabaseCommand extends Command
             $this->createDoctrineMigrationVersionTable();
         }
 
+        if ($method === 'createTable' && !$this->existsTableOrColumn('messenger_messages')) {
+            $this->createMessengerMessages();
+        }
+
     }
 
-    // create table
-    // private function createTable($meta): void
-    // {
-        
-    //     $tableName = $meta->getTableName();
-        
-    //     $columns = [];
-    //     foreach ($meta->getFieldNames() as $fieldName) {
-    //         $fieldMapping = $meta->getFieldMapping($fieldName);
-    //         $columns[] = $this->getColumnDefinition($fieldMapping);
-    //     }
-        
-    //     // Ensure the id column is a primary key
-    //     $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
-        
-    //     $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
-    //     // dd($sql);
-    //     $this->databaseService->query($sql);
-        
-    // }
 
+    // create table
     private function createTable($meta): void
     {
         $tableName = $meta->getTableName();
 
-        // Vérifier si la table existe déjà avant de tenter de la créer
+        // Check if the table already exists before attempting to create it
         if ($this->existsTableOrColumn($tableName)) {
             return;
         } else {
-            // dd($tableName);
-             // Créer les colonnes pour la table
+
+             // Create the columns for the table
         $columns = [];
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
             $columns[] = $this->getColumnDefinition($fieldMapping);
         }
 
-        // S'assurer que la première colonne est une clé primaire (id)
+        // Ensure the first column is a primary key (id)
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
 
-        // Construire la requête SQL de création de table
+        // Build table creation SQL query
 
         $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
         $this->databaseService->query($sql);
@@ -302,20 +287,36 @@ class ManageDatabaseCommand extends Command
         }
     }
 
-
+    // Create obligatory doctrine migration version table  
     private function createDoctrineMigrationVersionTable(): void
     {
-
         $this->databaseService->query('
             CREATE TABLE doctrine_migration_version (
                 version VARCHAR(191) NOT NULL,
-                executed_at DATETIME DEFAULT NULL,
-                executed_time INT DEFAULT NULL,
+                executed_at DATETIME NULL,
+                executed_time INT NULL,
                 PRIMARY KEY(version)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
         ');
     }
 
+    // Create obligatory doctrine messenger messages table  
+    private function createMessengerMessages(): void
+    {
+        $this->databaseService->query('
+            CREATE TABLE messenger_messages (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                body LONGTEXT NOT NULL,
+                headers LONGTEXT DEFAULT NULL,
+                queue_name VARCHAR(190) NOT NULL,
+                created_at DATETIME NOT NULL,
+                available_at DATETIME NOT NULL,
+                delivered_at DATETIME NULL
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
+        ');
+    }
+
+    // Update table for association mappings
     private function updateTable($meta): void
     {
         foreach ($meta->getAssociationMappings() as $associationMapping) {
