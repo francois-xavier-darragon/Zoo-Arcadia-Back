@@ -300,7 +300,7 @@ class ManageDatabaseCommand extends Command
         ');
     }
 
-    // Create obligatory doctrine messenger messages table  
+    // Create obligatory doctrine messenger messages table
     private function createMessengerMessages(): void
     {
         $this->databaseService->query('
