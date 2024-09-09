@@ -55,4 +55,15 @@ class AnimalRepository extends ServiceEntityRepository
     {
         $this->genericRepository->remove(Animal::class, $entity, $flush);
     }
+
+    // Methode to find most view animal
+    public function findMostViewedAnimal(): ?Animal
+    {
+        return $this->createQueryBuilder('a')
+        ->where('a.numberViews IS NOT NULL')
+        ->orderBy('a.numberViews', 'DESC')
+        ->setMaxResults(1)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
 }

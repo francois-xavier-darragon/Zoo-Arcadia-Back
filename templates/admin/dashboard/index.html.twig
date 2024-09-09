@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DashBoardController!{% endblock %}
+
+{% block body %}
+
+   <div>
+    {% if topAnimal %}
+        <h2>Animal le plus vu</h2>
+        <p>Nom : {{ topAnimal.name }}</p>
+        <p>Nombre de vues : {{ topAnimal.numberViews }}</p>
+    {% else %}
+        <p>Aucun animal n'a encore été vu.</p>
+    {% endif %}
+   </div> 
+   
+   {% include 'admin/notice/_index_include.html.twig' %}
+{% endblock %}

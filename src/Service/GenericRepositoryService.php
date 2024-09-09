@@ -100,7 +100,7 @@ class GenericRepositoryService
     }
 
     // Method to get table name from entity class name
-    private function getTableName(string $entityClass): string
+    public function getTableName(string $entityClass): string
     {
         return $this->entityManager->getClassMetadata($entityClass)->getTableName();
     }
