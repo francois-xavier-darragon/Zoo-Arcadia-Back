@@ -76,7 +76,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: VeterinaryReport::class, mappedBy: 'user')]
     private Collection $veterinaryReports;
 
-    
+    /**
+     * @var Collection<int, Food>
+     */
+    #[ORM\OneToMany(targetEntity: Food::class, mappedBy: 'prescribedBy')]
+    private Collection $prescribedFoods;
+
+    /**
+     * @var Collection<int, FoodAdministration>
+     */
+    #[ORM\OneToMany(targetEntity: FoodAdministration::class, mappedBy: 'administeredBy')]
+    private Collection $foodAdministrations;
+
     public function __construct()
     {
         $this->notices = new ArrayCollection();
@@ -84,6 +95,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->createdAt = new DateTimeImmutable();
         $this->updatedAt = new DateTimeImmutable();
         $this->setDeletedAt(null);
+        $this->prescribedFoods = new ArrayCollection();
+        $this->foodAdministrations = new ArrayCollection();
     }
 
     public function __toString()
@@ -295,6 +308,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApiToken(?string $apiToken): static
     {
         $this->apiToken = $apiToken;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Food>
+     */
+    public function getPrescribedFoods(): Collection
+    {
+        return $this->prescribedFoods;
+    }
+
+    public function addPrescribedFood(Food $prescribedFood): static
+    {
+        if (!$this->prescribedFoods->contains($prescribedFood)) {
+            $this->prescribedFoods->add($prescribedFood);
+            $prescribedFood->setPrescribedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrescribedFood(Food $prescribedFood): static
+    {
+        if ($this->prescribedFoods->removeElement($prescribedFood)) {
+            // set the owning side to null (unless already changed)
+            if ($prescribedFood->getPrescribedBy() === $this) {
+                $prescribedFood->setPrescribedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FoodAdministration>
+     */
+    public function getFoodAdministrations(): Collection
+    {
+        return $this->foodAdministrations;
+    }
+
+    public function addFoodAdministration(FoodAdministration $foodAdministration): static
+    {
+        if (!$this->foodAdministrations->contains($foodAdministration)) {
+            $this->foodAdministrations->add($foodAdministration);
+            $foodAdministration->setAdministeredBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFoodAdministration(FoodAdministration $foodAdministration): static
+    {
+        if ($this->foodAdministrations->removeElement($foodAdministration)) {
+            // set the owning side to null (unless already changed)
+            if ($foodAdministration->getAdministeredBy() === $this) {
+                $foodAdministration->setAdministeredBy(null);
+            }
+        }
 
         return $this;
     }

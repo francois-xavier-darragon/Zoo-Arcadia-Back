@@ -7,10 +7,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Service\DatabaseService;
+use DateTime;
 
 class ExportDatatabseDataCommand extends Command
 {
-    protected static $defaultName = 'app:export-database-data';
+    protected static $defaultName = 'apppor:ext-database-data';
     private $dbService;
     private $excludedTables = ['doctrine_migration_versions'];
 
@@ -38,7 +39,9 @@ class ExportDatatabseDataCommand extends Command
         if (!file_exists($exportDir)) {
             mkdir($exportDir, 0755, true);
         }
-        $filePath = $exportDir . $fileName . '.sql';
+        $toDay = new DateTime();
+        $formattedToDay = $toDay->format('m-d-Y');
+        $filePath = $exportDir . $fileName .'-('.$formattedToDay.').sql';
 
         $counter = 1;
         $originalFilePath = $filePath;

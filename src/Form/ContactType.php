@@ -36,7 +36,7 @@ class ContactType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
-                'label' => 'Adresse email',
+                'label' => 'Votre adresse email',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                 ],
