@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="col-12 col-md-6 mb-4 mb-md-0"> 
-                <img class="w-100 rounded" src="{{ randomAnimal.images|first ? uploaderHelper.asset(randomAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="{{ randomAnimal.breed }}">
+                <img class="w-100 rounded" src="{{ topAnimal.images|first ? uploaderHelper.asset(topAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="{{ topAnimal.breed }}">
             </div>
         </div>
     </div>

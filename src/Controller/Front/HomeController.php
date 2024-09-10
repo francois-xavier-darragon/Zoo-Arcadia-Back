@@ -27,13 +27,14 @@ class HomeController extends AbstractController
         $notice = $this->noticeRepository->findAllNotice();
         $services = $this->serviceRepository->findAllService();
 
-        $randomAnimal = $animals[array_rand($animals)];
+        // $randomAnimal = $animals[array_rand($animals)];
+        $topAnimal = $this->animalRepository->findMostViewedAnimal();
 
         return $this->render('front/home/index.html.twig', [
             'habitats'       => $habitats,
             'animals'        => $animals,
             'notices'        => $notice,
-            'randomAnimal'   => $randomAnimal,
+            'topAnimal'      => $topAnimal,
             'services'       => $services,
         ]);
     }

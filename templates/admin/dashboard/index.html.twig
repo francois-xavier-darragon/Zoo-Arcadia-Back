@@ -4,15 +4,27 @@
 
 {% block body %}
 
-   <div>
-    {% if topAnimal %}
-        <h2>Animal le plus vu</h2>
-        <p>Nom : {{ topAnimal.name }}</p>
-        <p>Nombre de vues : {{ topAnimal.numberViews }}</p>
-    {% else %}
-        <p>Aucun animal n'a encore été vu.</p>
-    {% endif %}
-   </div> 
+   <div class='row mt-5 mb-3'>
+    <div class='col-sm-12 p-3 custom-border card'> 
+        {% if topAnimal %}
+            <div class="d-flex align-items-center">
+                <div class="flex-grow-1">
+                    <h2 class="mb-0">Animal le plus vu : <span class="fw-bold">{{ topAnimal.name }}</span></h2>
+                    <p class="mb-0 mt-2">Nombre de vues : <span class="fw-bold">{{ topAnimal.numberViews }}</span></p>
+                </div>
+                <div class="ms-3">
+                    <img src="{{ topAnimal.images|first ? uploaderHelper.asset(topAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" 
+                        alt="Image de {{ topAnimal.name }}" 
+                        width="150" 
+                        height="110"
+                        style="object-fit: cover;">
+                </div>
+            </div>
+        {% else %}
+            <p>Aucun animal n'a encore été vu.</p>
+        {% endif %}
+    </div> 
+</div>
    
    {% include 'admin/notice/_index_include.html.twig' %}
 {% endblock %}
