@@ -23,9 +23,10 @@ class ManageDatabaseCommand extends Command
     private $entityManager;
     private $databaseService;
     private $databaseUrl;
+    private ?string $selectedFileName = null;
     private $sqlDir;
 
-    public function __construct(EntityManagerInterface $entityManager, DatabaseService $databaseService, string $databaseUrl, string $projectDir)
+    public function __construct(EntityManagerInterface $entityManager, DatabaseService $databaseService, string $databaseUrl,  string $projectDir)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -40,8 +41,7 @@ class ManageDatabaseCommand extends Command
         $this
             ->setDescription('Creates, drops, updates the database, or imports SQL data.')
             ->addArgument('action', InputArgument::OPTIONAL, 'The action to perform: create, drop, update, or import')
-            ->addArgument('dbname', InputArgument::OPTIONAL, 'The name of the database (for create action)')
-            ->addArgument('filename', InputArgument::OPTIONAL, 'The name of the SQL file to import (without path, required for import action)');
+            ->addArgument('dbname', InputArgument::OPTIONAL, 'The name of the database (for create action)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -72,9 +72,31 @@ class ManageDatabaseCommand extends Command
             $dbName = ltrim($dbopts['path'], '/');
         }
 
-        if ($action === 'import' && !$input->getArgument('filename')) {
-            $filename = $io->ask('Saisissez le nom du fichier SQL à importer (sans chemin)');
-            $input->setArgument('filename', $filename);
+        if ($action === 'import') {
+    
+            $files = glob($this->sqlDir . '*.sql');
+    
+            if (empty($files)) {
+                $io->error("Aucun fichier SQL trouvé dans le répertoire $this->sqlDir");
+                return Command::FAILURE;
+            }
+        
+            $io->section('Fichiers SQL disponibles :');
+            $choices = [];
+            foreach ($files as $file) {
+                $choices[] = basename($file);
+            }
+        
+            $question = new ChoiceQuestion(
+                'Choisissez le fichier à importer',
+                $choices
+            );
+        
+            $question->setErrorMessage('Le fichier %s n\'est pas valide.');
+            
+            $this->selectedFileName = $io->askQuestion($question);
+
+            $io->writeln("Fichier sélectionné : " . $this->selectedFileName);
         }
 
         $dbopts = parse_url($this->databaseUrl);
@@ -92,7 +114,7 @@ class ManageDatabaseCommand extends Command
                     $this->updateDatabase($dbName, $io);
                     break;
                 case 'import':
-                    $filename = $input->getArgument('filename');
+                    $filename = $this->selectedFileName;
                     if (!$filename) {
                         throw new InvalidArgumentException('The SQL filename is required for the import action.');
                     }
@@ -522,6 +544,7 @@ class ManageDatabaseCommand extends Command
         };
     }
 
+    //method to import sql data
     private function importDatabase(string $dbName, string $filePath, SymfonyStyle $io): void
     {
         $this->databaseService->selectDatabase($dbName);
