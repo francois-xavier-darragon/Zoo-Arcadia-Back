@@ -5,12 +5,6 @@
 {% block body %}
  <h2 class=" bg-info text-center text-dark pt-2 m-0">Les différents services que nous proposons.</h2>
 
-{# {% set itemsPerPage = 3 %}
-{% set pages = services|batch(itemsPerPage) %}
-{% set currentPage = page|default(1) %} #}
-
-{# {% if pages[currentPage - 1] is defined %} #}
-    {# {% for service in pages[currentPage - 1] %} #}
     {% if services|length > 0 %}
         {% for service in services %}    
         <article class="{{ loop.index is odd ? 'bg-info' : '' }} p-4">
@@ -44,11 +38,18 @@
 {% if totalPages > 1 %}
     <nav class="bg-info" aria-label="Page navigation">
         <ul class="pagination justify-content-center mb-0 pb-3">
+            <li class="page-item {{ currentPage == 1 ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ path('app_service_show', {'page': currentPage - 1}) }}" {{ currentPage == 1 ? 'tabindex="-1" aria-disabled="true"' : '' }}>Précédent</a>
+                </li>
             {% for i in 1..totalPages %}
                 <li class="page-item {{ currentPage == i ? 'active' : '' }}">
                     <a class="page-link" href="{{ path('app_service_show', {'page': i}) }}">{{ i }}</a>
                 </li>
             {% endfor %}
+
+            <li class="page-item {{ currentPage == totalPages ? 'disabled' : '' }}">
+                <a class="page-link" href="{{ path('app_service_show', {'page': currentPage + 1}) }}" {{ currentPage == totalPages ? 'tabindex="-1" aria-disabled="true"' : '' }}>Suivant</a>
+            </li>
         </ul>
     </nav>
 {% endif %}
