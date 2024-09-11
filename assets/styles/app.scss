@@ -369,7 +369,7 @@ td {
     width: 300px;
 }
 
-.card-habitat, .card-enclose, .card-notice, .card-description  {
+.card-habitat, .card-enclose, .card-notice, .card-description .gallery{
     border: 1px solid;
     border-color: $secondary;
 }
@@ -465,4 +465,14 @@ td {
 
 .scrollable-text::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.image-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.image-gallery img {
+    max-width: 400px;
+    height: auto;
 }
