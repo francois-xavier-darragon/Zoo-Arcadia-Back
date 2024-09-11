@@ -13,7 +13,7 @@ class VeterinaryReportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        if(in_array('ROLE_VETERINARY',$options['roles'])){
+        if(in_array('ROLE_VETERINARY',$options['roles']) || in_array('ROLE_ADMIN',$options['roles'])){
             $builder
                 ->add('health', ChoiceType::class, [
                     'label' => false,

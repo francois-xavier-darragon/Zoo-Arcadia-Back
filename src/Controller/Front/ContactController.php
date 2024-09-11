@@ -24,12 +24,11 @@ class ContactController extends AbstractController
             $mail = new MailService($params);
 
             $variables = [
-                'firstname' => $data['firstname'],
-                'lastname' => $data['lastname'],
-                'email' => $data['email']
+                'email' => $data['email'],
+                'message' => $data['message']
             ];
 
-            $result = $mail->send($_ENV['MAILER_SENDER'], $data['firstname'], $data['message'], $variables);
+            $result = $mail->send($_ENV['MAILER_SENDER'], $data['email'], $variables);
 
             if ($result['success']) {
                 $this->addFlash('success', 'Votre message a été envoyé avec succès.');

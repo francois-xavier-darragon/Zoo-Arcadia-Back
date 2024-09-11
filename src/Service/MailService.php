@@ -14,7 +14,7 @@ class MailService
         $this->params = $params;
     }
     
-    public function send($toEmail, $toName, $subject, $content)
+    public function send($toEmail, $subject, $content)
     {
         
         $mj = new Client($this->params->get('api_key'), $this->params->get('api_secret_key'), true, ['version' => 'v3.1']);
@@ -29,7 +29,6 @@ class MailService
                     'To' => [
                         [
                             'Email' => $toEmail,
-                            'Name' => $toName,
                         ]
                     ],
                     'TemplateID' => 6265311,
