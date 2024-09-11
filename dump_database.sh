@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Lire les informations de connexion à partir du fichier .env
+# Read login information from .env file
 if [ -f .env.local ]; then
     source .env.local
 elif [ -f .env ]; then
@@ -10,28 +10,28 @@ else
     exit 1
 fi
 
-# Extraire les informations de DATABASE_URL
+# Extract information from DATABASE_URL
 DB_USER=$(echo $DATABASE_URL | sed -n 's/.*mysql:\/\/\([^:]*\):.*/\1/p')
 DB_PASS=$(echo $DATABASE_URL | sed -n 's/.*mysql:\/\/[^:]*:\([^@]*\).*/\1/p')
 DB_NAME=$(echo $DATABASE_URL | sed -n 's/.*\/\([^?]*\).*/\1/p')
 
-# Demander le nom du fichier de sortie
+# Ask for the name of the output file
 read -p "Entrez le nom du fichier SQL (sans extension) : " FILE_NAME
 
-# Définir le répertoire d'export
+# Set export directory
 EXPORT_DIR="./sql"
 
-# Créer le répertoire s'il n'existe pas
+# Create the directory if it does not exist
 mkdir -p "$EXPORT_DIR"
 
-# Obtenir la date du jour
+# Get today's date
 TODAY=$(date +"%m-%d-%Y")
 
-# Construire le nom de fichier complet
+# Build full filename
 FULL_FILE_NAME="${FILE_NAME}-($TODAY).sql"
 FULL_PATH="${EXPORT_DIR}/${FULL_FILE_NAME}"
 
-# Vérifier si le fichier existe déjà et ajouter un numéro si nécessaire
+# Check if the file already exists and add a number if necessary
 COUNTER=1
 while [ -f "$FULL_PATH" ]
 do
@@ -40,10 +40,10 @@ do
     COUNTER=$((COUNTER+1))
 done
 
-# Exécuter la commande mysqldump
+# Run the mysqldump command
 MYSQL_PWD="$DB_PASS" mysqldump -u "$DB_USER" "$DB_NAME" --skip-comments --skip-extended-insert > "$FULL_PATH"
 
-# Vérifier si la commande s'est bien exécutée
+# Check if the command was executed correctly
 if [ $? -eq 0 ]; then
     echo "Les données ont été exportées avec succès dans le fichier $FULL_PATH"
 else
