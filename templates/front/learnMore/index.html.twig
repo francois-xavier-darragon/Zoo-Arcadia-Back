@@ -1,0 +1,97 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}À la découverte d'Arcadia{% endblock %}
+
+{% block body %}
+    <div class="bg-info p-4">
+        <div class="container p-4">
+            <header>
+                <h1 class="text-center mb-4">À la découverte d'Arcadia</h1>
+            </header>
+
+            <section id="introduction" class="row align-items-center section-content">
+                <div class="col-md-6 order-md-2">
+                    <img src="{{ asset('images/vue-panoramique-arcadia.jpg') }}" alt="Vue panoramique d'Arcadia" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <p>Depuis sa création, notre parc a pour mission de célébrer et de protéger la biodiversité. Situé près de la mythique forêt de Brocéliande, en Bretagne, notre site vous propose une immersion complète dans la nature, où chaque visite est une opportunité unique de se reconnecter avec les merveilles du monde naturel.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="m-4">
+        <div class="container p-4">
+            <section id="approche-respectueuse" class="row align-items-center section-content">
+                <div class="col-md-6">
+                    <img src="{{ asset('images/soigneur-animal.jpg') }}" alt="Soigneur s'occupant d'un animal" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6">
+                    <h2>Une approche respectueuse de l'environnement</h2>
+                    <p>Depuis ses débuts en 1960, notre parc s'engage à allier préservation écologique et bien-être animal. Divisé en plusieurs zones thématiques inspirées des différents écosystèmes de la planète (savane, jungle, marais, etc.), chaque espace est conçu pour recréer un habitat aussi proche que possible des conditions naturelles de nos résidents.</p>
+                    <p>Nos équipes travaillent quotidiennement pour garantir un environnement sain et équilibré à nos animaux, en veillant à ce que leur alimentation soit minutieusement adaptée à leurs besoins spécifiques, sur la base des rapports vétérinaires réguliers.</p>
+                    <p>Nos vétérinaires réalisent des contrôles rigoureux chaque jour avant l'ouverture du parc pour s'assurer de la santé et du bien-être de chaque animal. Grâce à cette vigilance et à un encadrement vétérinaire de haut niveau, nos animaux vivent dans des conditions optimales, reflétant notre engagement envers leur bien-être.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="bg-info p-4">
+        <div class="container p-4">
+            <section id="parc-ecologique" class="row align-items-center section-content">
+                <div class="col-md-6 order-md-2">
+                    <img src="{{ asset('images/panneaux-solaires.jpg') }}" alt="Panneaux solaires du parc Arcadia" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <h2>Un parc écologique et autonome</h2>
+                    <p>Fiers de nos valeurs écologiques, nous avons rendu le parc totalement autonome sur le plan énergétique, grâce à l'utilisation de ressources renouvelables. Chaque aspect de notre gestion quotidienne vise à réduire notre empreinte carbone, que ce soit par nos infrastructures respectueuses de l'environnement ou par nos pratiques durables. En parcourant nos allées, vous pourrez ressentir cette harmonie entre technologie verte et nature.</p>
+                    <p>Nous mettons également un point d'honneur à sensibiliser nos visiteurs à la protection de l'environnement à travers nos programmes éducatifs. Chacune de nos initiatives vise à faire prendre conscience de l'importance de préserver notre planète pour les générations futures.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+      <div class="m-4">
+        <div class="container p-4">
+            <section id="education-recherche" class="row align-items-center section-content">
+                <div class="col-md-6 ">
+                    <img src="{{ asset('images/laboratoire-recherche.jpg') }}" alt="Laboratoire de recherche du parc Arcadia" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6 order-md-1">
+                    <h2>Notre engagement pour l'éducation et la recherche</h2>
+                    <p>Au-delà de notre mission de conservation, Arcadia s'engage activement dans l'éducation et la recherche scientifique. Notre centre d'éducation environnementale propose des programmes pédagogiques innovants pour tous les âges, visant à éveiller les consciences sur l'importance de la biodiversité et les enjeux écologiques actuels.</p>
+                    <p>Parallèlement, nos laboratoires de recherche, en collaboration avec des universités renommées, mènent des études approfondies sur la biodiversité, la conservation des espèces menacées et l'impact du changement climatique sur les écosystèmes. Ces recherches contribuent non seulement à améliorer nos pratiques de conservation, mais aussi à enrichir la connaissance scientifique globale.</p>
+                    <p>Grâce à ces initiatives, Arcadia joue un rôle crucial dans la formation de la prochaine génération de défenseurs de l'environnement et dans l'avancement de la science de la conservation.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div class="bg-info p-4">
+        <div class="container p-4">
+            <section id="ambition-future" class="row align-items-center section-content">
+                <div class="col-md-6 order-md-2">
+                    <img src="{{ asset('images/visiteurs-parc.jpg') }}" alt="Visiteurs profitant d'une expérience immersive dans le parc" class="img-fluid rounded">
+                </div>
+                <div class="col-md-6">
+                    <h2>Une ambition commune pour l'avenir</h2>
+                    <p>Notre parc, qui a toujours su évoluer pour intégrer les meilleures pratiques écologiques, est une véritable fierté pour notre équipe et notre directeur. Fort de notre succès et de la satisfaction de nos visiteurs, nous aspirons à continuer d'innover pour offrir une expérience enrichissante et respectueuse de la nature.</p>
+                    <p>Nous vous invitons à explorer davantage notre engagement et à nous rejoindre dans notre mission de préservation de la biodiversité.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .section-content {
+            min-height: 300px; 
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+{% endblock %}
