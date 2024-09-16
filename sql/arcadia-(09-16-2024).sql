@@ -206,7 +206,7 @@ CREATE TABLE `image` (
   CONSTRAINT `FK_image_enclosure` FOREIGN KEY (`enclosure_id`) REFERENCES `enclosure` (`id`),
   CONSTRAINT `FK_image_habitat` FOREIGN KEY (`habitat_id`) REFERENCES `habitat` (`id`),
   CONSTRAINT `FK_image_service` FOREIGN KEY (`service_id`) REFERENCES `service` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=102 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `image` WRITE;
@@ -214,23 +214,23 @@ LOCK TABLES `image` WRITE;
 INSERT INTO `image` VALUES (3,'foret-tropical-66a0b826315e6325045385.jpg','foret-tropical.jpg',224822,'image/jpeg','2024-07-24 08:15:34','2024-07-24 08:15:34',NULL,2,NULL,NULL);
 INSERT INTO `image` VALUES (4,'marecage-66a0b839bd27c921110822.jpg','marecage.jpg',193079,'image/jpeg','2024-07-24 08:15:53','2024-07-24 08:15:53',NULL,3,NULL,NULL);
 INSERT INTO `image` VALUES (5,'lion-500x750-66a0bb38ec316593006673.jpg','lion 500x750.jpg',70123,'image/jpeg','2024-07-24 08:28:40','2024-07-24 08:28:40',1,NULL,NULL,NULL);
-INSERT INTO `image` VALUES (8,'portrait-young-businessman-with-mustache-glasses-3d-rendering-1-66a1deb97faea749847864.jpg','portrait-young-businessman-with-mustache-glasses-3d-rendering (1).jpg',153955,'image/jpeg','2024-07-25 05:12:25','2024-07-25 05:12:25',NULL,NULL,NULL,NULL);
 INSERT INTO `image` VALUES (76,'savane-750x500-66a38e13edb1c314963776.jpg','savane 750x500.jpg',138401,'image/jpeg','2024-07-26 11:52:51','2024-07-26 11:52:51',NULL,1,NULL,NULL);
 INSERT INTO `image` VALUES (84,'lion-v3-66a38f67963df403742430.jpg','lion-v3.jpg',61238,'image/jpeg','2024-07-26 11:58:31','2024-07-26 11:58:31',1,NULL,NULL,NULL);
 INSERT INTO `image` VALUES (87,'caiman-1-66a399f9da089567703840.jpg','caiman (1).jpg',104032,'image/jpeg','2024-07-26 12:43:37','2024-07-26 12:43:37',2,NULL,NULL,NULL);
 INSERT INTO `image` VALUES (88,'panda-roux-66a39af753c27601529226.jpg','panda-roux.jpg',128691,'image/jpeg','2024-07-26 12:47:51','2024-07-26 12:47:51',3,NULL,NULL,NULL);
 INSERT INTO `image` VALUES (89,'elephant-66a39b3f4dca8352210543.jpg','elephant.jpg',137951,'image/jpeg','2024-07-26 12:49:03','2024-07-26 12:49:03',4,NULL,NULL,NULL);
 INSERT INTO `image` VALUES (90,'zebras-4258909-1280-66a39b7989cfa152462236.jpg','zebras-4258909_1280.jpg',156656,'image/jpeg','2024-07-26 12:50:01','2024-07-26 12:50:01',5,NULL,NULL,NULL);
-INSERT INTO `image` VALUES (91,'portrait-young-businessman-with-mustache-glasses-3d-rendering-66aa54349063b136765774.jpg','portrait-young-businessman-with-mustache-glasses-3d-rendering.jpg',153955,'image/jpeg','2024-07-31 15:11:48','2024-07-31 15:11:48',NULL,NULL,NULL,NULL);
-INSERT INTO `image` VALUES (92,'portrait-young-businessman-with-mustache-glasses-3d-rendering-66ab6f43a42f2216523897.jpg','portrait-young-businessman-with-mustache-glasses-3d-rendering.jpg',153955,'image/jpeg','2024-08-01 11:19:31','2024-08-01 11:19:31',NULL,NULL,NULL,NULL);
 INSERT INTO `image` VALUES (93,'restaurant-66ac715005a77977326646.jpg','restaurant.jpg',81396,'image/jpeg','2024-08-02 05:40:31','2024-08-02 05:40:31',NULL,NULL,2,NULL);
 INSERT INTO `image` VALUES (94,'bouitique-66ac950c3fed1320301612.jpg','bouitique.jpg',234615,'image/jpeg','2024-08-02 08:13:00','2024-08-02 08:13:00',NULL,NULL,3,NULL);
 INSERT INTO `image` VALUES (95,'visite-guide-66ac97f9a47bf016728655.jpg','visite guide.jpg',421190,'image/jpeg','2024-08-02 08:25:29','2024-08-02 08:25:29',NULL,NULL,4,NULL);
 INSERT INTO `image` VALUES (96,'reproduction-66ac9d257c659464606088.jpg','reproduction.jpg',91067,'image/jpeg','2024-08-02 08:47:33','2024-08-02 08:47:33',NULL,NULL,5,NULL);
 INSERT INTO `image` VALUES (97,'couple-lion-66dd7f8657fea721695563.jpg','couple-lion.jpg',94851,'image/jpeg','2024-09-08 12:42:14','2024-09-08 12:42:14',NULL,NULL,NULL,1);
-INSERT INTO `image` VALUES (98,'enclos-lion-66dfdf41edfae244163650.jpg','enclos-lion.jpg',141301,'image/jpeg','2024-09-10 07:55:13','2024-09-10 07:55:13',NULL,NULL,NULL,1);
 INSERT INTO `image` VALUES (99,'enclos-caiman-66dfdf8c0ed01849178489.jpeg','enclos-caïman.jpeg',105874,'image/jpeg','2024-09-10 07:56:28','2024-09-10 07:56:28',NULL,NULL,NULL,3);
 INSERT INTO `image` VALUES (101,'lion-v3-66e1994978726952236311.jpg','lion-v3.jpg',106136,'image/jpeg','2024-09-11 15:21:13','2024-09-11 15:21:13',1,NULL,NULL,NULL);
+INSERT INTO `image` VALUES (102,'avatar-man-66e7cb95d8340366269111.jpg','avatar-man.jpg',45428,'image/jpeg','2024-09-16 08:09:25','2024-09-16 08:09:25',NULL,NULL,NULL,NULL);
+INSERT INTO `image` VALUES (103,'avatar-woman-66e7cbb6caaaa597356610.jpg','avatar-woman.jpg',62359,'image/jpeg','2024-09-16 08:09:58','2024-09-16 08:09:58',NULL,NULL,NULL,NULL);
+INSERT INTO `image` VALUES (104,'avatar-man-66e7cbcd899b7120225243.jpg','avatar-man.jpg',45428,'image/jpeg','2024-09-16 08:10:21','2024-09-16 08:10:21',NULL,NULL,NULL,NULL);
+INSERT INTO `image` VALUES (105,'couple-lions-v2-66e7cc2655ef3911924714.jpg','couple-lions-v2.jpg',141301,'image/jpeg','2024-09-16 08:11:50','2024-09-16 08:11:50',NULL,NULL,NULL,1);
 /*!40000 ALTER TABLE `image` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `messenger_messages`;
@@ -267,7 +267,7 @@ CREATE TABLE `notice` (
   PRIMARY KEY (`id`),
   KEY `FK_notice_user` (`user_id`),
   CONSTRAINT `FK_notice_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 LOCK TABLES `notice` WRITE;
@@ -276,6 +276,7 @@ INSERT INTO `notice` VALUES (1,'TEST','sb<sbs',1,'2024-07-26 10:21:56','2024-07-
 INSERT INTO `notice` VALUES (2,'wbbwb','sb<sbs',1,'2024-07-29 06:18:12','2024-07-29 06:18:12',NULL,2);
 INSERT INTO `notice` VALUES (3,'wbbwb','sb<sbsVQDVVQDV',1,'2024-07-29 06:18:20','2024-07-29 06:18:20',NULL,2);
 INSERT INTO `notice` VALUES (4,'TEST','sb<sbsVQDVVQDV',1,'2024-07-29 06:18:28','2024-07-29 06:18:28',NULL,2);
+INSERT INTO `notice` VALUES (5,'TEST','bgeggegeg',0,'2024-09-16 08:06:11','2024-09-16 08:06:11',NULL,NULL);
 /*!40000 ALTER TABLE `notice` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `service`;
@@ -326,9 +327,9 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (2,'fxd@gmail.com','darragon','darragon','[\"ROLE_ADMIN\"]','$2y$13$T03dnXDYdj.9.QvLyIGJC.Pw4N5nmBfRrqbbAt6C81UUie9ZCYYsO',667879458,'{\"zip\": \"15130\", \"city\": \"YTRAC\", \"street\": \"Rue du Puy de Peyre Arse\", \"complement\": null}',NULL,'2024-07-25 05:12:25','2024-07-25 05:12:25',NULL,8);
-INSERT INTO `user` VALUES (3,'fxdvisiteur@gmail.com','dd','dd','[\"ROLE_VISITOR\"]','$2y$13$TeC79G/YmYR678YJinaQ3u9Frz8oFHNUI5exHkykWyNzq9jfcfLse',NULL,NULL,NULL,'2024-07-31 15:11:48','2024-07-31 15:11:48',NULL,91);
-INSERT INTO `user` VALUES (4,'fxdveto@gmail.com','fx','dd','[\"ROLE_VETERINARY\"]','$2y$13$smpYSPUqa2ehucZEXMewxuU5BbKpWGNvq6EeMB/IozGhNBYf19A2i',NULL,'{\"zip\": null, \"city\": null, \"street\": null, \"complement\": null}',NULL,'2024-08-01 11:19:31','2024-08-01 11:19:31',NULL,92);
+INSERT INTO `user` VALUES (2,'fxd@gmail.com','darragon','darragon','[\"ROLE_ADMIN\"]','$2y$13$T03dnXDYdj.9.QvLyIGJC.Pw4N5nmBfRrqbbAt6C81UUie9ZCYYsO',667879458,'{\"zip\": \"15130\", \"city\": \"YTRAC\", \"street\": \"Rue du Puy de Peyre Arse\", \"complement\": null}',NULL,'2024-07-25 05:12:25','2024-07-25 05:12:25',NULL,102);
+INSERT INTO `user` VALUES (3,'fxdvisiteur@gmail.com','dd','dd','[\"ROLE_VETERINARY\"]','$2y$13$TeC79G/YmYR678YJinaQ3u9Frz8oFHNUI5exHkykWyNzq9jfcfLse',NULL,'{\"zip\": null, \"city\": null, \"street\": null, \"complement\": null}',NULL,'2024-07-31 15:11:48','2024-07-31 15:11:48',NULL,103);
+INSERT INTO `user` VALUES (4,'fxdveto@gmail.com','fx','dd','[\"ROLE_VETERINARY\"]','$2y$13$smpYSPUqa2ehucZEXMewxuU5BbKpWGNvq6EeMB/IozGhNBYf19A2i',NULL,'{\"zip\": null, \"city\": null, \"street\": null, \"complement\": null}',NULL,'2024-08-01 11:19:31','2024-08-01 11:19:31',NULL,104);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 DROP TABLE IF EXISTS `veterinary_report`;
