@@ -14,8 +14,6 @@ class NoticeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $roles = $options['roles'];
-
         $builder
             ->add('nickname', TextType::class, [
                 'required' => true,

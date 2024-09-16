@@ -16,16 +16,17 @@ class NoticeController extends AbstractController
     public function new(Request $request, NoticeRepository $noticeRepository): Response
     {
         $user =  $this->getUser();
-
-        $roles = $user->getRoles();
+        
         $notice = new Notice();
-        $form = $this->createForm(NoticeType::class, $notice, ['roles' => $roles]);
+        $form = $this->createForm(NoticeType::class, $notice);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $notice->setUser($user);
-        
+            if($user != null) {
+                $notice->setUser($user);
+            }
+              
             $noticeRepository->saveNotice($notice, true);
 
             return $this->redirectToRoute('app_admin_notice_index', [], Response::HTTP_SEE_OTHER);

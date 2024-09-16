@@ -192,11 +192,9 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
 
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <div class="text-start pt-4">
-                <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
-            </div>
-        {% endif %}
+        <div class="text-start pt-4">
+            <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
+        </div>
     </div>
 </article>
 {% endblock %}

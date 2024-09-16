@@ -50,7 +50,10 @@ class UserType extends AbstractType
                 'mapped' => false,
             
                 'label' => 'Role de l\'utilasteur',
-                'choices'=> array_flip(USER::ROLES),
+                'choices' => array_diff_key(
+                    array_flip(User::ROLES),
+                    ['Administrateur' => 'ROLE_ADMIN']
+                ),
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
                 ],

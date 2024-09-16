@@ -2,14 +2,13 @@
     <div class='col-sm-12 p-4 custom-border card'> 
         <div class= "col-sm-12 d-flex justify-content-between mb-5">
             <h1>Liste des Avis</h1>
-            <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_notice_new') }}" title="Ajouter un notice">Ajouter un Avis</a>
+            {# <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_notice_new') }}" title="Ajouter un notice">Ajouter un Avis</a> #}
         </div>
         <table class="table custom-table">
             <thead>
                 <tr>
                     <th class="text-start">Avatar</th>
                     <th class="text-center">Pseudo</th>
-                    <th class="text-center">Utilisateur</th>
                     <th class="text-center">Commentaire</th>
                     <th class="text-center">Statut</th>
                     <th class="text-end">Actions</th>
@@ -20,13 +19,16 @@
             {% for notice in notices %}    
                 <tr>
                     <td class="text-start">
-                        <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="50" height="50">
+                        <img class="rounded-circle" src="{% if notice.user is not null and notice.user.avatar is defined and notice.user.avatar is not empty %}
+                            {{ uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') }}
+                        {% else %}
+                            {{ asset('images/default/default-avatar.jpg') }}
+                        {% endif %}" alt="Avatar de l'utilisateur" width="50" height="50">
                     </td>
                     <td class="text-center">{{ notice.nickname }}</td>
-                    <td class="text-center">{{ notice.user }}</td>
                     <td class="text-center">{{ notice.comment }}</td>
                     {% if arrayStatut[notice.status] is defined %}
-                    <td class="text-center badge rounded-pill {% if arrayStatut[notice.status] == 'En attente' %}status-pending{% elseif arrayStatut[notice.status] == 'Refusé' %}status-refused{% elseif arrayStatut[notice.status] == 'Validé' %}status-valid{% endif %}"> {{ arrayStatut[notice.status] }}</td>
+                        <td class="text-center badge rounded-pill {% if arrayStatut[notice.status] == 'En attente' %}status-pending{% elseif arrayStatut[notice.status] == 'Refusé' %}status-refused{% elseif arrayStatut[notice.status] == 'Validé' %}status-valid{% endif %}"> {{ arrayStatut[notice.status] }}</td>
                     {% endif %}    
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_notice_show', {'id': notice.id}) }}" title="voir">

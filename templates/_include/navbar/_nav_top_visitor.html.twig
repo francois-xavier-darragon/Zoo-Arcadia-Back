@@ -65,19 +65,13 @@
                     {% endif %}
 
                 {% if app.user %}
-                    {% set role = 'ROLE_VISITOR' %}
-                    {% if role in app.user.roles %}
-                        <li class="nav-item" data-show="connected">
-                            <a class="nav-link text-white" href="{{path('app_account_show', {'id': app.user.id})}}">Mon compte</a>
-                        </li>
-                    {% endif %}
-                <li class="nav-item" data-show="connected">
-                    <a class="nav-link text-white" href="/logout">Déconnexion</a>
-                </li>
-                {% else %}
-                 <li class="nav-item" data-show="disconnected">
-                    <a class="nav-link text-white" href="/login">Connexion/Inscription</a>
-                </li>
+                    <li class="nav-item" data-show="connected">
+                        <a class="nav-link text-white" href="/logout">Déconnexion</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item" data-show="disconnected">
+                        <a class="nav-link text-white" href="/login">Connexion/Inscription</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>

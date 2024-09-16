@@ -52,6 +52,7 @@ class NoticeController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $noticeRepository->saveNotice($notice, true);
 
             return $this->redirectToRoute('app_admin_notice_index', [], Response::HTTP_SEE_OTHER);
