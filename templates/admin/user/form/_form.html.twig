@@ -22,7 +22,11 @@
 
         {{ form_row(form.firstname) }}
         {{ form_row(form.lastname) }}
-        {{ form_row(form.roles) }}
+
+         {% if form.roles is defined %}
+            {{ form_row(form.roles) }}
+        {% endif %}
+
         {{ form_row(form.email) }}
         {{ form_row(form.address) }}
         {{ form_row(form.phone) }}
