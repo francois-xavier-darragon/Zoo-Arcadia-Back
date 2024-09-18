@@ -389,31 +389,53 @@ class ManageDatabaseCommand extends Command
     // add relation ManytoMany
     private function updateManyToManyColumn($meta, $associationMapping): void
     {
-        $createdTables = [];
-
         $sourceTableName = $meta->getTableName();
         $targetEntityMeta = $this->entityManager->getClassMetadata($associationMapping['targetEntity']);
         $targetTableName = $targetEntityMeta->getTableName();
 
-        $sortedTables = [$sourceTableName, $targetTableName];
-        sort($sortedTables);
-        $joinTableName = implode('_', $sortedTables);
+        $nullable = $this->isAssociationNullable($associationMapping);
 
-        if (!in_array($joinTableName, $createdTables)) {
-            $createdTables[] = $joinTableName;
-            $sourceColumnName = strtolower($sourceTableName) . '_id';
-            $targetColumnName = strtolower($targetTableName) . '_id';
+        if (isset($associationMapping['joinTable']) && isset($associationMapping['joinTable']['name'])) {
+            $joinTableName = $associationMapping['joinTable']['name'];
+        } else {
+            $sortedTables = [$sourceTableName, $targetTableName];
+            sort($sortedTables);
+            $joinTableName = implode('_', $sortedTables);
+        }
+      
+        $defaultJoinTableName = $sourceTableName . '_' . $targetTableName;
+    
+        // If the default table exists and it is different from the custom table, delete it
+        if ($joinTableName !== $defaultJoinTableName && $this->existsTableOrColumn($defaultJoinTableName)) {
+            $this->dropTable($defaultJoinTableName);
+        }
 
-            $nullable = $this->isAssociationNullable($associationMapping);
+        $sourceColumnName = strtolower($sourceTableName) . '_id';
+        $targetColumnName = strtolower($targetTableName) . '_id';
 
-            if (!$this->existsTableOrColumn($joinTableName)) {
-                $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName, );
-            } else {
-                $this->checkAndAddColumns($joinTableName, [
-                    ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName, 'nullable' => $nullable],
-                    ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName, 'nullable' => $nullable]
-                ]);
+        // Create or update the join table
+        if (!$this->existsTableOrColumn($joinTableName)) {
+            $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName);
+            echo "Table de jointure $joinTableName créée.\n";
+        } else {
+            $this->checkAndAddColumns($joinTableName, [
+                ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName, 'nullable' => $nullable],
+                ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName, 'nullable' => $nullable]
+            ]);
+        }
+
+        // Check if other join tables exist for this relationship and remove them
+        $otherPossibleTableNames = [
+            $sourceTableName . '_' . $targetTableName,
+            $targetTableName . '_' . $sourceTableName,
+        ];
+     
+        foreach ($otherPossibleTableNames as $tableName) {
+           
+            if ($tableName !== $joinTableName && $this->existsTableOrColumn($tableName)) {
+                $this->dropTable($tableName);
             }
+            
         }
     }
 
@@ -608,5 +630,29 @@ class ManageDatabaseCommand extends Command
             // Re-enable foreign key constraints
             $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
         }
+    }
+
+    private function dropTable($tableName): void
+    {
+        $sql = "DROP TABLE IF EXISTS `$tableName`";
+        
+        try {
+            $this->databaseService->query($sql);
+           
+            $checkSql = "SHOW TABLES LIKE '$tableName'";
+            // $result = $this->databaseService->query($checkSql)->fetchAll();
+            
+            // if (empty($result)) {
+            //     echo "La table $tableName a été supprimée avec succès.";
+            // } else {
+            //     echo "La table $tableName existe toujours après la tentative de suppression.";
+            // }
+        
+
+        } catch (\PDOException $e) {
+            
+            throw new \RuntimeException("Failed to drop table $tableName: " . $e->getMessage());
+        }
+        
     }
 }
