@@ -5,7 +5,8 @@ namespace App\Entity;
 use App\Entity\Trait\SoftDeletableTrait;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\FoodAdministrationRepository;
-use Doctrine\DBAL\Types\Types;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FoodAdministrationRepository::class)]
@@ -20,9 +21,6 @@ class FoodAdministration
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'foodAdministrations')]
-    private ?Food $food = null;
-
-    #[ORM\ManyToOne(inversedBy: 'foodAdministrations')]
     private ?User $administeredBy = null;
 
     #[ORM\Column(nullable: true)]
@@ -34,21 +32,21 @@ class FoodAdministration
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $notes = null;
 
+    /**
+     * @var Collection<int, Food>
+     */
+    #[ORM\ManyToMany(targetEntity: Food::class, mappedBy: 'foodAdministrations')]
+    #[ORM\JoinTable(name: 'food_administration_link')]
+    private Collection $food;
+
+    public function __construct()
+    {
+        $this->food = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getFood(): ?Food
-    {
-        return $this->food;
-    }
-
-    public function setFood(?Food $food): static
-    {
-        $this->food = $food;
-
-        return $this;
     }
 
     public function getAdministeredBy(): ?User
@@ -95,6 +93,33 @@ class FoodAdministration
     public function setNotes(?string $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Food>
+     */
+    public function getFood(): Collection
+    {
+        return $this->food;
+    }
+
+    public function addFood(Food $food): static
+    {
+        if (!$this->food->contains($food)) {
+            $this->food->add($food);
+            $food->addFoodAdministration($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFood(Food $food): static
+    {
+        if ($this->food->removeElement($food)) {
+            $food->removeFoodAdministration($this);
+        }
 
         return $this;
     }

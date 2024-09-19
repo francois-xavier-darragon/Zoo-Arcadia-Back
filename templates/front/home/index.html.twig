@@ -13,7 +13,7 @@
                    <p class="text-dark">Merci de rejoindre notre mission de sauvegarde de la biodiversité et de célébrer avec nous la beauté du monde naturel. Nous vous souhaitons une visite inoubliable au cœur de la nature et de la légende.</p></p>
                 </div>
                 <div class="text-start pt-4">
-                    <a href="#" class="btn btn-gradiant">En savoir plus</a>
+                    <a href="{{path('app_learn_more')}}" class="btn btn-gradiant">En savoir plus</a>
                 </div>
             </div>
             <div class="col-12 col-md-6 mb-4 mb-md-0"> 
@@ -192,11 +192,9 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
 
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <div class="text-start pt-4">
-                <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
-            </div>
-        {% endif %}
+        <div class="text-start pt-4">
+            <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
+        </div>
     </div>
 </article>
 {% endblock %}

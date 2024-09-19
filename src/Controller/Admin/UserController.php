@@ -8,6 +8,7 @@ use App\Form\UserType;
 use App\Repository\ImageRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,7 +47,8 @@ class UserController extends AbstractController
         $user = new User();
         $form = $this->createForm(UserType::class, $user, [
             'is_new'  => true,
-            'is_edit' => false
+            'is_edit' => false,
+            'show_role_field' => true
         ]);
         
         $form->handleRequest($request);
@@ -75,13 +77,17 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function edit(Request $request, User $user, UserRepository $userRepository, Security  $security, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $passwordHasher): Response
     {
+        $currentUser = $security->getUser();
+        $showRoleField = !($currentUser === $user && in_array('ROLE_ADMIN', $currentUser->getRoles()));
+
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
         $form = $this->createForm(UserType::class, $user, [
             'is_new' => false,
-            'is_edit' => true
+            'is_edit' => true,
+            'show_role_field' => $showRoleField,
         ]);
 
         $form->handleRequest($request);
@@ -94,9 +100,11 @@ class UserController extends AbstractController
                $user->setAvatar($avatarFile);
             }
 
-            $roles[]= $form->get('roles')->getdata();
-            $user->setRoles($roles);
-
+            if($form->has('roles')) {
+                $roles[]= $form->get('roles')->getdata();
+                $user->setRoles($roles);
+            }
+            
             $password = $form->get('plainpassword')->get('password')->getdata();
          
             if($password != null) {

@@ -42,7 +42,7 @@ class Food
     /**
      * @var Collection<int, FoodAdministration>
      */
-    #[ORM\OneToMany(targetEntity: FoodAdministration::class, mappedBy: 'food')]
+    #[ORM\ManyToMany(targetEntity: FoodAdministration::class, inversedBy: 'food')]
     private Collection $foodAdministrations;
 
     public function __construct()
@@ -139,7 +139,6 @@ class Food
     {
         if (!$this->foodAdministrations->contains($foodAdministration)) {
             $this->foodAdministrations->add($foodAdministration);
-            $foodAdministration->setFood($this);
         }
 
         return $this;
@@ -147,12 +146,7 @@ class Food
 
     public function removeFoodAdministration(FoodAdministration $foodAdministration): static
     {
-        if ($this->foodAdministrations->removeElement($foodAdministration)) {
-            // set the owning side to null (unless already changed)
-            if ($foodAdministration->getFood() === $this) {
-                $foodAdministration->setFood(null);
-            }
-        }
+        $this->foodAdministrations->removeElement($foodAdministration);
 
         return $this;
     }

@@ -30,7 +30,7 @@ export function newImage(btnEdit, imgElement, editUrl){
     });
 }
 
-export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg, div) {
+export function removeExistingImage(removeButton, id, url, path, btnToHide, existingImg) {
     removeButton.addEventListener("click", function() {
         
         const imageId = existingImg.dataset.imgId
@@ -62,8 +62,6 @@ export function removeExistingImage(removeButton, id, url, path, btnToHide, exis
 
                 btnToHide.classList.remove('d-none');
                 removeButton.classList.add('d-none');
-
-                div.remove();
 
             } else {
                 alert(data.message);
