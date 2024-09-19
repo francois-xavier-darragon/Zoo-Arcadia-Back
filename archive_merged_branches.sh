@@ -27,27 +27,30 @@ display_merged_branches() {
     echo
 }
 
-# Function to create an archive tag for a branch
-archive_branch() {
+# Function to create or update an annotated archive tag for a branch
+update_archive_tag() {
     branch_name=$1
     tag_name="archive/$branch_name"
     
-    echo -e "${YELLOW}Vérification du tag d'archive pour la branche : $branch_name${NC}"
+    echo -e "${YELLOW}Mise à jour du tag d'archive pour la branche : $branch_name${NC}"
+    
+    git fetch origin $branch_name
+    
+    # Get list of commits
+    commit_list=$(git log --oneline develop..origin/$branch_name)
+    
+    # Create the tag message
+    tag_message="Archive de la branche $branch_name\n\nListe des commits :\n$commit_list"
     
     # Check if the tag already exists
     if git rev-parse -q --verify "refs/tags/$tag_name" >/dev/null; then
-        echo -e "${YELLOW}Le tag '$tag_name' existe déjà. Aucune action nécessaire.${NC}"
-        return 0
-    fi
-    
-    echo -e "${YELLOW}Création d'un tag d'archive pour la branche : $branch_name${NC}"
-    
-    git fetch origin $branch_name
-    if git tag $tag_name origin/$branch_name; then
-        echo -e "${GREEN}Tag '$tag_name' créé pour la branche '$branch_name'.${NC}"
+        # Update existing tag
+        git tag -f -a $tag_name -m "$tag_message" origin/$branch_name
+        echo -e "${GREEN}Tag annoté '$tag_name' mis à jour pour la branche '$branch_name'.${NC}"
     else
-        echo -e "${RED}Erreur lors de la création du tag pour '$branch_name'.${NC}"
-        return 1
+        # Create a new tag
+        git tag -a $tag_name -m "$tag_message" origin/$branch_name
+        echo -e "${GREEN}Nouveau tag annoté '$tag_name' créé pour la branche '$branch_name'.${NC}"
     fi
 }
 
@@ -70,34 +73,27 @@ main() {
     
     display_merged_branches
     
-    read -p "Voulez-vous créer des tags d'archive pour ces branches ? (o/n) " confirm_archive
+    read -p "Voulez-vous créer ou mettre à jour des tags d'archive annotés pour ces branches ? (o/n) " confirm_archive
     if [[ $confirm_archive != [oO] ]]; then
         echo -e "${YELLOW}Opération annulée.${NC}"
         exit 0
     fi
     
-    new_tags_created=false
     for branch in $merged_branches; do
         if [ ! -z "$branch" ]; then
-            archive_branch $branch
-            if [ $? -eq 0 ]; then
-                new_tags_created=true
-            fi
+            update_archive_tag $branch
         fi
     done
     
-    if $new_tags_created; then
-        if git push origin --tags; then
-            echo -e "${GREEN}Les nouveaux tags d'archive ont été poussés vers le dépôt distant.${NC}"
-        else
-            echo -e "${RED}Erreur lors de la poussée des tags vers le dépôt distant.${NC}"
-        fi
+    if git push origin --tags -f; then
+        echo -e "${GREEN}Les tags d'archive ont été poussés vers le dépôt distant.${NC}"
     else
-        echo -e "${YELLOW}Aucun nouveau tag n'a été créé. Rien à pousser vers le dépôt distant.${NC}"
+        echo -e "${RED}Erreur lors de la poussée des tags vers le dépôt distant.${NC}"
     fi
     
-    echo -e "${GREEN}Opération terminée. Des tags d'archive ont été créés pour les branches mergées dans develop qui n'en avaient pas encore.${NC}"
+    echo -e "${GREEN}Opération terminée. Les tags d'archive ont été créés ou mis à jour pour les branches mergées dans develop.${NC}"
     echo -e "${YELLOW}N'oubliez pas que vous devrez supprimer manuellement les branches si nécessaire.${NC}"
+    echo -e "${YELLOW}Pour voir le contenu d'un tag annoté, utilisez 'git show archive/nom_de_branche'.${NC}"
 }
 
 # Run the script
