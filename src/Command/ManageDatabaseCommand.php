@@ -639,16 +639,6 @@ class ManageDatabaseCommand extends Command
         try {
             $this->databaseService->query($sql);
            
-            $checkSql = "SHOW TABLES LIKE '$tableName'";
-            // $result = $this->databaseService->query($checkSql)->fetchAll();
-            
-            // if (empty($result)) {
-            //     echo "La table $tableName a été supprimée avec succès.";
-            // } else {
-            //     echo "La table $tableName existe toujours après la tentative de suppression.";
-            // }
-        
-
         } catch (\PDOException $e) {
             
             throw new \RuntimeException("Failed to drop table $tableName: " . $e->getMessage());
