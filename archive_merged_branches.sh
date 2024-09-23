@@ -5,44 +5,62 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-get_sorted_merged_branches() {
-    git for-each-ref --sort=committerdate refs/remotes/origin/ --format='%(refname:short)' |
-    grep -v "origin/develop" | grep -v "origin/main" | grep -v "origin/HEAD" |
-    while read branch; do
-        if git merge-base --is-ancestor $branch develop; then
-            echo "$branch"
-        fi
-    done | sed 's/origin\///'
+get_all_archive_tags() {
+    git tag -l "archive/*" | sed 's/archive\///'
 }
 
-display_merged_branches() {
-    echo -e "${YELLOW}Branches distantes mergées dans develop (de la plus ancienne à la plus récente) :${NC}"
-    for branch in $merged_branches; do
-        last_commit_date=$(git log -1 --format=%cd --date=short origin/$branch)
-        echo "$last_commit_date - $branch"
-    done
-    echo
+get_merged_branches() {
+    git for-each-ref --format='%(refname:short)' refs/remotes/origin/ |
+    grep -vE "origin/(develop|main|HEAD)" |
+    sed 's/origin\///'
+}
+
+display_branches() {
+    local branches="$1"
+    local message="$2"
+    
+    if [ ! -z "$branches" ]; then
+        echo -e "${YELLOW}$message${NC}"
+        for branch in $branches; do
+            local date=$(git log -1 --format=%cd --date=short develop --grep="Merge pull request .* from .*/$branch" || 
+                         echo "Date inconnue")
+            echo "$date - $branch"
+        done
+        echo
+    fi
 }
 
 archive_branch() {
-    branch_name=$1
+    local branch_name=$1
+    local tag_name="archive/$branch_name"
     
-    echo -e "${YELLOW}Création d'un tag d'archive pour la branche : $branch_name${NC}"
+    echo -e "${YELLOW}Traitement de la branche : $branch_name${NC}"
     
-    git fetch origin $branch_name
+
+    local merge_commit=$(git log --merges -1 --grep="Merge pull request .* from .*/$branch_name" develop --format=%H)
     
-    commit_list=$(git log --oneline develop..origin/$branch_name)
+    if [ -z "$merge_commit" ]; then
+        echo -e "${RED}Impossible de trouver un commit de merge pour la branche '$branch_name'. Ignorée.${NC}"
+        return 0
+    fi
     
-    tag_message="Archive de la branche $branch_name
+ 
+    local commit_list=$(git log --oneline $merge_commit^2..$merge_commit^1 --format="%h %s")
+    
+    local tag_message=$(cat << EOF
+Archive de la branche $branch_name
 
 Liste des commits :
-$commit_list"
+$commit_list
+EOF
+)
     
-    if git tag -a "archive/$branch_name" -m "$tag_message" origin/$branch_name; then
-        echo -e "${GREEN}Tag 'archive/$branch_name' créé pour la branche '$branch_name'.${NC}"
-    else
-        echo -e "${RED}Erreur lors de la création du tag pour '$branch_name'.${NC}"
+    if git tag -f -a "$tag_name" -m "$tag_message" $merge_commit; then
+        echo -e "${GREEN}Tag '$tag_name' créé ou mis à jour pour la branche '$branch_name'.${NC}"
         return 1
+    else
+        echo -e "${RED}Erreur lors de la création ou mise à jour du tag pour '$branch_name'.${NC}"
+        return 2
     fi
 }
 
@@ -55,35 +73,43 @@ main() {
     fi
     git pull origin develop
     
-    merged_branches=$(get_sorted_merged_branches)
+    local current_branches=$(get_merged_branches)
+    local archive_tags=$(get_all_archive_tags)
+    local all_branches=$(echo -e "${current_branches}\n${archive_tags}" | sort -u)
     
-    if [ -z "$merged_branches" ]; then
-        echo -e "${YELLOW}Aucune branche mergée dans develop n'a été trouvée.${NC}"
+    display_branches "$current_branches" "Branches actuellement présentes sur le dépôt distant :"
+    display_branches "$(echo "$all_branches" | grep -vxF -f <(echo "$current_branches"))" "Branches précédemment mergées et supprimées :"
+    
+    if [ -z "$all_branches" ]; then
+        echo -e "${YELLOW}Aucune branche à archiver n'a été trouvée.${NC}"
         exit 0
     fi
     
-    display_merged_branches
-    
-    read -p "Voulez-vous créer des tags d'archive pour ces branches ? (o/n) " confirm_archive
+    read -p "Voulez-vous créer ou mettre à jour des tags d'archive pour ces branches ? (o/n) " confirm_archive
     if [[ $confirm_archive != [oO] ]]; then
         echo -e "${YELLOW}Opération annulée.${NC}"
         exit 0
     fi
     
-    for branch in $merged_branches; do
-        if [ ! -z "$branch" ]; then
-            archive_branch $branch
+    local tags_updated=false
+    for branch in $all_branches; do
+        archive_branch $branch
+        if [ $? -eq 1 ]; then
+            tags_updated=true
         fi
     done
     
-    if git push origin --tags; then
-        echo -e "${GREEN}Les tags d'archive ont été poussés vers le dépôt distant.${NC}"
+    if $tags_updated; then
+        if git push origin --tags -f; then
+            echo -e "${GREEN}Les tags d'archive ont été poussés vers le dépôt distant.${NC}"
+        else
+            echo -e "${RED}Erreur lors de la poussée des tags vers le dépôt distant.${NC}"
+        fi
     else
-        echo -e "${RED}Erreur lors de la poussée des tags vers le dépôt distant.${NC}"
+        echo -e "${YELLOW}Aucun nouveau tag créé ou mis à jour. Rien à pousser vers le dépôt distant.${NC}"
     fi
     
-    echo -e "${GREEN}Opération terminée. Des tags d'archive ont été créés pour toutes les branches mergées dans develop.${NC}"
-    echo -e "${YELLOW}N'oubliez pas que vous devrez supprimer manuellement les branches si nécessaire.${NC}"
+    echo -e "${GREEN}Opération terminée. Des tags d'archive ont été créés ou mis à jour pour toutes les branches mergées dans develop.${NC}"
 }
 
 main
