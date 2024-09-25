@@ -38,7 +38,7 @@ class HabitatType extends AbstractType
             ])
             ->add('shortdescription', TextType::class, [
                 'required' => true,
-                'label' => 'Description court',
+                'label' => 'Description courte',
                 'label_attr' => [
                     'class' => 'col-lg-4 col-form-label required fw-semibold fs-6'
                 ],

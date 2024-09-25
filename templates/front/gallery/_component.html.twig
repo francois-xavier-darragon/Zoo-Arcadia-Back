@@ -6,7 +6,7 @@
                     <div class="card-header">
                         <h5 class="card-title">{{ item.name }}</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body card-habitat">
                         <div class="image-gallery">
                             {% for image in item.images %}
                                 <img src="{{ asset('uploads/images/' ~ currentType ~ '/' ~ image.name) }}" alt="{{ 'Image de ' ~ item.name }}">

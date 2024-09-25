@@ -230,16 +230,6 @@ p, .health {
     background-color: $secondary;
 }
 
-// td {
-//     white-space: nowrap;
-// }
-
-// td .badge {
-//     display: block;
-//     margin: 0 auto;
-//     max-width: fit-content;
-// }
-
 .habitat-select {
     min-width: 120px;
     max-width: 250px;
@@ -371,7 +361,7 @@ p, .health {
     width: 300px;
 }
 
-.card-habitat, .card-enclose, .card-notice, .card-description .gallery{
+.card-habitat, .card-enclose, .card-notice, .card-description, .gallery{
     border: 1px solid;
     border-color: $secondary;
 }
@@ -471,4 +461,10 @@ p, .health {
 
 .image-gallery img {
     max-width: 400px;
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1140px;
+    }
 }

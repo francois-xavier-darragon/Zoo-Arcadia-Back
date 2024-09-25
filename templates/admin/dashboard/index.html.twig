@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Acceuil{% endblock %}
+{% block title %}DashBoard{% endblock %}
 
 {% block body %}
 
@@ -9,7 +9,7 @@
         {% if topAnimal %}
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
-                    <h2 class="mb-0">Animal qui plait le plus : <span class="fw-bold">{{ topAnimal.name }}</span></h2>
+                    <h2 class="mb-0">En vedette : <span class="fw-bold">{{ topAnimal.name }}</span></h2>
                     <p class="mb-0 mt-2">Nombre de vues : <span class="fw-bold">{{ topAnimal.numberViews }}</span></p>
                 </div>
                 <div class="ms-3">

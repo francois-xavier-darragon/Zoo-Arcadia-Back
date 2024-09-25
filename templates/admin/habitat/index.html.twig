@@ -12,8 +12,8 @@
                     <tr>
                         <th class="w-15 text-start">Images</th>
                         <th class="w-20 text-start">Nom</th>
-                        <th class="w-15 text-center">Liste des animaux</th>
                         <th class="w-15 text-center">Liste des enclos</th>
+                        <th class="w-15 text-center">Liste des animaux</th>
                         <th class="w-15 text-end">Actions</th>
                     </tr>
                 </thead>
@@ -25,27 +25,31 @@
                         </td>
                         <td class="text-start">{{ habitat.name }}</td>
                         <td class="text-center">
-                            {% if habitat.animals|length > 0 %}
-                                <select class="form-select-sm custom-select habitat-select" aria-label="Liste des animaux">
-                                    <option selected disabled hidden>voir la liste</option>
-                                    {% for animal in habitat.animals %}
-                                        <option disabled>{{ animal.name }}</option>
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <span>Aucun animal</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
                             {% if habitat.enclosures|length > 0 %}
                                 <select class="form-select-sm custom-select habitat-select" aria-label="Liste des enclos">
                                     <option selected disabled hidden>voir la liste</option>
                                     {% for enclosure in habitat.enclosures %}
-                                        <option disabled>{{ enclosure.name }}</option>
+                                        <option value="{{ path('app_admin_enclosure_edit', {'enclosure': enclosure.id}) }}">
+                                            {{ enclosure.name }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             {% else %}
                                 <span>Aucun enclos</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if habitat.animals|length > 0 %}
+                                <select class="form-select-sm custom-select habitat-select" aria-label="Liste des animaux">
+                                    <option selected hidden>voir la liste</option>
+                                    {% for animal in habitat.animals %}
+                                        <option title="éditer" value="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
+                                            {{ animal.name }} 
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <span>Aucun animal</span>
                             {% endif %}
                         </td>
                         <td class="text-end">
@@ -78,6 +82,15 @@
 <script>
     const selects = document.querySelectorAll('.habitat-select');
     manageWidthSelect(selects)
+
+    selects.forEach(function(select) {
+        select.addEventListener('change', function() {
+            var selectedOption = this.options[this.selectedIndex];
+            if (selectedOption.value) {
+                window.location.href = selectedOption.value;
+            }
+        });
+    });
 </script>
 
 {% endblock %}
