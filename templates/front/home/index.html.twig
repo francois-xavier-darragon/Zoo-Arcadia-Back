@@ -63,24 +63,24 @@
         </div>
         <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
             <div class="carousel-inner">
-               {% set animals_batches = animals|batch(4) %}
+               {% set enclosures_batches = enclosures|batch(4) %}
                {% set previous_batch = [] %}
 
-               {% for batch in animals_batches %}
+               {% for batch in enclosures_batches %}
                     {% if previous_batch and batch|length < 4 %}
                         {% set batch = batch|merge(previous_batch|slice(0, 4 - batch|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="row">
-                            {% for animal in batch %}
+                            {% for enclosure in batch %}
                                 <div class="animal-card col-12 col-md-3 mb-4 d-flex">
                                     <div class="card card-enclose h-100 d-flex flex-column">
-                                        <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt={{ animal.breed }}>
+                                        <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
                                          <div class="card-body d-flex flex-column">
-                                            <h5 class="card-title">Enclos des {{ animal.breed }}s</h5>
-                                            <p class="card-text text-dark flex-grow-1">{{animal.enclosure.shortdescription}}</p>
+                                            <h5 class="card-title">{{ enclosure.name }}</h5>
+                                            <p class="card-text text-dark flex-grow-1">{{enclosure.shortdescription}}</p>
                                             <div class="mt-auto">
-                                                <a href="{{path('app_enclosure_show', {'id': animal.id})}}" class="btn btn-gradiant">Consulter</a>
+                                                <a href="{{path('app_enclosure_show', {'id': enclosure.id})}}" class="btn btn-gradiant">Consulter</a>
                                             </div>
                                         </div>
                                     </div>
