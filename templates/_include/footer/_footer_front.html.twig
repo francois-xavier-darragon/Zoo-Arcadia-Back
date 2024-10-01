@@ -11,17 +11,38 @@
                       <li class="nav-item mb-2">
                           <a class="nav-link text-white" href="/">Accueil</a>
                       </li>
-                      <li class="nav-item mb-2">
-                          <a class="nav-link text-white" href="/habitats">Habitats</a>
-                      </li>
-                      <li class="nav-item mb-2">
-                          <a class="nav-link text-white" href="/services">Services</a>
-                      </li>
-                      <li class="nav-item mb-2" data-show="visitor">
-                          <a class="nav-link text-white" href="/contact">Nous contacter</a>
-                      </li>
+                      <li class="nav-item dropdown">
+                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            habitats
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {% for habitat in habitats %}
+                                <li><a class="dropdown-item text-white" href="{{path('app_habitat_show', {'id': habitat.id})}}">{{ habitat.name }} </a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Enclos
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            {% for enclosure in enclosures %}
+                                <li><a class="dropdown-item text-white" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }} </a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{path('app_service_show')}}" role="button" aria-expanded="false">
+                            Services
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{path('app_gallery')}}" role="button" aria-expanded="false">
+                            Gallerie
+                        </a>
+                    </li>
                       <li class="nav-item mb-2" data-show="connected">
-                          <a class="nav-link text-white" href="/account">Mon compte</a>
+                          <a class="nav-link text-white" href="/contact">Nous contacter</a>
                       </li>
                   </ul>
               </div>

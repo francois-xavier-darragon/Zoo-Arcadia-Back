@@ -4,7 +4,7 @@
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.1",
+        "php": ">=8.2",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-pdo": "*",
@@ -13,6 +13,7 @@
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.12",
         "doctrine/doctrine-migrations-bundle": "^3.3",
+        "doctrine/mongodb-odm-bundle": "^4.5",
         "doctrine/orm": "^3.2",
         "gedmo/doctrine-extensions": "^3.14",
         "mailjet/mailjet-apiv3-php": "^1.6",
@@ -64,7 +65,7 @@
             "symfony/runtime": true
         },
         "platform": {
-         "php": "8.1.0"
+         "php": "8.2.24"
        },
         "sort-packages": true
     },
