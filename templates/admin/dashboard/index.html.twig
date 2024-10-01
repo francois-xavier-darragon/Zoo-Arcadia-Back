@@ -10,7 +10,7 @@
             <div class="d-flex align-items-center">
                 <div class="flex-grow-1">
                     <h2 class="mb-0">En vedette : <span class="fw-bold">{{ topAnimal.name }}</span></h2>
-                    <p class="mb-0 mt-2">Nombre de vues : <span class="fw-bold">{{ topAnimal.numberViews }}</span></p>
+                    <p class="mb-0 mt-2">Nombre de vues : <span class="fw-bold">{{ nbviews }}</span></p>
                 </div>
                 <div class="ms-3">
                     <img src="{{ topAnimal.images|first ? uploaderHelper.asset(topAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" 
