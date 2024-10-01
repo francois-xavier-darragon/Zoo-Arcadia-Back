@@ -20,7 +20,7 @@ class DashBoardController extends AbstractController
     public function index(NoticeRepository $noticeRepository, AnimalRepository $animalRepository, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper, int $page = 1,): Response
     {
         $topAnimal = $animalRepository->findMostViewedAnimal();
-        // dd($topAnimal);
+
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
         $itemsPerPage = 10;
         $paginationData = $paginationService->paginate($notices, $page, $itemsPerPage);

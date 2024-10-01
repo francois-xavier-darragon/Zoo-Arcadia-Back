@@ -61,13 +61,6 @@ class AnimalRepository extends ServiceEntityRepository
         $this->genericRepository->remove(Animal::class, $entity, $flush);
     }
 
-    // Methode to icrement view
-    public function incrementViewCount(Animal $animal): void
-    {
-        $animal->setNumberViews($animal->getNumberViews() + 1);
-        $this->getEntityManager()->flush();
-    }
-
     // Methode to find most view animal with mongoDB
     public function findMostViewedAnimal(): ?Animal
     {
