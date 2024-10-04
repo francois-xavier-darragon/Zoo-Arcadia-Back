@@ -1,0 +1,11 @@
+{
+    "AnimalViews": [
+        {
+            "_id": {
+                "$oid": "66fe306c9a2a7a2cdf01e4b2"
+            },
+            "animalId": 2,
+            "views": 1
+        }
+    ]
+}

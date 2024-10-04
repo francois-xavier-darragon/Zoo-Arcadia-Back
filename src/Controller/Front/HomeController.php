@@ -30,7 +30,7 @@ class HomeController extends AbstractController
         $services = $this->serviceRepository->findAllService();
 
         $topAnimal = $this->animalRepository->findMostViewedAnimal();
-
+        
         return $this->render('front/home/index.html.twig', [
             'habitats'       => $habitats,
             'enclosures'     => $enclosures,

@@ -2,10 +2,12 @@
 
 namespace App\Controller\Admin;
 
+use App\Document\AnimalViews;
 use App\Entity\Notice;
 use App\Repository\AnimalRepository;
 use App\Repository\NoticeRepository;
 use App\Service\PaginationService;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,9 +19,13 @@ class DashBoardController extends AbstractController
 {
     
     #[Route('/{page<\d+>?1}', name: 'app_admin_dashboard', methods: ['GET'])]
-    public function index(NoticeRepository $noticeRepository, AnimalRepository $animalRepository, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper, int $page = 1,): Response
+    public function index(NoticeRepository $noticeRepository, AnimalRepository $animalRepository, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper, DocumentManager $dm, int $page = 1,): Response
     {
         $topAnimal = $animalRepository->findMostViewedAnimal();
+
+        $animalId = $topAnimal->getId();
+
+        $nbviews = $dm->getRepository(AnimalViews::class)->findOneBy(['animalId' => $animalId]);
 
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
         $itemsPerPage = 10;
@@ -40,7 +46,8 @@ class DashBoardController extends AbstractController
             'delete_btn'    => true,
             'uploaderHelper' => $uploaderHelper,
             'arrayStatut' => Notice::STATUT,
-            'topAnimal' => $topAnimal
+            'topAnimal' => $topAnimal,
+            'nbviews' => $nbviews->getViews()
         ]);
     }
 }

@@ -68,8 +68,6 @@ class Animal
     #[ORM\OneToMany(targetEntity: Food::class, mappedBy: 'animal')]
     private Collection $foods;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $numberViews = null;
 
     public function __construct()
     {
@@ -243,18 +241,6 @@ class Animal
                 $food->setAnimal(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getNumberViews(): ?int
-    {
-        return $this->numberViews;
-    }
-
-    public function setNumberViews(?int $numberViews): static
-    {
-        $this->numberViews = $numberViews;
 
         return $this;
     }

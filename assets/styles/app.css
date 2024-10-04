@@ -12187,21 +12187,23 @@ p, .health {
 .badge.status-valid {
   display: inline-block;
   padding: 0.35em 0.65em;
-  font-size: 0.75em;
-  font-weight: 700;
   line-height: 1;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
   border-radius: 10rem;
   display: flex;
   flex-direction: column;
   position: relative;
   top: 20px;
   width: 90px;
-  left: 55px;
+  left: 83px;
 }
 
+@media (max-width: 500px) {
+  .badge.status-pending,
+  .badge.status-refused,
+  .badge.status-valid {
+    left: 0px;
+  }
+}
 .badge.status-pending {
   color: #fff;
   background-color: #d44747;
@@ -12217,13 +12219,6 @@ p, .health {
   background-color: #B6D438;
 }
 
-td .badge {
-  display: block;
-  margin: 0 auto;
-  max-width: -moz-fit-content;
-  max-width: fit-content;
-}
-
 .habitat-select {
   min-width: 120px;
   max-width: 250px;
@@ -12231,10 +12226,6 @@ td .badge {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-td {
-  white-space: nowrap;
 }
 
 .custom-select {
@@ -12360,7 +12351,7 @@ td {
   width: 300px;
 }
 
-.card-habitat, .card-enclose, .card-notice, .card-description .gallery {
+.card-habitat, .card-enclose, .card-notice, .card-description, .gallery {
   border: 1px solid;
   border-color: #B6D438;
 }
@@ -12459,4 +12450,10 @@ td {
 
 .image-gallery img {
   max-width: 400px;
+}
+
+@media (min-width: 1400px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+    max-width: 1140px;
+  }
 }/*# sourceMappingURL=app.css.map */
