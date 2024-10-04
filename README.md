@@ -15,12 +15,14 @@ bin/console app:manage-database update
 # Deploiment sur heroku
 avoir un compte heroku
 se connecté  : heroku login
+heroku create "nom-d-application"
 heroku config:get JAWSDB_URL --app "nom-d-application"
-heroku config:get JAWSDB_URL
-heroku config:set APP_ENV=prod
-heroku config:set DATABASE_DRIVER=pdo_mysql
-heroku buildpacks:add --index 1 heroku/nodejs "nom-d-application"
-heroku buildpacks:add --index 2 heroku/php "nom-d-application"
+heroku config:set APP_ENV=prod --app "nom-d-application"
+heroku addons:create ormongo:cat --app "nom-de-votre-application"
+heroku config:set DATABASE_DRIVER=pdo_mysql --app "nom-d-application"
+heroku buildpacks:add --index 1 heroku/nodejs --app "nom-d-application"
+heroku buildpacks:add --index 2 heroku/php --app "nom-d-application"
+git push heroku main
 
 une fois le projet compiler est déployé sur heroku 
 heroku run php bin/console app:manage:database choix 2
