@@ -39,7 +39,6 @@ services:
     App\Command\ManageMongoDBCommand:
         arguments:
             $documentManager: '@doctrine_mongodb.odm.document_manager'
-            $projectDir: '%kernel.project_dir%'
         tags: ['console.command']        
     App\Command\MakeTraitCommand:
         tags: [ 'console.command' ]
