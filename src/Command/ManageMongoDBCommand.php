@@ -55,7 +55,7 @@ class ManageMongoDBCommand extends Command
     private function importDatabase(string $dbName, SymfonyStyle $io): void
     {
         // Load environment variables
-        $mongodbUrl = $_ENV['MONGODB_URL'];
+        $mongodbUrl = $_ENV['MONGODB_URL'] ?? $_ENV['ORMONGO_URL'] ?? $_ENV['MONGODB_URL'];
         $dbName = $_ENV['MONGODB_DB'];
 
         // Extract host and port from MongoDB URL
