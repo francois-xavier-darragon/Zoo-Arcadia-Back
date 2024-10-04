@@ -86,14 +86,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
             details.forEach(detail => {
                 if (detail.id === `animal-${animalId}`) {
-                    console.log(detail.classList)
                     detail.classList.remove('d-none');
                 } else {
                     detail.classList.add('d-none');
                 }
             });
+
+            fetch(`/animal/${animalId}`, { method: 'POST' });
         });
     });
+
 });
 </script>
 {% endblock %}

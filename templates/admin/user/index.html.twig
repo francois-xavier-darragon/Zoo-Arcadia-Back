@@ -21,12 +21,12 @@
             {% for user in users %}
                 <tr>
                     <td class="text-start">
-                        <img class="rounded-circle" src="{{ user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="Avatar de l'utilisateur" width="50" height="50">
+                        <img class="rounded-circle" src="{{ user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default-avatar.jpg') }}" alt="Avatar de l'utilisateur" width="50" height="50">
                     </td>
                     <td class="text-center">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.firstName }}</td>
                     {% for role in user.roles %}
-                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_HEALER' or role == 'ROLE_VISITOR' %}
+                        {% if role == 'ROLE_ADMIN' or role == 'ROLE_VETERINARY' or role == 'ROLE_WORKER' %}
                             {% set roleName = allRoles[role] %}
                             <td class="text-center">{{ roleName }}</td>
                         {% endif %}

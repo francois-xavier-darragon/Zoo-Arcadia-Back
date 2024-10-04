@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Notice;
-use App\Form\NoticeType;
+use App\Form\NoticeTypeAdmin;
 use App\Repository\NoticeRepository;
 use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +19,6 @@ class NoticeController extends AbstractController
     #[Route('/{page<\d+>?1}', name: 'app_admin_notice_index', methods: ['GET'])]
     public function index(NoticeRepository $noticeRepository, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper, int $page = 1,): Response
     {
-      
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
         $itemsPerPage = 10;
         $paginationData = $paginationService->paginate($notices, $page, $itemsPerPage);
@@ -49,10 +48,11 @@ class NoticeController extends AbstractController
         $roles = $user->getRoles();
 
         $notice = new Notice();
-        $form = $this->createForm(NoticeType::class, $notice, ['roles' => $roles]);
+        $form = $this->createForm(NoticeTypeAdmin::class, $notice, ['roles' => $roles]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $noticeRepository->saveNotice($notice, true);
 
             return $this->redirectToRoute('app_admin_notice_index', [], Response::HTTP_SEE_OTHER);
@@ -65,12 +65,15 @@ class NoticeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_notice_show', methods: ['GET','POST'])]
+    #[Route('/voir/{id}', name: 'app_admin_notice_show', methods: ['GET','POST'])]
     public function read(Request $request, Notice $notice,NoticeRepository $noticeRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
+        $user =  $this->getUser();
+        $roles = $user->getRoles();
+
         $csrfToken = $csrfTokenManager->getToken('delete-notice' . $notice->getId())->getValue();
 
-        $form = $this->createForm(NoticeType::class, $notice);
+        $form = $this->createForm(NoticeTypeAdmin::class, $notice, ['roles' => $roles]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

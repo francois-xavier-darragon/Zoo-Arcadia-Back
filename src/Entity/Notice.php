@@ -35,6 +35,7 @@ class Notice
     private ?int $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'notices')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     public function __construct()

@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Document\AnimalViews;
 use App\Entity\Animal;
+use Doctrine\ODM\MongoDB\DocumentManager;
 use App\Service\GenericRepositoryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -12,12 +14,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class AnimalRepository extends ServiceEntityRepository
 {
+   
     public function __construct(
         private ManagerRegistry $registry,
         private GenericRepositoryService $genericRepository,
+        private  DocumentManager $dm,
     )
     {
         parent::__construct($registry, Animal::class);
+        $this->dm = $dm;
     }
 
     // method to find a Animal by their identifier (ID)
@@ -55,4 +60,25 @@ class AnimalRepository extends ServiceEntityRepository
     {
         $this->genericRepository->remove(Animal::class, $entity, $flush);
     }
+
+    // Methode to find most view animal with mongoDB
+    public function findMostViewedAnimal(): ?Animal
+    {
+      
+        $animalView = $this->dm->getRepository(AnimalViews::class)
+            ->createQueryBuilder()
+            ->sort('views', 'DESC')
+            ->limit(1)
+            ->getQuery()
+            ->getSingleResult();
+
+        if (!$animalView) {
+            return null;
+        }
+
+        $animalId = $animalView->getAnimalId();
+        
+        return $this->find($animalId);
+    }
+
 }

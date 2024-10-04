@@ -13,11 +13,11 @@
                    <p class="text-dark">Merci de rejoindre notre mission de sauvegarde de la biodiversité et de célébrer avec nous la beauté du monde naturel. Nous vous souhaitons une visite inoubliable au cœur de la nature et de la légende.</p></p>
                 </div>
                 <div class="text-start pt-4">
-                    <a href="#" class="btn btn-gradiant">En savoir plus</a>
+                    <a href="{{path('app_learn_more')}}" class="btn btn-gradiant">En savoir plus</a>
                 </div>
             </div>
             <div class="col-12 col-md-6 mb-4 mb-md-0"> 
-                <img class="w-100 rounded" src="{{ randomAnimal.images|first ? uploaderHelper.asset(randomAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="{{ randomAnimal.breed }}">
+                <img class="w-100 rounded" src="{{ topAnimal.images|first ? uploaderHelper.asset(topAnimal.images|first, 'animalFile') : asset('images/default/default.png') }}" alt="{{ topAnimal.breed }}">
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
                 <h2 class="text-dark">Découvrez nos habitats</p>
             </div>
             <div class="col-12">
-                <p class="text-dark section-title">Explorez les différents habitats de notre parc animalier.</p>
+                <p class="text-dark section-title">Explorez les différents habitats de notre parc animalier</p>
             </div>
         </div>
         <div class="row justify-content-center">    
@@ -58,29 +58,29 @@
                 <h2 class="text-dark">Découvrez nos enclos</p>
             </div>
             <div class="col-12">
-                <p class="text-dark section-title">Venez explorer les différents enclos de notre parc animalier.</p>
+                <p class="text-dark section-title">Venez explorer les différents enclos de notre parc animalier</p>
             </div>
         </div>
         <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
             <div class="carousel-inner">
-               {% set animals_batches = animals|batch(4) %}
+               {% set enclosures_batches = enclosures|batch(4) %}
                {% set previous_batch = [] %}
 
-               {% for batch in animals_batches %}
+               {% for batch in enclosures_batches %}
                     {% if previous_batch and batch|length < 4 %}
                         {% set batch = batch|merge(previous_batch|slice(0, 4 - batch|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="row">
-                            {% for animal in batch %}
+                            {% for enclosure in batch %}
                                 <div class="animal-card col-12 col-md-3 mb-4 d-flex">
                                     <div class="card card-enclose h-100 d-flex flex-column">
-                                        <img src="{{ animal.images|first ? uploaderHelper.asset(animal.images|first, 'animalFile') : asset('images/default/default.png') }}" class="card-img-top" alt={{ animal.breed }}>
+                                        <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
                                          <div class="card-body d-flex flex-column">
-                                            <h5 class="card-title">Enclos des {{ animal.breed }}s</h5>
-                                            <p class="card-text text-dark flex-grow-1">{{animal.enclosure.shortdescription}}</p>
+                                            <h5 class="card-title">{{ enclosure.name }}</h5>
+                                            <p class="card-text text-dark flex-grow-1">{{enclosure.shortdescription}}</p>
                                             <div class="mt-auto">
-                                                <a href="{{path('app_enclosure_show', {'id': animal.id})}}" class="btn btn-gradiant">Consulter</a>
+                                                <a href="{{path('app_enclosure_show', {'id': enclosure.id})}}" class="btn btn-gradiant">Consulter</a>
                                             </div>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
         <div class="row justify-content-center">
             <div class="row row-cols-2 align-items-center">
                 <div class="col-12 col-md-6 mb-4 mb-md-0">
-                    <h2 class=" text-start text-dark">Découvrez les services que nous proposons.</h2>
+                    <h2 class=" text-start text-dark">Découvrez les services que nous proposons</h2>
                     <div class="text-start pt-4">
                        <p class="text-dark">Nous nous engageons à offrir une expérience inoubliable à nos visiteurs tout en promouvant la conservation et l’éducation.</p>
                        <p class="text-dark">Nous proposons des visites guidées animées par nos experts, qui partagent leur passion et leurs connaissances sur les animaux et leurs habitats naturels. Des ateliers interactifs et des conférences sont régulièrement organisés pour sensibiliser petits et grands à la préservation de la faune et de la flore.</p>
@@ -147,7 +147,7 @@
                 <h2 class="text-dark">Nos visiteurs témoignent</h2>
             </div>
             <div class="col-12">
-                <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc.</p>
+                <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc</p>
             </div>
         </div>
         <div id="notice-carousel" class="carousel slide" data-bs-interval="false">   
@@ -192,11 +192,9 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
 
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <div class="text-start pt-4">
-                <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
-            </div>
-        {% endif %}
+        <div class="text-start pt-4">
+            <a href="{{ path('app_notice_new') }}" class="btn btn-gradiant">Laisser un avis</a>
+        </div>
     </div>
 </article>
 {% endblock %}

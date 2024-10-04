@@ -23,9 +23,10 @@ class ManageDatabaseCommand extends Command
     private $entityManager;
     private $databaseService;
     private $databaseUrl;
+    private ?string $selectedFileName = null;
     private $sqlDir;
 
-    public function __construct(EntityManagerInterface $entityManager, DatabaseService $databaseService, string $databaseUrl, string $projectDir)
+    public function __construct(EntityManagerInterface $entityManager, DatabaseService $databaseService, string $databaseUrl,  string $projectDir)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -40,7 +41,7 @@ class ManageDatabaseCommand extends Command
         $this
             ->setDescription('Creates, drops, updates the database, or imports SQL data.')
             ->addArgument('action', InputArgument::OPTIONAL, 'The action to perform: create, drop, update, or import')
-            ->addArgument('filename', InputArgument::OPTIONAL, 'The name of the SQL file to import (without path, required for import action)');
+            ->addArgument('dbname', InputArgument::OPTIONAL, 'The name of the database (for create action)');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -51,7 +52,7 @@ class ManageDatabaseCommand extends Command
         if (!$action) {
             $question = new ChoiceQuestion(
                 'Veuillez sélectionner l\'action à effectuer',
-                ['create', 'drop', 'update', 'import'],
+                ['drop', 'create', 'update', 'import'],
                 0
             );
             $question->setErrorMessage('L\'action %s n\'est pas valide.');
@@ -60,10 +61,42 @@ class ManageDatabaseCommand extends Command
             $input->setArgument('action', $action);
         }
     
+        if ($action === 'create') {
+            $dbName = $input->getArgument('dbname');
+            if (!$dbName) {
+                $dbName = $io->ask('Veuillez entrer le nom de la base de données à créer :');
+                $input->setArgument('dbname', $dbName);
+            }
+        } else {
+            $dbopts = parse_url($this->databaseUrl);
+            $dbName = ltrim($dbopts['path'], '/');
+        }
+
+        if ($action === 'import') {
+    
+            $files = glob($this->sqlDir . '*.sql');
+    
+            if (empty($files)) {
+                $io->error("Aucun fichier SQL trouvé dans le répertoire $this->sqlDir");
+                return Command::FAILURE;
+            }
         
-        if ($action === 'import' && !$input->getArgument('filename')) {
-            $filename = $io->ask('Saisissez le nom du fichier SQL à importer (sans chemin)');
-            $input->setArgument('filename', $filename);
+            $io->section('Fichiers SQL disponibles :');
+            $choices = [];
+            foreach ($files as $file) {
+                $choices[] = basename($file);
+            }
+        
+            $question = new ChoiceQuestion(
+                'Choisissez le fichier à importer',
+                $choices
+            );
+        
+            $question->setErrorMessage('Le fichier %s n\'est pas valide.');
+            
+            $this->selectedFileName = $io->askQuestion($question);
+
+            $io->writeln("Fichier sélectionné : " . $this->selectedFileName);
         }
 
         $dbopts = parse_url($this->databaseUrl);
@@ -81,7 +114,7 @@ class ManageDatabaseCommand extends Command
                     $this->updateDatabase($dbName, $io);
                     break;
                 case 'import':
-                    $filename = $input->getArgument('filename');
+                    $filename = $this->selectedFileName;
                     if (!$filename) {
                         throw new InvalidArgumentException('The SQL filename is required for the import action.');
                     }
@@ -128,7 +161,7 @@ class ManageDatabaseCommand extends Command
         $checkVerifcation = $this->checkVerification($database);
         
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        
+
         // Step 1: Create all tables without relations
         $this->processTables($metadata, 'createTable', $checkVerifcation ,$io);
 
@@ -151,6 +184,11 @@ class ManageDatabaseCommand extends Command
             $tables = $stmtTables->fetchAll(PDO::FETCH_COLUMN);
             
             foreach ($tables as $table) {
+
+                if($table == "doctrine_migration_version") {
+                    continue;
+                }
+
                 $isCombinedTable = false;
 
                 // check if there are join tables
@@ -186,10 +224,11 @@ class ManageDatabaseCommand extends Command
     }
 
     // creation or update process
-    private function processTables(array $metadata, string $method, array $checkVerifcation): void
+    private function processTables(array $metadata, string $method, array $checkVerifcation, SymfonyStyle $io): void
     {
+
         $entityColumns = [];
-        $tablesToSkip = ['file', 'messenger_messages'];
+        $tablesToSkip = ['file'];
 
         // Step 1: Collect column names for each table, skipping specified tables
         foreach ($metadata as $meta) {
@@ -211,88 +250,113 @@ class ManageDatabaseCommand extends Command
                 continue;
             }
 
-
-            $countNumberByTableEntityColumns = [];
+            $entityNameAndPropertyNumber = [];
             foreach($entityColumns as $key => $table) {
-                $countNumberByTableEntityColumns[$key] = count($table);
-            }
-            $countNumberByTableCheckVerifcation = [];
-            foreach($checkVerifcation as $key => $table) {
-                $countNumberByTableCheckVerifcation[$key] = count($table);
+                $entityNameAndPropertyNumber[$key] = count($table);
             }
 
-         //TODO à modifier car les nouvelles colonnes ne sont pas ajouté
-            // Check if the number of tables to process matches the verification array
-            // if(count($entityColumns) != count($checkVerifcation)) {
-                
-                if ($method === 'createTable') {
-                    $this->createTable($meta);
-                } elseif ($method === 'updateTable'){
-                    $this->updateTable($meta);
-                }
-            // }
+            $entityNameAndPropertyNumberInBdd = [];
+            foreach($checkVerifcation as $key => $table) {
+                $entityNameAndPropertyNumberInBdd[$key] = count($table);
+            }
+
+            if ($method === 'createTable') {
+                $this->createTable($meta);
+            } elseif ($method === 'updateTable'){
+                $this->updateTable($meta);
+            }else {
+                $io->success('Database schema not need updated.');
+            }
+
         }
 
         if ($method === 'createTable' && !$this->existsTableOrColumn('doctrine_migration_version')) {
             $this->createDoctrineMigrationVersionTable();
         }
 
+        if ($method === 'createTable' && !$this->existsTableOrColumn('messenger_messages')) {
+            $this->createMessengerMessages();
+        }
+
     }
+
 
     // create table
     private function createTable($meta): void
     {
         $tableName = $meta->getTableName();
-        
+
+        // Check if the table already exists before attempting to create it
+        if ($this->existsTableOrColumn($tableName)) {
+            return;
+        } else {
+
+             // Create the columns for the table
         $columns = [];
         foreach ($meta->getFieldNames() as $fieldName) {
             $fieldMapping = $meta->getFieldMapping($fieldName);
             $columns[] = $this->getColumnDefinition($fieldMapping);
         }
-     
-        // Ensure the id column is a primary key
+
+        // Ensure the first column is a primary key (id)
         $columns[0] = 'id INT NOT NULL AUTO_INCREMENT PRIMARY KEY';
-        
+
+        // Build table creation SQL query
+
         $sql = sprintf('CREATE TABLE %s (%s)', $tableName, implode(', ', $columns));
-        
         $this->databaseService->query($sql);
 
+        }
     }
 
+    // Create obligatory doctrine migration version table  
     private function createDoctrineMigrationVersionTable(): void
     {
-
         $this->databaseService->query('
             CREATE TABLE doctrine_migration_version (
                 version VARCHAR(191) NOT NULL,
-                executed_at DATETIME DEFAULT NULL,
-                executed_time INT DEFAULT NULL,
+                executed_at DATETIME NULL,
+                executed_time INT NULL,
                 PRIMARY KEY(version)
             ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
         ');
     }
 
-    // updates table and add relation ManyToOne, OneToOne or ManyToMany
+    // Create obligatory doctrine messenger messages table 
+    private function createMessengerMessages(): void
+    {
+        $this->databaseService->query('
+            CREATE TABLE messenger_messages (
+                id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                body LONGTEXT NOT NULL,
+                headers LONGTEXT DEFAULT NULL,
+                queue_name VARCHAR(190) NOT NULL,
+                created_at DATETIME NOT NULL,
+                available_at DATETIME NOT NULL,
+                delivered_at DATETIME NULL
+            ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB
+        ');
+    }
+
+    // Update table for association mappings
     private function updateTable($meta): void
     {
         foreach ($meta->getAssociationMappings() as $associationMapping) {
-           
             if ($associationMapping['type'] === ClassMetadata::MANY_TO_ONE || $associationMapping['type'] === ClassMetadata::ONE_TO_ONE) {
-                $columnName = $associationMapping['fieldName'];
+                $columnName = $associationMapping['fieldName'] . '_id';
                 
                 $targetEntityTableName = $this->entityManager->getClassMetadata($associationMapping['targetEntity'])->getTableName();
                 
-                $constraintName = sprintf('FK_%s_%s', $meta->getTableName(), $columnName);
-              
+                $constraintName = sprintf('FK_%s_%s', $meta->getTableName(), $associationMapping['fieldName']);
+            
                 // Determine if the column should allow NULL
                 $nullable = $this->isAssociationNullable($associationMapping);
 
                 // Check if the column exists
                 if (!$this->existsTableOrColumn($meta->getTableName(), $columnName)) {
-                    
                     try {
                         // Add the column and foreign key constraint
-                        $sql = sprintf('ALTER TABLE %s ADD %s_id INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s_id) REFERENCES %s(id)',
+                        $sql = sprintf('ALTER TABLE %s ADD %s INT %s, ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s(id)',
                             $meta->getTableName(), $columnName,
                             $nullable ? 'NULL' : 'NOT NULL',
                             $constraintName, $columnName, $targetEntityTableName
@@ -302,8 +366,20 @@ class ManageDatabaseCommand extends Command
                     } catch (PDOException $e) {
                         echo 'Error: ' . $e->getMessage();
                     }
+                } else {
+                    // Column already exists, check if foreign key constraint exists
+                    if (!$this->foreignKeyExists($meta->getTableName(), $constraintName)) {
+                        try {
+                            // Add only foreign key constraint
+                            $sql = sprintf('ALTER TABLE %s ADD CONSTRAINT %s FOREIGN KEY (%s) REFERENCES %s(id)',
+                                $meta->getTableName(), $constraintName, $columnName, $targetEntityTableName
+                            );
+                            $this->databaseService->query($sql);
+                        } catch (PDOException $e) {
+                            echo 'Error: ' . $e->getMessage();
+                        }
+                    }
                 }
-
             } elseif($associationMapping['type'] === ClassMetadata::MANY_TO_MANY) {
                 $this->updateManyToManyColumn($meta, $associationMapping);
             }
@@ -313,31 +389,53 @@ class ManageDatabaseCommand extends Command
     // add relation ManytoMany
     private function updateManyToManyColumn($meta, $associationMapping): void
     {
-        $createdTables = [];
-
         $sourceTableName = $meta->getTableName();
         $targetEntityMeta = $this->entityManager->getClassMetadata($associationMapping['targetEntity']);
         $targetTableName = $targetEntityMeta->getTableName();
 
-        $sortedTables = [$sourceTableName, $targetTableName];
-        sort($sortedTables);
-        $joinTableName = implode('_', $sortedTables);
+        $nullable = $this->isAssociationNullable($associationMapping);
 
-        if (!in_array($joinTableName, $createdTables)) {
-            $createdTables[] = $joinTableName;
-            $sourceColumnName = strtolower($sourceTableName) . '_id';
-            $targetColumnName = strtolower($targetTableName) . '_id';
+        if (isset($associationMapping['joinTable']) && isset($associationMapping['joinTable']['name'])) {
+            $joinTableName = $associationMapping['joinTable']['name'];
+        } else {
+            $sortedTables = [$sourceTableName, $targetTableName];
+            sort($sortedTables);
+            $joinTableName = implode('_', $sortedTables);
+        }
+      
+        $defaultJoinTableName = $sourceTableName . '_' . $targetTableName;
+    
+        // If the default table exists and it is different from the custom table, delete it
+        if ($joinTableName !== $defaultJoinTableName && $this->existsTableOrColumn($defaultJoinTableName)) {
+            $this->dropTable($defaultJoinTableName);
+        }
 
-            $nullable = $this->isAssociationNullable($associationMapping);
+        $sourceColumnName = strtolower($sourceTableName) . '_id';
+        $targetColumnName = strtolower($targetTableName) . '_id';
 
-            if (!$this->existsTableOrColumn($joinTableName)) {
-                $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName, );
-            } else {
-                $this->checkAndAddColumns($joinTableName, [
-                    ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName, 'nullable' => $nullable],
-                    ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName, 'nullable' => $nullable]
-                ]);
+        // Create or update the join table
+        if (!$this->existsTableOrColumn($joinTableName)) {
+            $this->createJoinTable($joinTableName, $sourceColumnName, $targetColumnName);
+            echo "Table de jointure $joinTableName créée.\n";
+        } else {
+            $this->checkAndAddColumns($joinTableName, [
+                ['columnName' => $sourceColumnName, 'referencedTableName' => $sourceTableName, 'nullable' => $nullable],
+                ['columnName' => $targetColumnName, 'referencedTableName' => $targetTableName, 'nullable' => $nullable]
+            ]);
+        }
+
+        // Check if other join tables exist for this relationship and remove them
+        $otherPossibleTableNames = [
+            $sourceTableName . '_' . $targetTableName,
+            $targetTableName . '_' . $sourceTableName,
+        ];
+     
+        foreach ($otherPossibleTableNames as $tableName) {
+           
+            if ($tableName !== $joinTableName && $this->existsTableOrColumn($tableName)) {
+                $this->dropTable($tableName);
             }
+            
         }
     }
 
@@ -433,6 +531,20 @@ class ManageDatabaseCommand extends Command
         return true;
     }
 
+    // Checks if a specific foreign key constraint already exists
+    private function foreignKeyExists(string $tableName, string $constraintName): bool
+    {
+        $sql = "SELECT COUNT(*) FROM information_schema.TABLE_CONSTRAINTS 
+                WHERE CONSTRAINT_SCHEMA = DATABASE() 
+                AND TABLE_NAME = '$tableName' 
+                AND CONSTRAINT_NAME = '$constraintName' 
+                AND CONSTRAINT_TYPE = 'FOREIGN KEY'";
+        
+        $stmt = $this->databaseService->getConnection()->query($sql);
+        $result = $stmt->fetchColumn();
+        return $result > 0;
+    }
+
     // retrieves the column type and its definition
     private function getColumnDefinition(FieldMapping $fieldMapping): string
     {
@@ -454,6 +566,7 @@ class ManageDatabaseCommand extends Command
         };
     }
 
+    //method to import sql data
     private function importDatabase(string $dbName, string $filePath, SymfonyStyle $io): void
     {
         $this->databaseService->selectDatabase($dbName);
@@ -517,5 +630,19 @@ class ManageDatabaseCommand extends Command
             // Re-enable foreign key constraints
             $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
         }
+    }
+
+    private function dropTable($tableName): void
+    {
+        $sql = "DROP TABLE IF EXISTS `$tableName`";
+        
+        try {
+            $this->databaseService->query($sql);
+           
+        } catch (\PDOException $e) {
+            
+            throw new \RuntimeException("Failed to drop table $tableName: " . $e->getMessage());
+        }
+        
     }
 }

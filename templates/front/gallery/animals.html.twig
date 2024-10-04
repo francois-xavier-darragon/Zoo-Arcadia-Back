@@ -1,0 +1,9 @@
+{% extends 'front/gallery/index.html.twig' %}
+
+{% block gallery_content %}
+{% if currentType == 'animals' %}
+    {% set currentType = 'animaux' %}
+     {{ include('front/gallery/_component.html.twig') }}
+{% endif %}
+   
+{% endblock %}

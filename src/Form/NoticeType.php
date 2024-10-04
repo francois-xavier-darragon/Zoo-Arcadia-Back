@@ -14,8 +14,6 @@ class NoticeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $roles = $options['roles'];
-        // dd($roles);
         $builder
             ->add('nickname', TextType::class, [
                 'required' => true,
@@ -36,23 +34,6 @@ class NoticeType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ]);
-
-
-            if(in_array('ROLE_ADMIN',$roles)){
-                $builder
-                ->add('status', ChoiceType::class, [
-                    'mapped' => false,
-                    'label' => false,
-                    'choices' => array_flip(NOTICE::STATUT),
-                        'label_attr' => [
-                            'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
-                        ],
-                        'attr' => [
-                            'class' => 'form-control form-control-solid',
-                            'data-placeholder' => 'Choisir une race existante'
-                        ],
-                    ]);
-            }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

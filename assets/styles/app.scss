@@ -186,6 +186,7 @@ p, .health {
 .table-fixed {
     table-layout: fixed;
 }
+
 .w-10 { width: 10%; }
 .w-15 { width: 15%; }
 .w-20 { width: 20%; }
@@ -197,19 +198,22 @@ p, .health {
 .badge.status-valid {
     display: inline-block;
     padding: 0.35em 0.65em;
-    font-size: 0.75em;
-    font-weight: 700;
     line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
     border-radius: 10rem;
     display: flex;
     flex-direction: column;
     position: relative;
     top: 20px;
     width: 90px;
-    left: 55px;
+    left: 83px;
+}
+
+@media (max-width: 500px) {
+    .badge.status-pending,
+    .badge.status-refused,
+    .badge.status-valid {
+        left: 0px;
+    }
 }
 
 .badge.status-pending {
@@ -226,12 +230,6 @@ p, .health {
     background-color: $secondary;
 }
 
-td .badge {
-    display: block;
-    margin: 0 auto;
-    max-width: fit-content;
-}
-
 .habitat-select {
     min-width: 120px;
     max-width: 250px;
@@ -239,10 +237,6 @@ td .badge {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-td {
-    white-space: nowrap;
 }
 
 .custom-select {
@@ -320,7 +314,6 @@ td {
     font-size: 20px;
 }
 
-
 .dropdown-menu {
     background-color: $dark; 
 }
@@ -329,7 +322,6 @@ td {
     background-color: #fff; 
     color: #000;
 }
-
 
 .light-dropdown .dropdown-item:hover,
 .light-dropdown .dropdown-item:focus {
@@ -369,7 +361,7 @@ td {
     width: 300px;
 }
 
-.card-habitat, .card-enclose, .card-notice, .card-description  {
+.card-habitat, .card-enclose, .card-notice, .card-description, .gallery{
     border: 1px solid;
     border-color: $secondary;
 }
@@ -465,4 +457,14 @@ td {
 
 .scrollable-text::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+.image-gallery img {
+    max-width: 400px;
+}
+
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1140px;
+    }
 }

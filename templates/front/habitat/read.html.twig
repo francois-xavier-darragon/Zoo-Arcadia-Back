@@ -28,7 +28,7 @@
                     {% set allImages = allImages|merge(habitat.images) %}
                 {% endfor %}
 
-                {# <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'habitatFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}"> #}
+                <img class="w-100 rounded" src="{{ allImages is not empty ? uploaderHelper.asset(random(allImages), 'habitatFile') : asset('images/default/default.png') }}" alt="Image {{ allImages is not empty ? 'aléatoire d\'un animal de l\'enclos' : 'par défaut' }}">
             </div>
         </div>
     </div>

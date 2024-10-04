@@ -4,40 +4,49 @@
 
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
+    <div class="card bg-white bg-opacity-75 shadow" style="border-radius: 15px;">
+        <div class="card-body p-4">
+            <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                Vous êtes connecter en temps que : {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
-            </div>
-        {% endif %}
-    
-            <div class="d-flex">
-                <div style="margin-right: 40px;">
-                    <img class="col-md-6 d-flex align-items-center justify-content-center" style="width: 100%;" src="{{asset('images/ARCADIA.png')}}" alt="log-parc-animalier-arcadia">
-                </div>    
-                
-                <div style="width: 100%;">
-                    <label class='text-white mb-3' for="username">Email</label>
-                    <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control mb-3" autocomplete="email" required autofocus>
-                    <label class='text-white mb-3' for="password">Mot de passe</label>
-                    <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-
-                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                </div>
-            </div>
-
-            <div class="text-center pt-5">
-                <a href="/signin" class="text-white">Vous n'avez pas de compte ? inscrivez-vous ici !</a>
-            </div>
+                {% if app.user %}
+                    <div class="mb-3">
+                        Vous êtes connecté en tant que : {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Déconnexion</a>
+                    </div>
+                {% endif %}
             
-            <div class="d-flex justify-content-end">
-                <button class="btn btn-lg btn-primary mt-4" type="submit">
-                    Connexion
-                </button>
-            </div>
-    </form>
+                <div class="row">
+                    <div class="col-md-5 mb-4 mb-md-0 d-flex align-items-center">
+                        <img class="img-fluid" src="{{asset('images/ARCADIA.png')}}" alt="logo-parc-animalier-arcadia">
+                    </div>    
+                    
+                    <div class="col-md-7">
+                        <div class="mb-3">
+                            <label class="form-label" for="username">Email</label>
+                            <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="password">Mot de passe</label>
+                            <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/contact">Vous n'avez pas de compte ? Faite en la demande ici !</a>
+                </div>
+                
+                <div class="d-flex justify-content-end mt-4">
+                    <button class="btn btn-lg btn-primary" type="submit">
+                        Connexion
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+  
 {% endblock %}
