@@ -12,11 +12,13 @@ class ManageMongoDBCommand extends Command
 {
     protected static $defaultName = 'app:manage:mongodb';
     private $documentManager;
+    private $mongodbUrl;
 
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManager $documentManager,  string $mongodbUrl)
     {
         parent::__construct();
         $this->documentManager = $documentManager;
+        $this->mongodbUrl = $mongodbUrl;
     }
 
     protected function configure()
@@ -29,7 +31,7 @@ class ManageMongoDBCommand extends Command
         $io = new SymfonyStyle($input, $output);
         
         $dbName = $this->chooseDatabase($io);
-        $this->importDatabase($dbName, $io);
+        $this->importDatabase($dbName, $io, $this->mongodbUrl);
 
         return Command::SUCCESS;
     }
@@ -52,12 +54,16 @@ class ManageMongoDBCommand extends Command
         return $io->choice('Sélectionnez une base de données à importer', $dbNames);
     }
 
-    private function importDatabase(string $dbName, SymfonyStyle $io): void
+    private function importDatabase(string $dbName, SymfonyStyle $io, string $mongodbUrl = null): void
     {
-        // Load environment variables
-        $mongodbUrl = $_ENV['MONGODB_URL'] ?? $_ENV['ORMONGO_URL'] ?? $_ENV['MONGODB_URL'];
-        $dbName = $_ENV['MONGODB_DB'];
-
+        // // Load environment variables
+        // $mongodbUrl = $_ENV['MONGODB_URL'] ?? $_ENV['ORMONGO_URL'] ?? $_ENV['MONGODB_URL'];
+        // $dbName = $_ENV['MONGODB_DB'];
+        if (!$mongodbUrl) {
+            // Vous pouvez définir une URL par défaut ici ou lancer une exception
+            throw new \InvalidArgumentException('MongoDB URL is not provided');
+        }
+        
         // Extract host and port from MongoDB URL
         $urlParts = parse_url($mongodbUrl);
         $host = $urlParts['host'];

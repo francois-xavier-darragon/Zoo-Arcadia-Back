@@ -24,6 +24,8 @@ heroku addons:create ormongo --app "nom-de-votre-application"
 # Verification ORMONGO_URL
 heroku config:get ORMONGO_URL --app "nom-d-application"
 heroku config:get ORMONGO_RS_URL --app "nom-d-application"
+heroku config:set MONGODB_URL="mongodb://iad2-c18-2.mongo.objectrocket.com:52338,iad2-c18-1.mongo.objectrocket.com:52338,iad2-c18-0.mongo.objectrocket.com:52338/?replicaSet=2ef4e8f636ba4cfb86d99f6d45886237&ssl=true" --app arcadia-ecf
+heroku config:set MONGODB_DB="votre_nom_de_base" --app "nom-d-application"
 
 heroku config:set DATABASE_DRIVER=pdo_mysql --app "nom-d-application"
 heroku buildpacks:add --index 1 heroku/nodejs --app "nom-d-application"
