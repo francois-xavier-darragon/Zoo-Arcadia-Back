@@ -10,12 +10,23 @@ else
     exit 1
 fi
 
+# Prioritize Heroku ObjectRocket URL if availablec
+if [ -n "$ORMONGO_RS_URL" ]; then
+    MONGODB_URL=$ORMONGO_RS_URL
+elif [ -n "$ORMONGO_URL" ]; then
+    MONGODB_URL=$ORMONGO_URL
+fi
+
 # Extracting login information from MONGODB_URL
 DB_HOST=$(echo $MONGODB_URL | sed -n 's/.*mongodb:\/\/\([^:]*\):.*/\1/p')
 DB_PORT=$(echo $MONGODB_URL | sed -n 's/.*:\([0-9]*\).*/\1/p')
 
-# Use MONGODB_DB from environment file for database name
-DB_NAME=$MONGODB_DB
+# Use MONGODB_DB from environment file for database name, or extract from URL if not set
+if [ -z "$MONGODB_DB" ]; then
+    DB_NAME=$(echo $MONGODB_URL | sed -n 's/.*\/\([^?]*\).*/\1/p')
+else
+    DB_NAME=$MONGODB_DB
+fi
 
 # Checking the necessary variables
 if [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ] || [ -z "$DB_NAME" ]; then
