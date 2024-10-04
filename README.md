@@ -34,6 +34,7 @@ heroku config:set APP_ENV=prod --app "nom-d-application"
 git push heroku main
 
 une fois le projet compiler est déployé sur heroku 
+heroku run php bin/console app:manage:mongodb
 heroku run php bin/console app:manage:database choix 2
 heroku run php bin/console app:manage:database choix 3 avec à la question : arcadia.sql 
 

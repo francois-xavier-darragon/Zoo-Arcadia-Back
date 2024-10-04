@@ -31,9 +31,8 @@ class ManageMongoDBCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         
-        $mongodbUrl = $this->managerRegistry->getConnection()->getConfiguration()->getServerUrl();
         $dbName = $this->chooseDatabase($io);
-        $this->importDatabase($dbName, $io, $mongodbUrl);
+        $this->importDatabase($dbName, $io);
 
         return Command::SUCCESS;
     }
@@ -56,16 +55,12 @@ class ManageMongoDBCommand extends Command
         return $io->choice('Sélectionnez une base de données à importer', $dbNames);
     }
 
-    private function importDatabase(string $dbName, SymfonyStyle $io, string $mongodbUrl = null): void
+    private function importDatabase(string $dbName, SymfonyStyle $io): void
     {
-        // // Load environment variables
-        // $mongodbUrl = $_ENV['MONGODB_URL'] ?? $_ENV['ORMONGO_URL'] ?? $_ENV['MONGODB_URL'];
-        // $dbName = $_ENV['MONGODB_DB'];
-        if (!$mongodbUrl) {
-            // Vous pouvez définir une URL par défaut ici ou lancer une exception
-            throw new \InvalidArgumentException('MongoDB URL is not provided');
-        }
-        
+        // Load environment variables
+        $mongodbUrl = $_ENV['MONGODB_URL'];
+        $dbName = $_ENV['MONGODB_DB'];
+
         // Extract host and port from MongoDB URL
         $urlParts = parse_url($mongodbUrl);
         $host = $urlParts['host'];
@@ -140,5 +135,4 @@ class ManageMongoDBCommand extends Command
 
         $io->success("Importation du dump terminée pour la base de données '$dbName'.");
     }
-
 }
