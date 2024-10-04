@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,13 +13,13 @@ class ManageMongoDBCommand extends Command
 {
     protected static $defaultName = 'app:manage:mongodb';
     private $documentManager;
-    private $mongodbUrl;
+    private $managerRegistry;
 
-    public function __construct(DocumentManager $documentManager,  string $mongodbUrl)
+    public function __construct(DocumentManager $documentManager,  ManagerRegistry $managerRegistry)
     {
         parent::__construct();
         $this->documentManager = $documentManager;
-        $this->mongodbUrl = $mongodbUrl;
+        $this->managerRegistry = $managerRegistry;
     }
 
     protected function configure()
@@ -30,8 +31,9 @@ class ManageMongoDBCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         
+        $mongodbUrl = $this->managerRegistry->getConnection()->getConfiguration()->getServerUrl();
         $dbName = $this->chooseDatabase($io);
-        $this->importDatabase($dbName, $io, $this->mongodbUrl);
+        $this->importDatabase($dbName, $io, $mongodbUrl);
 
         return Command::SUCCESS;
     }
