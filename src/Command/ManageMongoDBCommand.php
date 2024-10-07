@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Doctrine\Bundle\MongoDBBundle\ManagerRegistry;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,11 +13,13 @@ class ManageMongoDBCommand extends Command
 {
     protected static $defaultName = 'app:manage:mongodb';
     private $documentManager;
+    private $managerRegistry;
 
-    public function __construct(DocumentManager $documentManager)
+    public function __construct(DocumentManager $documentManager,  ManagerRegistry $managerRegistry)
     {
         parent::__construct();
         $this->documentManager = $documentManager;
+        $this->managerRegistry = $managerRegistry;
     }
 
     protected function configure()
@@ -55,7 +58,7 @@ class ManageMongoDBCommand extends Command
     private function importDatabase(string $dbName, SymfonyStyle $io): void
     {
         // Load environment variables
-        $mongodbUrl = $_ENV['MONGODB_URL'] ?? $_ENV['ORMONGO_URL'] ?? $_ENV['MONGODB_URL'];
+        $mongodbUrl = $_ENV['MONGODB_URL'];
         $dbName = $_ENV['MONGODB_DB'];
 
         // Extract host and port from MongoDB URL
@@ -132,5 +135,4 @@ class ManageMongoDBCommand extends Command
 
         $io->success("Importation du dump terminée pour la base de données '$dbName'.");
     }
-
 }
