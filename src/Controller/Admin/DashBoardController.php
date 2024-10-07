@@ -22,10 +22,13 @@ class DashBoardController extends AbstractController
     public function index(NoticeRepository $noticeRepository, AnimalRepository $animalRepository, PaginationService $paginationService, CsrfTokenManagerInterface $csrfTokenManager, UploaderHelper $uploaderHelper, DocumentManager $dm, int $page = 1,): Response
     {
         $topAnimal = $animalRepository->findMostViewedAnimal();
+        $nbviews = null;
 
-        $animalId = $topAnimal->getId();
-
-        $nbviews = $dm->getRepository(AnimalViews::class)->findOneBy(['animalId' => $animalId]);
+        if ($topAnimal != null ) {
+            $animalId = $topAnimal->getId();
+            $nbviewsDoc = $dm->getRepository(AnimalViews::class)->findOneBy(['animalId' => $animalId]);
+            $nbviews = $nbviewsDoc ? $nbviewsDoc->getViews() : 0;
+        }
 
         $notices = $noticeRepository->findAllnotice(['deleted_At'=> null]);
         $itemsPerPage = 10;
@@ -47,7 +50,7 @@ class DashBoardController extends AbstractController
             'uploaderHelper' => $uploaderHelper,
             'arrayStatut' => Notice::STATUT,
             'topAnimal' => $topAnimal,
-            'nbviews' => $nbviews->getViews()
+            'nbviews' => $nbviews
         ]);
     }
 }

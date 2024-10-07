@@ -31,6 +31,14 @@ class HomeController extends AbstractController
 
         $topAnimal = $this->animalRepository->findMostViewedAnimal();
         
+        if (!$topAnimal) {
+            $allAnimals = $this->animalRepository->findAll();
+            if (!empty($allAnimals)) {
+                $topAnimal = $allAnimals[array_rand($allAnimals)];
+            }
+        }
+        
+        
         return $this->render('front/home/index.html.twig', [
             'habitats'       => $habitats,
             'enclosures'     => $enclosures,
