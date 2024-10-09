@@ -100,12 +100,7 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
-        ],
-        "dev-server": "encore dev-server",
-        "dev": "encore dev",
-        "watch": "encore dev --watch",
-        "build": "encore production --progress",
-        "heroku-postbuild": "node_modules/.bin/encore production"
+        ]
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -117,18 +112,6 @@
         }
     },
     "require-dev": {
-        "@babel/core": "^7.17.0",
-        "@babel/preset-env": "^7.16.0",
-        "@hotwired/stimulus": "^3.0.0",
-        "@symfony/stimulus-bridge": "^3.2.0",
-        "@symfony/webpack-encore": "^4.0.0",
-        "core-js": "^3.23.0",
-        "regenerator-runtime": "^0.13.9",
-        "webpack": "^5.74.0",
-        "webpack-cli": "^4.10.0",
-        "webpack-notifier": "^1.15.0",
-        "sass": "^1.53.0",
-        "sass-loader": "^13.0.0",
         "phpunit/phpunit": "^9.5",
         "symfony/browser-kit": "6.4.*",
         "symfony/css-selector": "6.4.*",
