@@ -71,7 +71,7 @@
                         {% set batch = batch|merge(previous_batch|slice(0, 4 - batch|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <div class="row">
+                        <div class="row p-0 m-0">
                             {% for enclosure in batch %}
                                 <div class="animal-card col-12 col-md-3 mb-4 d-flex">
                                     <div class="card card-enclose custom-border h-100 d-flex flex-column">
@@ -160,7 +160,7 @@
                         {% set group = group|merge(previous_group|slice(0, 3 - group|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center p-0 m-0">
                             {% for notice in group %}
                                {% if notice.status == 1 %}
                                     <div class="col-12 col-md-4 mb-4 d-flex align-items-stretch">
