@@ -260,10 +260,11 @@ p, .health {
     color: #6c757d;
 }
 
-.custom-border{
-    border: 3px solid $secondary;
-    border-radius: 20px;     
-    box-shadow: 0 8px 30px $dark;
+.custom-border {
+    border: 1px solid;
+    border-color: $secondary;
+    border-radius: 5px;     
+    box-shadow: 0 8px 10px $dark;
 }
 
 .defaut-img {
@@ -361,10 +362,11 @@ p, .health {
     width: 300px;
 }
 
-.card-habitat, .card-enclose, .card-notice, .card-description, .gallery{
-    border: 1px solid;
-    border-color: $secondary;
-}
+// .card-habitat, .card-enclose, .card-notice, .card-description, .gallery{
+//     border: 1px solid;
+//     border-color: $secondary;
+//     box-shadow: 0 8px 10px $dark;
+// }
 
 .circle-container {
     width: 50px; 
