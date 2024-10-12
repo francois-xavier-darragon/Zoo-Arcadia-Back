@@ -1,5 +1,5 @@
 
-<nav class="sidebar">
+<nav class="sidebar d-none d-lg-block">
     <ul class="nav flex-column">
         <li class="nav-item d-flex justify-content-end">
             <button id="toggle-btn" class="nav-link toggle-btn text-end">
@@ -9,7 +9,7 @@
             </button>
         </li>
         
-        <li class="nav-item">
+        {# <li class="nav-item">
             <a class="nav-link active" href="{{path('app_admin_dashboard')}}">
                 <span class="icon">{% include "_include/_components/_icons/_home_icon_svg.html.twig" %}</span>
                 <span class="text">Accueil</span>
@@ -49,7 +49,8 @@
                 <span class="icon"> {% include "_include/_components/_icons/_service_icon_svg.html.twig" %}</span>
                 <span class="text">Services</span>
             </a>
-        </li>
+        </li> #}
+        {% include "_include/navbar/_components/_nav_links.html.twig" %}
     </ul>
     <div class="sidebar-logo">
         <img src="{{asset('images/ARCADIA.png')}}" class="w-40 mb-4" style="width: 240px;" alt="log-parc-animalier-arcadia">
