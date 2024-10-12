@@ -35,6 +35,7 @@ when@prod:
         orm:
             auto_generate_proxy_classes: false
             proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            hydrator_dir: '%kernel.cache_dir%/doctrine/orm/Hydrators'
             query_cache_driver:
                 type: pool
                 pool: doctrine.system_cache_pool
