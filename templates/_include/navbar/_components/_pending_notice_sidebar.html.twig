@@ -1,0 +1,9 @@
+<li class="nav-item">
+    <a class="nav-link active position-relative" href="{{path('app_admin_notice_index')}}">
+        <span class="icon">{% include "_include/_components/_icons/_notice_icon_svg.html.twig" %}</span>
+        <span class="text">Avis</span>
+        <span id="notice-number-sidebar" class="badge rounded-pill bg-danger ms-auto {% if pending_notices_count == 0 %}d-none{% endif %}">
+            {{ pending_notices_count }}
+        </span>
+    </a>
+</li>

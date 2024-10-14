@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
-    <div class="container-fluid d-flex">
+    <div class="container-fluid d-flex flex-nowrap">
         <div style="width: 400px;">
             <a class="navbar-brand d-lg-none" href="{{path('app_admin_dashboard')}}">
                 <img src="{{asset('images/ARCADIA.png')}}" class="w-15" alt="log-parc-animalier-arcadia">
@@ -10,7 +10,7 @@
         </div>
         {% if app.user and (is_granted('ROLE_ADMIN') or is_granted('ROLE_VETERINARY') or is_granted('ROLE_WORKER')) %}
         <div class="d-flex ms-lg-auto">
-            <a class="nav-link text-white me-3 mt-2" href="/">Accueil Public</a>
+            <a class="nav-link text-white me-3 mt-2 text-nowrap" href="/">Accueil Public</a>
             <img src="{{ app.user.avatar ? uploaderHelper.asset(app.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="User Avatar" width="40" height="40" class="rounded-circle me-3">
             <span class="text-white me-3 mt-2">{{ app.user.userIdentifier }}</span>
             <a type="button" class="btn btn-gradiant" href="{{ path('app_logout') }}">Déconnexion</a>
