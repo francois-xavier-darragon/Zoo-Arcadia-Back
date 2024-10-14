@@ -50,13 +50,16 @@ body {
 }
 
 .bg-image{
-    height: 100%;
+    min-height: 100vh;
     margin: 0;
     background-image: url('/public/images/lion-bg.jpg'); 
     background-size: cover; 
-    background-position: center 30%;
+    background-position: center;
     background-repeat: no-repeat; 
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar {
@@ -128,7 +131,7 @@ body {
     bottom: 0px;
 }
 
-.notice-number-collapsed {
+.notice-number-sidebar-collapsed {
     position: absolute;
     top: 10px;
     left: 18px;
@@ -386,7 +389,7 @@ p, .health {
 }
 
 .custom-carousel-control{
-    top: 52%;
+    top: 50%;
 }
 
 .custom-carousel-control-notice {
@@ -404,20 +407,10 @@ p, .health {
     justify-content: center;
 }
 
-.custom-carousel-control.carousel-control-prev {
+.custom-carousel-control .carousel-control-prev .custom-carousel-control-notice .carousel-control-next {
     left: 10px;
-}
-
-.custom-carousel-control.carousel-control-next {
     right: 10px;
-}
-
-.custom-carousel-control-notice.carousel-control-prev {
-    left: 10px;
-}
-
-.custom-carousel-control-notice.carousel-control-next {
-    right: 10px;
+    position: absolute;
 }
 
 //Signin pages
@@ -466,8 +459,76 @@ p, .health {
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 750px) {
     .connection-link {
         display: none;
     }
+}
+
+@media (max-width: 1000px) {
+    .custom-carousel-control {
+        top:51%;
+    }
+    .custom-carousel-control-notice {
+        top:84%;
+    }
+}
+
+@media (max-width: 770px) {
+    .custom-carousel-control {
+        top:53%;
+    }
+    .custom-carousel-control-notice {
+        top:86%;
+    }
+}
+
+@media (max-width: 765px) {
+    .custom-carousel-control-notice {
+        top:81%;
+    }
+}
+
+@media (max-width: 440px) {
+    .custom-carousel-control {
+        top:52%;
+    }
+}
+
+@media (max-width: 300px) {
+    .custom-carousel-control {
+        top:49%;
+    }
+    .custom-carousel-control-notice {
+        top:83%;
+    }
+}
+
+.bg-image > div {
+    margin-left: 10%;
+}
+
+@media (max-width: 1024px) {
+    .bg-image {
+        justify-content: center;
+    }
+    .bg-image > div {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .bg-image {
+        justify-content: center;
+    }
+    .bg-image > div {
+        margin-left: 0;
+        width: 90%;
+        max-width: 400px;
+    }
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
 }

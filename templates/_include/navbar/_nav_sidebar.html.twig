@@ -1,4 +1,4 @@
-
+{% set navType = "sidebar" %}
 <nav class="sidebar d-none d-lg-block">
     <ul class="nav flex-column">
         <li class="nav-item d-flex justify-content-end">
@@ -50,7 +50,8 @@
                 <span class="text">Services</span>
             </a>
         </li> #}
-        {% include "_include/navbar/_components/_nav_links.html.twig" %}
+        {% include "_include/navbar/_components/_nav_links.html.twig" with {'navType': navType} only %}
+  
     </ul>
     <div class="sidebar-logo">
         <img src="{{asset('images/ARCADIA.png')}}" class="w-40 mb-4" style="width: 240px;" alt="log-parc-animalier-arcadia">
@@ -61,14 +62,14 @@
 <script>
     const toggleBtn = document.getElementById('toggle-btn');
     const sidebar = document.querySelector('.sidebar');
-    const noticeNumber = document.getElementById('notice-number');
+    const noticeNumber = document.getElementById('notice-number-sidebar');
 
      function toggleSidebar() {
         sidebar.classList.toggle('collapsed');
         if (sidebar.classList.contains('collapsed')) {
-            noticeNumber.classList.add('notice-number-collapsed');
+            noticeNumber.classList.add('notice-number-sidebar-collapsed');
         } else {
-            noticeNumber.classList.remove('notice-number-collapsed');
+            noticeNumber.classList.remove('notice-number-sidebar-collapsed');
         }
     }
 
