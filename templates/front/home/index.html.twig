@@ -54,7 +54,7 @@
         </div>
 </article>
 
-<article class="bg-info p-4">
+{# <article class="bg-info p-4">
     <div id="enclosure-carousel-animal" class="container">
         <div class="row text-center mb-3">
             <div class="col-12">
@@ -112,6 +112,96 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
         </button>
     </div>
+</article> #}
+
+<article class="bg-info p-4">
+    <div id="enclosure-carousel-animal" class="container">
+        <div class="row text-center mb-3">
+            <div class="col-12">
+                <h2 class="text-dark">Découvrez nos enclos</p>
+            </div>
+            <div class="col-12">
+                <p class="text-dark section-title">Venez explorer les différents enclos de notre parc animalier</p>
+            </div>
+        </div>
+        {# <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
+            <div class="carousel-inner">
+               {% set enclosures_batches = enclosures|batch(4) %}
+               {% set previous_batch = [] %}
+
+               {% for batch in enclosures_batches %}
+                    {% if previous_batch and batch|length < 4 %}
+                        {% set batch = batch|merge(previous_batch|slice(0, 4 - batch|length)) %}
+                    {% endif %}
+                    <div class="carousel-item {% if loop.first %}active{% endif %}">
+                        <div class="row">
+                            {% for enclosure in batch %}
+                                <div class="animal-card col-12 col-md-3 mb-4 d-flex">
+                                    <div class="card card-enclose h-100 d-flex flex-column">
+                                        <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
+                                         <div class="card-body d-flex flex-column">
+                                            <h5 class="card-title">{{ enclosure.name }}</h5>
+                                            <p class="card-text text-dark flex-grow-1">{{enclosure.shortdescription}}</p>
+                                            <div class="mt-auto">
+                                                <a href="{{path('app_enclosure_show', {'id': enclosure.id})}}" class="btn btn-gradiant">Consulter</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% set previous_batch = batch %}
+                {% endfor %}
+            </div>     
+        </div> #}
+    <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
+    <div class="carousel-inner">
+        {% set screen_sizes = {
+            'xs': {'max_width': 575, 'batch_size': 1},
+            'sm': {'max_width': 767, 'batch_size': 2},
+            'md': {'max_width': 991, 'batch_size': 3},
+            'lg': {'max_width': 10000, 'batch_size': 4}
+        } %}
+
+        {% for size, config in screen_sizes %}
+            {% set enclosures_batches = enclosures|batch(config.batch_size) %}
+            {% set previous_batch = [] %}
+
+            {% for batch in enclosures_batches %}
+                {% if previous_batch and batch|length < config.batch_size %}
+                    {% set batch = batch|merge(previous_batch|slice(0, config.batch_size - batch|length)) %}
+                {% endif %}
+                <div class="carousel-item {% if loop.parent.loop.first and loop.first %}active{% endif %}" data-screen-size="{{ size }}">
+                    <div class="row">
+                        {% for enclosure in batch %}
+                            <div class="animal-card col-12 col-md-{{ 12 // config.batch_size }} mb-4 d-flex">
+                                <div class="card card-enclose h-100 d-flex flex-column">
+                                    <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{ enclosure.name }}</h5>
+                                        <p class="card-text text-dark flex-grow-1">{{enclosure.shortdescription}}</p>
+                                        <div class="mt-auto">
+                                            <a href="{{path('app_enclosure_show', {'id': enclosure.id})}}" class="btn btn-gradiant">Consulter</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% set previous_batch = batch %}
+            {% endfor %}
+        {% endfor %}
+    </div>     
+</div>
+        <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next custom-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+    </div>
 </article>
 
 <article class="m-4">
@@ -162,7 +252,7 @@
                 <p class="text-dark section-title">Découvrez les avis de nos visiteurs sur leur expérience au parc</p>
             </div>
         </div>
-        <div id="notice-carousel" class="carousel slide" data-bs-interval="false">   
+        {# <div id="notice-carousel" class="carousel slide" data-bs-interval="false">   
             <div class="carousel-inner">
 
                {% set group_size_md = 3 %}
@@ -203,6 +293,47 @@
                     {% set previous_group = group %}
                 {% endfor %}
             </div>     
+        </div> #}
+
+        <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
+            <div class="carousel-inner">
+                {% set screen_sizes = {
+                    'xs': {'max_width': 575, 'batch_size': 1},
+                    'sm': {'max_width': 767, 'batch_size': 2},
+                    'md': {'max_width': 991, 'batch_size': 3},
+                    'lg': {'max_width': 10000, 'batch_size': 4}
+                } %}
+
+                {% for size, config in screen_sizes %}
+                    {% set enclosures_batches = enclosures|batch(config.batch_size) %}
+                    {% set previous_batch = [] %}
+
+                    {% for batch in enclosures_batches %}
+                        {% if previous_batch and batch|length < config.batch_size %}
+                            {% set batch = batch|merge(previous_batch|slice(0, config.batch_size - batch|length)) %}
+                        {% endif %}
+                        <div class="carousel-item {% if loop.parent.loop.first and loop.first %}active{% endif %}" data-screen-size="{{ size }}">
+                            <div class="row">
+                                {% for enclosure in batch %}
+                                    <div class="animal-card col-12 col-md-{{ 12 // config.batch_size }} mb-4 d-flex">
+                                        <div class="card card-enclose h-100 d-flex flex-column">
+                                            <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
+                                            <div class="card-body d-flex flex-column">
+                                                <h5 class="card-title">{{ enclosure.name }}</h5>
+                                                <p class="card-text text-dark flex-grow-1">{{enclosure.shortdescription}}</p>
+                                                <div class="mt-auto">
+                                                    <a href="{{path('app_enclosure_show', {'id': enclosure.id})}}" class="btn btn-gradiant">Consulter</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% set previous_batch = batch %}
+                    {% endfor %}
+                {% endfor %}
+            </div>     
         </div>
     
         <button class="carousel-control-prev custom-carousel-control-notice" type="button" data-bs-target="#notice-carousel" data-bs-slide="prev">
@@ -217,4 +348,33 @@
         </div>
     </div>
 </article>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function adjustCarousel() {
+        var width = window.innerWidth;
+        var size = width <= 575 ? 'xs' : width <= 767 ? 'sm' : width <= 991 ? 'md' : 'lg';
+
+        document.querySelectorAll('#enclosure-carousel .carousel-item').forEach(function(item) {
+            item.classList.remove('active');
+            if (item.dataset.screenSize === size) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        var firstVisibleItem = document.querySelector('#enclosure-carousel .carousel-item[data-screen-size="' + size + '"]');
+        if (firstVisibleItem) {
+            firstVisibleItem.classList.add('active');
+        }
+    }
+
+    window.addEventListener('resize', adjustCarousel);
+    adjustCarousel();
+});
+</script>
 {% endblock %}
