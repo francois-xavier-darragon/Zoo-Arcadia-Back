@@ -1,6 +1,9 @@
 {% extends 'base_front.html.twig' %}
 
 {% block body %}
+<style>
+
+</style>
 <article class="bg-info p-4">
     <div class="container p-4">
         <div class="row row-cols-2 align-items-center">
@@ -170,7 +173,7 @@
                {% set previous_group = [] %}
 
                {% for group in notices_groups %}
-                    {% if previous_batch and group|length < group_size_md %}
+                    {% if previous_group and group|length < group_size_md %}
                         {% set group = group|merge(previous_group|slice(0, group_size_md - group|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
