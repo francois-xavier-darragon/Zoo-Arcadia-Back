@@ -1,6 +1,7 @@
 {% extends 'base_front.html.twig' %}
 
 {% block body %}
+
 <article class="bg-info p-4">
     <div class="container p-4">
         <div class="row row-cols-2 align-items-center">
@@ -62,30 +63,22 @@
             </div>
         </div>
         <div id="enclosure-carousel" class="carousel slide" data-bs-interval="false">   
-        <div class="carousel-inner">
-            {% set batch_size_lg = 4 %}
-            {% set batch_size_md = 3 %}
-            {% set batch_size_sm = 2 %}
-            {% set batch_size_xs = 1 %}
+            <div class="carousel-inner">
+               {% set enclosures_batches = enclosures|batch(1) %}
 
-            {% set enclosures_batches = enclosures|batch(batch_size_lg) %}
-           
-            {% set previous_batch = [] %}
+               {% set previous_batch = [] %}
 
-            {% for batch in enclosures_batches %}
-                    {% if previous_batch and batch|length < batch_size_lg %}
-                        {% set batch = batch|merge(previous_batch|slice(0, batch_size_lg - batch|length)) %}
+               {% for batch in enclosures_batches %}
+                    {% if previous_batch and batch|length < 0 %}
+                        {% set batch = batch|merge(previous_batch|slice(0, 0 - batch|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <div class="row justify-content-center p-0 m-0">
+                        <div class="row">
                             {% for enclosure in batch %}
-                                <div class="animal-card col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center
-                                            {% if loop.index > batch_size_xs %}d-none d-sm-flex{% endif %}
-                                            {% if loop.index > batch_size_sm %}d-sm-none d-md-flex{% endif %}
-                                            {% if loop.index > batch_size_md %}d-md-none d-lg-flex{% endif %}">
-                                    <div class="card card-enclose custom-border h-100 d-flex flex-column">
-                                        <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="{{ enclosure.name }}" style="object-fit: cover; height: 200px;">
-                                        <div class="card-body d-flex flex-column">
+                                <div class="card-animal col-12 col-md-3 mb-4 d-flex">
+                                    <div class="card card-enclose h-100 d-flex flex-column">
+                                        <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
+                                         <div class="card-body d-flex flex-column">
                                             <h5 class="card-title">{{ enclosure.name }}</h5>
                                             <p class="card-text text-dark flex-grow-1">{{enclosure.shortdescription}}</p>
                                             <div class="mt-auto">
@@ -101,7 +94,6 @@
                 {% endfor %}
             </div>     
         </div>
-
         <button class="carousel-control-prev custom-carousel-control" type="button" data-bs-target="#enclosure-carousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
@@ -162,26 +154,20 @@
         <div id="notice-carousel" class="carousel slide" data-bs-interval="false">   
             <div class="carousel-inner">
 
-               {% set group_size_md = 3 %}
-               {% set group_size_sm = 2 %}
-               {% set group_size_xs = 1 %} 
-
-               {% set notices_groups = notices|batch(group_size_md) %}
+               {% set notices_groups = notices|batch(1) %}
+               
                {% set previous_group = [] %}
 
                {% for group in notices_groups %}
-                    {% if previous_batch and group|length < group_size_md %}
-                        {% set group = group|merge(previous_group|slice(0, group_size_md - group|length)) %}
+                    {% if previous_group and group|length < 0 %}
+                        {% set group = group|merge(previous_group|slice(0, 0 - group|length)) %}
                     {% endif %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="row justify-content-center p-0 m-0">
                             {% for notice in group %}
                                {% if notice.status == 1 %}
-                                    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex align-items-stretch justify-content-center
-                                            {% if loop.index > group_size_xs %}d-none d-sm-flex{% endif %}
-                                            {% if loop.index > group_size_sm %}d-sm-none d-md-flex{% endif %}
-                                            {% if loop.index > group_size_md %}d-md-none d-lg-flex{% endif %}">
-                                        <div class="card card-notice custom-border w-100">
+                                    <div class="card-notice col-12 col-md-3 mb-4 d-flex align-items-stretch justify-content-center">
+                                        <div class="card custom-border w-100">
                                             <div class="d-flex m-2">
                                                 <div class="circle-container">
                                                     <img class="rounded-circle" src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt={{notice.nickname }} width="50" height="50">
@@ -201,7 +187,7 @@
                 {% endfor %}
             </div>     
         </div>
-    
+
         <button class="carousel-control-prev custom-carousel-control-notice" type="button" data-bs-target="#notice-carousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         </button>
@@ -214,4 +200,21 @@
         </div>
     </div>
 </article>
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image/carousel-responsive.js') }}" ></script>
+<script>
+    initializeCarousel({
+        carousel: 'enclosure-carousel',
+        cardSelector: '.card-animal',
+        itemClasses: 'card-animal mb-4 d-flex justify-content-center'
+    });
+
+    initializeCarousel({
+        carousel: 'notice-carousel',
+        cardSelector: '.card-notice',
+        itemClasses: 'card-notice mb-4 d-flex justify-content-center'
+    });
+</script>
 {% endblock %}

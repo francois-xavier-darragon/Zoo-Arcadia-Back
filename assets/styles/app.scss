@@ -1,6 +1,7 @@
 @import "custom";
 @import "~bootstrap/scss/bootstrap";
 @import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
+@import "responsive";
 
 html {
     position: relative;
@@ -137,20 +138,6 @@ body {
     left: 18px;
 }
 
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-    }
-
-    .sidebar.collapsed {
-        transform: translateX(0);
-    }
-
-    .sidebar .nav-link span {
-        display: none;
-    }
-}
-
 h3 {
     font-size: 24px;
 }
@@ -209,14 +196,6 @@ p, .health {
     top: 20px;
     width: 90px;
     left: 83px;
-}
-
-@media (max-width: 500px) {
-    .badge.status-pending,
-    .badge.status-refused,
-    .badge.status-valid {
-        left: 0px;
-    }
 }
 
 .badge.status-pending {
@@ -361,7 +340,7 @@ p, .health {
     top: 1460px;
 }
 
-.card-enclose, .card-notice  {
+.card-enclose {
     width: 300px;
 }
 
@@ -452,80 +431,8 @@ p, .health {
     max-width: 400px;
 }
 
-
-@media (min-width: 1400px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: 1140px;
-    }
-}
-
-@media (max-width: 750px) {
-    .connection-link {
-        display: none;
-    }
-}
-
-@media (max-width: 1000px) {
-    .custom-carousel-control {
-        top:51%;
-    }
-    .custom-carousel-control-notice {
-        top:84%;
-    }
-}
-
-@media (max-width: 770px) {
-    .custom-carousel-control {
-        top:53%;
-    }
-    .custom-carousel-control-notice {
-        top:86%;
-    }
-}
-
-@media (max-width: 765px) {
-    .custom-carousel-control-notice {
-        top:81%;
-    }
-}
-
-@media (max-width: 440px) {
-    .custom-carousel-control {
-        top:52%;
-    }
-}
-
-@media (max-width: 300px) {
-    .custom-carousel-control {
-        top:49%;
-    }
-    .custom-carousel-control-notice {
-        top:83%;
-    }
-}
-
 .bg-image > div {
     margin-left: 10%;
-}
-
-@media (max-width: 1024px) {
-    .bg-image {
-        justify-content: center;
-    }
-    .bg-image > div {
-        margin-left: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .bg-image {
-        justify-content: center;
-    }
-    .bg-image > div {
-        margin-left: 0;
-        width: 90%;
-        max-width: 400px;
-    }
 }
 
 .img-fluid {

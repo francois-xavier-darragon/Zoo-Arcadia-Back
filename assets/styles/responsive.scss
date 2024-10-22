@@ -1,0 +1,114 @@
+//Sidebar
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.collapsed {
+        transform: translateX(0);
+    }
+
+    .sidebar .nav-link span {
+        display: none;
+    }
+}
+
+//Badge Status
+@media (max-width: 500px) {
+    .badge.status-pending,
+    .badge.status-refused,
+    .badge.status-valid {
+        left: 0px;
+    }
+}
+
+//Container
+@media (min-width: 1400px) {
+    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
+        max-width: 1140px;
+    }
+}
+
+//Link
+@media (max-width: 750px) {
+    .connection-link {
+        display: none;
+    }
+}
+
+//Carousel
+
+@media (max-width: 1199px) {
+    .custom-carousel-control-notice {
+        top:85% !Important;
+    }
+} 
+
+@media (max-width: 1000px) {
+    .custom-carousel-control {
+        top:51%;
+    }
+}
+
+@media (max-width: 991px) {
+    .custom-carousel-control-notice {
+        top:86% !Important;
+    }
+} 
+
+@media (max-width: 770px) {
+    .custom-carousel-control {
+        top:53%;
+    }
+}
+
+@media (max-width: 767px) {
+    .custom-carousel-control-notice {
+        top:81% !Important;
+    }
+    .custom-carousel-control {
+        top:53% !Important;
+    }
+}
+
+@media (max-width: 575px) {
+    .card-notice {
+        width: 100% !Important;
+    }
+    .custom-carousel-control-notice {
+        top:81% !Important;
+    }
+}
+
+@media (max-width: 440px) {
+    .custom-carousel-control {
+        top:52%;
+    }
+}
+
+@media (max-width: 300px) {
+    .custom-carousel-control {
+        top:49%;
+    }
+}
+
+//Background Image Connexion
+@media (max-width: 1024px) {
+    .bg-image {
+        justify-content: center;
+    }
+    .bg-image > div {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .bg-image {
+        justify-content: center;
+    }
+    .bg-image > div {
+        margin-left: 0;
+        width: 90%;
+        max-width: 400px;
+    }
+}
