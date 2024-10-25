@@ -56,6 +56,10 @@ Encore
     // enables Sass/SCSS support
     .enableSassLoader()
 
+    .configureWatchOptions(watchOptions => {
+        watchOptions.poll = 250;
+    });
+
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
     //.enableStimulusBridge('./assets/controllers.json')
