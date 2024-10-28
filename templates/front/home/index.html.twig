@@ -1,7 +1,6 @@
 {% extends 'base_front.html.twig' %}
 
 {% block body %}
-
 <article class="bg-info p-4">
     <div class="container p-4">
         <div class="row row-cols-2 align-items-center">
@@ -76,7 +75,7 @@
                         <div class="row">
                             {% for enclosure in batch %}
                                 <div class="card-animal col-12 col-md-3 mb-4 d-flex">
-                                    <div class="card card-enclose h-100 d-flex flex-column">
+                                    <div class="card custom-border card-enclose h-100 d-flex flex-column">
                                         <img src="{{ enclosure.images|first ? uploaderHelper.asset(enclosure.images|first, 'enclosureFile') : asset('images/default/default.png') }}" class="card-img-top" alt="">
                                          <div class="card-body d-flex flex-column">
                                             <h5 class="card-title">{{ enclosure.name }}</h5>
@@ -204,6 +203,7 @@
 {% block javascripts %}
 {{ parent() }}
 <script src="{{ asset('js/image/carousel-responsive.js') }}" ></script>
+<script src="{{ asset('js/image/constant-size-card.js') }}" ></script>
 <script>
     initializeCarousel({
         carousel: 'enclosure-carousel',
@@ -216,5 +216,65 @@
         cardSelector: '.card-notice',
         itemClasses: 'card-notice mb-4 d-flex justify-content-center'
     });
+
+    {# document.addEventListener('DOMContentLoaded', function() {
+    let globalMaxHeight = 0;
+
+    function calculateAndApplyMaxHeight() {
+        document.querySelectorAll('.carousel-item').forEach(item => {
+            item.classList.add('d-flex');
+            item.style.visibility = 'hidden';
+            item.style.position = 'absolute';
+        });
+
+        document.querySelectorAll('.card-enclose').forEach(card => {
+            card.style.height = '';
+        });
+
+        document.querySelectorAll('.card-enclose').forEach(card => {
+            const height = card.getBoundingClientRect().height;
+            globalMaxHeight = Math.max(globalMaxHeight, height);
+        });
+
+        const style = document.createElement('style');
+        style.innerHTML = `.card-enclose { height: ${globalMaxHeight}px !important; }`;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('.carousel-item').forEach(item => {
+            item.classList.remove('d-flex');
+            item.style.visibility = '';
+            item.style.position = '';
+        });
+
+    }
+
+    const cardImages = Array.from(document.querySelectorAll('.card-img-top'));
+    const imagePromises = cardImages.map(img => {
+        return new Promise((resolve) => {
+            if (img.complete) {
+                resolve();
+            } else {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+            }
+        });
+    });
+
+    Promise.all(imagePromises).then(() => {
+        calculateAndApplyMaxHeight();
+    });
+
+    document.querySelector('#enclosure-carousel').addEventListener('slid.bs.carousel', calculateAndApplyMaxHeight);
+
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            globalMaxHeight = 0;
+            calculateAndApplyMaxHeight();
+        }, 250);
+    });
+}); #}
+
 </script>
 {% endblock %}
