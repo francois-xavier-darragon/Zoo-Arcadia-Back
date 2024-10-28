@@ -40,7 +40,6 @@ body {
     width: 18%;
 }
 
-
 .custom-col-margin{
     margin-left: 7%;
 }
@@ -112,14 +111,15 @@ body {
     color: white !important;
 }
 
-.dropdown-menu {
-    .dropdown-item {
-        &:hover {
-            background-color: #343a40 !important;
-        }
-        &.active,
-        &:active { 
-            background-color: $primary !important;
+.custom-col-width {
+    .nav-item.dropdown {
+        position: relative;
+        
+        .dropdown-menu {
+            position: absolute !important;
+            width: 100%;
+            margin-top: 0.5rem;
+            z-index: 1000 !important;
         }
     }
 }
