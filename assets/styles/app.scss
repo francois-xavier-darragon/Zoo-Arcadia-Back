@@ -11,7 +11,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    min-height: 100%;
 }
+
 .page-wrapper {
     display: flex;
     flex-direction: column;
@@ -31,6 +33,7 @@ body {
     padding: 15px;
     bottom: 0;
     width: 100%;
+    
 }
 
 .custom-col-width{
@@ -493,7 +496,7 @@ p, .health {
 //Container
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: 1140px;
+        max-width: 1800px;
     }
 }
 
