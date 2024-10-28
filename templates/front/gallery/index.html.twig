@@ -11,9 +11,9 @@
                     Choisir la galerie
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="text-white dropdown-item {% if currentType == 'habitats' %}active{% endif %}" href="{{ path('app_gallery', {'type': 'habitats'}) }}">Galerie des habitats</a></li>
-                    <li><a class="text-white dropdown-item {% if currentType == 'enclosures' %}active{% endif %}" href="{{ path('app_gallery', {'type': 'enclosures'}) }}">Galerie des enclos</a></li>
-                    <li><a class="text-white dropdown-item {% if currentType == 'animals' %}active{% endif %}" href="{{ path('app_gallery', {'type': 'animals'}) }}">Galerie des animaux</a></li>
+                    <li><a class="dropdown-item {% if currentType == 'habitats' %}active{% endif %}" href="{{ path('app_gallery', {'type': 'habitats'}) }}">Galerie des habitats</a></li>
+                    <li><a class="dropdown-item {% if currentType == 'enclosures' %}active{% endif %}" href="{{ path('app_gallery', {'type': 'enclosures'}) }}">Galerie des enclos</a></li>
+                    <li><a class="dropdown-item {% if currentType == 'animals' %}active{% endif %}" href="{{ path('app_gallery', {'type': 'animals'}) }}">Galerie des animaux</a></li>
                 </ul>
             </div>
         </div>

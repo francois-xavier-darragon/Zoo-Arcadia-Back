@@ -3,26 +3,26 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-<article class="bg-info p-4">
-    <div class="container p-4 mt-5 mb-5 d-flex">
-        <div class="dropdown " style="left: -100px; top: 0;">
+<article class="bg-info py-5" >
+    <div class="container p-4 d-flex my-5">
+        <div class="dropdown " style="left: -50px; top: 0;">
             <button class="btn btn-gradiant dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 Enclos de l'habitat
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                 {% for enclosure in habitat.enclosures %}
-                    <li><a class="dropdown-item text-white" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }}</a></li>
+                    <li><a class="dropdown-item" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
-        <div class="row ">
+        <div class="row">
             <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
                 <h2 class="text-dark mb-3">Habitat - {{habitat.name}}</h2>
                 <div class="scrollable-text">
                     <p>{{ habitat.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
                 </div>
             </div>
-            <div class="col-12 col-md-6 mb-4 mb-md-0"> 
+            <div class="col-12 col-md-6 mb-4 mb-md-0 media-container"> 
                 {% set allImages = [] %}
                 {% for images in habitat.images %}
                     {% set allImages = allImages|merge(habitat.images) %}
@@ -33,4 +33,12 @@
         </div>
     </div>
 </article>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image/media-resize.js') }}"></script>
+<script>
+    adjustCardSize();
+</script>
 {% endblock %}

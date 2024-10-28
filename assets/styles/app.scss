@@ -33,12 +33,13 @@ body {
     padding: 15px;
     bottom: 0;
     width: 100%;
-    
+    position: relative;
 }
 
 .custom-col-width{
     width: 18%;
 }
+
 
 .custom-col-margin{
     margin-left: 7%;
@@ -103,6 +104,24 @@ body {
 
 .sidebar.collapsed .nav-link .text {
     opacity: 0;
+}
+
+.nav-link, 
+.dropdown-item,
+.navbar-brand {
+    color: white !important;
+}
+
+.dropdown-menu {
+    .dropdown-item {
+        &:hover {
+            background-color: #343a40 !important;
+        }
+        &.active,
+        &:active { 
+            background-color: $primary !important;
+        }
+    }
 }
 
 .toggle-btn {
@@ -185,19 +204,18 @@ p, .health {
 .w-25 { width: 25%; }
 .w-30 { width: 30%; }
 
+
 .badge.status-pending,
 .badge.status-refused,
 .badge.status-valid {
-    display: inline-block;
+    display: inline-flex; 
+    justify-content: center; 
+    align-items: center;
     padding: 0.35em 0.65em;
     line-height: 1;
     border-radius: 10rem;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    top: 20px;
-    width: 90px;
-    left: 83px;
+    min-width: 90px; 
+    margin: auto; 
 }
 
 .badge.status-pending {
@@ -281,20 +299,6 @@ p, .health {
     height: 125px;
 }
 
-// .card-enclose {
-//     height: 400px !important; 
-    
-//     .card-body {
-//         //overflow: hidden; 
-//         .card-text {
-//             display: -webkit-box;
-//             -webkit-line-clamp: 3;
-//             -webkit-box-orient: vertical;
-//             overflow: hidden;
-//             text-overflow: ellipsis;
-//         }
-//     }
-// }
 
 .button-container, .button-avatar-container {
     position: absolute;
@@ -361,8 +365,6 @@ p, .health {
         display: flex !important;
         flex-direction: column !important;
         height: 100% !important; 
-        
-        
 
         .mt-auto {
             margin: 20px 0 10px 0 !important; 
@@ -432,7 +434,7 @@ p, .health {
 
 //pages front 
 .scrollable-text {
-    max-height: 300px;
+    max-height: 250px;
     overflow-y: auto;
     padding-right: 15px;
 }
@@ -508,7 +510,6 @@ p, .health {
 }
 
 //Carousel
-
 @media (max-width: 1199px) {
     .custom-carousel-control-notice {
         top:85% !Important;
@@ -581,5 +582,12 @@ p, .health {
         margin-left: 0;
         width: 90%;
         max-width: 400px;
+    }
+}
+
+//Image 
+@media (max-width: 768px) { 
+    .media-container {
+        padding: 0 !important;
     }
 }

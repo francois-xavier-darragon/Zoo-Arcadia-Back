@@ -1,46 +1,47 @@
 {% set navType = "navbar" %}
-<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+<nav class="navbar navbar-expand-xl bg-dark" data-bs-theme="dark">
     <div class="container-fluid">
-        <div class="d-flex justify-content-between align-items-center w-100">
-            <a class="navbar-brand text-white" href="/">
-                <img src="{{asset('images/ARCADIA.png')}}" class="w-15" alt="log-parc-animalier-arcadia">
-            </a>
+        <div class="d-flex align-items-center">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <a class="navbar-brand ms-3" href="/">
+                <img src="{{asset('images/ARCADIA.png')}}" class="w-15" alt="log-parc-animalier-arcadia">
+            </a>
         </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-end">
+        
+        <div class="collapse navbar-collapse mt-2" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-3 mb-2 mb-xl-0 ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="/">Accueil</a>
+                    <a class="nav-link" href="/">Accueil</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link text-white dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         Habitats
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {% for habitat in habitats %}
-                            <li><a class="dropdown-item text-white" href="{{path('app_habitat_show', {'id': habitat.id})}}">{{ habitat.name }}</a></li>
+                            <li><a class="dropdown-item" href="{{path('app_habitat_show', {'id': habitat.id})}}">{{ habitat.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link text-white dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                         Enclos
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         {% for enclosure in enclosures %}
-                            <li><a class="dropdown-item text-white" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }}</a></li>
+                            <li><a class="dropdown-item" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }}</a></li>
                         {% endfor %}
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{path('app_service_show')}}" role="button" aria-expanded="false">
+                    <a class="nav-link" href="{{path('app_service_show')}}" role="button" aria-expanded="false">
                         Services
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{path('app_gallery')}}" role="button" aria-expanded="false">
+                    <a class="nav-link" href="{{path('app_gallery')}}" role="button" aria-expanded="false">
                         Galerie
                     </a>
                 </li>
@@ -57,23 +58,23 @@
 
                 {% if not should_hide %}
                     <li class="nav-item" data-show="visitor">
-                        <a class="nav-link text-white text-nowrap" href="/contact">Nous contacter</a>
+                        <a class="nav-link text-nowrap" href="/contact">Nous contacter</a>
                     </li>
                 {% endif %}
 
                 {% if should_hide %}
                     <li class="nav-item" data-show="admin">
-                        <a class="nav-link text-white" href="{{path('app_admin_dashboard')}}">Administration</a>
+                        <a class="nav-link" href="{{path('app_admin_dashboard')}}">Administration</a>
                     </li>
                 {% endif %}
 
                 {% if app.user %}
                     <li class="nav-item connection-link " data-show="connected">
-                        <a class="nav-link text-white" href="/logout">Déconnexion</a>
+                        <a class="nav-link" href="/logout">Déconnexion</a>
                     </li>
                 {% else %}
                     <li class="nav-item connection-link" data-show="disconnected">
-                        <a class="nav-link text-white" href="/login">Connexion</a>
+                        <a class="nav-link" href="/login">Connexion</a>
                     </li>
                 {% endif %}
             </ul>

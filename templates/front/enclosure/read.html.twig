@@ -3,16 +3,16 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-<article class="bg-info container-page p-4">
-    <div class="container p-4 mt-5 mb-2 d-flex animal-enclosure">
-        <div class="row ">
+<article class="bg-info py-5">
+    <div class="container p-4 d-flex animal-enclosure my-5">
+        <div class="row">
             <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
                 <h2 class="text-dark mb-3">{{enclosure.name}}</h2>
                 <div class="scrollable-text">
                     <p>{{ enclosure.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
                 </div>
             </div>
-            <div class="col-12 col-md-6 mb-4 mb-md-0"> 
+            <div class="col-12 col-md-6 mb-4 mb-md-0 media-container"> 
                 {% set allImages = [] %}
                 {% for image in enclosure.images %}
                     {% set allImages = allImages|merge(enclosure.images) %}
@@ -23,18 +23,30 @@
         </div>
     </div>
 
-    <div class="container dropdown animal-list mb-2">
-        <button class="btn btn-gradiant dropdown-toggle mb-5" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-            Animaux de l'enclos
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            {% for animal in enclosure.animals %}
-                {% for veterinaryReport in animal.veterinaryReports %}
-                <li><a type="button"  class="dropdown-item text-white animal-button" data-animal-id="{{ animal.id }}">{{ animal.name }}</a></li>
+{% if enclosure.animals|length > 0 %}   
+    {% set hasReports = false %}
+    {% for animal in enclosure.animals %}
+        {% if animal.veterinaryReports|length > 0 %}
+            {% set hasReports = true %}
+        {% endif %}
+    {% endfor %}
+
+    {% if hasReports %}
+        <div class="container dropdown animal-list mb-2">
+            <button class="btn btn-gradiant dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                Animaux de l'enclos
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                {% for animal in enclosure.animals %}
+                    {% if animal.veterinaryReports|length > 0 %}
+                        <li><a type="button" class="dropdown-item animal-button" data-animal-id="{{ animal.id }}">{{ animal.name }}</a></li>
+                    {% endif %}
                 {% endfor %}
-            {% endfor %}
-        </ul>
-    </div>
+            </ul>
+        </div>
+    {% endif %}
+{% endif %}
+
 </article>
 
 <div class="animal-details">
@@ -57,7 +69,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-6 mb-4 mb-md-0"> 
+                <div class="col-12 col-md-6 mb-4 mb-md-0 media-container"> 
                     {% set allImages = [] %}
                     {% for image in animal.images %}
                         {% set allImages = allImages|merge(animal.images) %}
@@ -75,27 +87,37 @@
 
 {% block javascripts %}
 {{ parent() }}
+<script src="{{ asset('js/image/media-resize.js') }}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.animal-button');
-    const details = document.querySelectorAll('.animal-detail');
+    adjustCardSize();
 
-    buttons.forEach(button => {
-        button.addEventListener('click', function() {
-            const animalId = this.getAttribute('data-animal-id');
+    document.addEventListener('DOMContentLoaded', function() {
+        const buttons = document.querySelectorAll('.animal-button');
+        const details = document.querySelectorAll('.animal-detail');
 
-            details.forEach(detail => {
-                if (detail.id === `animal-${animalId}`) {
-                    detail.classList.remove('d-none');
-                } else {
-                    detail.classList.add('d-none');
-                }
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                const animalId = this.getAttribute('data-animal-id');
+
+                details.forEach(detail => {
+                    if (detail.id === `animal-${animalId}`) {
+                        detail.classList.remove('d-none');
+                        setTimeout(() => {
+                            const visibleImg = detail.querySelector('.media-container img');
+                            const visibleCard = detail.querySelector('.card-description');
+                            if (visibleImg && visibleCard) {
+                                visibleCard.style.height = `${visibleImg.offsetHeight}px`;
+                            }
+                        }, 0);
+                    } else {
+                        detail.classList.add('d-none');
+                    }
+                });
+
+                fetch(`/animal/${animalId}`, { method: 'POST' });
             });
-
-            fetch(`/animal/${animalId}`, { method: 'POST' });
         });
-    });
 
-});
+    });
 </script>
 {% endblock %}
