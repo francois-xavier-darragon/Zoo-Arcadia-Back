@@ -11,7 +11,9 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    min-height: 100%;
 }
+
 .page-wrapper {
     display: flex;
     flex-direction: column;
@@ -34,15 +36,11 @@ body {
     position: relative;
 }
 
-
 .custom-col-width{
     width: 18%;
 }
 
 
-.logo-arcadia-footer {
-    z-index: 1000 !important;
-}
 .custom-col-margin{
     margin-left: 7%;
 }
@@ -500,7 +498,7 @@ p, .health {
 //Container
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: 1140px;
+        max-width: 1800px;
     }
 }
 
