@@ -28,7 +28,7 @@
                     <td class="text-center">{{ notice.nickname }}</td>
                     <td class="text-center">{{ notice.comment }}</td>
                     {% if arrayStatut[notice.status] is defined %}
-                        <td> <span class="text-center badge {% if arrayStatut[notice.status] == 'En attente' %}status-pending{% elseif arrayStatut[notice.status] == 'Refusé' %}status-refused{% elseif arrayStatut[notice.status] == 'Validé' %}status-valid{% endif %}"> {{ arrayStatut[notice.status] }} </span> </td>
+                        <td class="text-center"> <span class="badge {% if arrayStatut[notice.status] == 'En attente' %}status-pending{% elseif arrayStatut[notice.status] == 'Refusé' %}status-refused{% elseif arrayStatut[notice.status] == 'Validé' %}status-valid{% endif %}"> {{ arrayStatut[notice.status] }} </span> </td>
                     {% endif %}    
                     <td class="text-end">
                         <a type='button' class='text-primary me-2' href="{{ path('app_admin_notice_show', {'id': notice.id}) }}" title="voir">

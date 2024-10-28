@@ -20,7 +20,7 @@
         <button class="btn btn-secondary dropdown-toggle mb-2" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
             Liste des enclos
         </button>
-        <ul class="dropdown-menu light-dropdown" aria-labelledby="dropdownMenuButton2">
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
             {% if habitat.enclosures|length > 0 %}
                 {% for enclosure in habitat.enclosures %}
                     <li class="dropdown-item p-2">

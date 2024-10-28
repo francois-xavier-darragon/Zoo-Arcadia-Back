@@ -3,12 +3,12 @@
 {% block title %}{% endblock %}
 
 {% block body %}
- <h2 class=" bg-info text-center text-dark pt-2 m-0">Les différents services que nous proposons.</h2>
+ <h2 class=" bg-info text-center text-dark m-0 pt-4">Les différents services que nous proposons.</h2>
 
     {% if services|length > 0 %}
         {% for service in services %}    
-        <article class="{{ loop.index is odd ? 'bg-info' : '' }} p-4">
-            <div class="container p-4">
+        <article class="{{ loop.index is odd ? 'bg-info' : '' }} py-4">
+            <div class="container p-4 my-5">
                 <div class="row">
                     {% set imageClass = loop.index is even ? 'order-md-1 ps-0' : 'pe-0' %}
                     {% set textClass = loop.index is even ? 'order-md-2' : '' %}
@@ -18,7 +18,7 @@
                             <p>{{ service.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 mb-4 mb-md-0 {{ imageClass }}"> 
+                    <div class="col-12 col-md-6 mb-4 mb-md-0 media-container {{ imageClass }}"> 
                         {% set allImages = [] %}
                         {% for images in service.images %}
                             {% set allImages = allImages|merge(service.images) %}
@@ -54,4 +54,11 @@
     </nav>
 {% endif %}
 
+{% endblock %}
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('js/image/media-resize.js') }}"></script>
+<script>
+    adjustCardSize();
+</script>    
 {% endblock %}
