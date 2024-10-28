@@ -246,6 +246,7 @@ p, .health {
     border-color: $secondary;
     border-radius: 5px;     
     box-shadow: 0 8px 10px $dark;
+    margin: 0 12px;
 }
 
 .defaut-img {
@@ -276,6 +277,21 @@ p, .health {
     width: 187px;
     height: 125px;
 }
+
+// .card-enclose {
+//     height: 400px !important; 
+    
+//     .card-body {
+//         //overflow: hidden; 
+//         .card-text {
+//             display: -webkit-box;
+//             -webkit-line-clamp: 3;
+//             -webkit-box-orient: vertical;
+//             overflow: hidden;
+//             text-overflow: ellipsis;
+//         }
+//     }
+// }
 
 .button-container, .button-avatar-container {
     position: absolute;
@@ -325,10 +341,6 @@ p, .health {
     width: 400px;
 }
 
-.card-enclose {
-    height: 400px;
-}
-
 .card-notice {
     height: 200px;
 }
@@ -340,7 +352,20 @@ p, .health {
 }
 
 .card-enclose {
+    height: 400px;
     width: 300px;
+    .card-body {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important; 
+        
+        
+
+        .mt-auto {
+            margin: 20px 0 10px 0 !important; 
+            padding: 0 !important; 
+        }
+    }
 }
 
 .circle-container {
