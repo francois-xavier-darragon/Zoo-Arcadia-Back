@@ -102,6 +102,30 @@ body {
     opacity: 0;
 }
 
+.navbar {
+    .nav-link, 
+    .dropdown-item,
+    .navbar-brand {
+        color: white !important;
+    }
+}
+
+.dropdown-item {
+    color: white !important;
+}
+
+.dropdown-menu {
+    .dropdown-item {
+        &:hover {
+            background-color: #343a40 !important;
+        }
+        &.active,
+        &:active { 
+            background-color: $primary !important;
+        }
+    }
+}
+
 .toggle-btn {
     background-color: transparent;
     border: none;
@@ -278,20 +302,6 @@ p, .health {
     height: 125px;
 }
 
-// .card-enclose {
-//     height: 400px !important; 
-    
-//     .card-body {
-//         //overflow: hidden; 
-//         .card-text {
-//             display: -webkit-box;
-//             -webkit-line-clamp: 3;
-//             -webkit-box-orient: vertical;
-//             overflow: hidden;
-//             text-overflow: ellipsis;
-//         }
-//     }
-// }
 
 .button-container, .button-avatar-container {
     position: absolute;

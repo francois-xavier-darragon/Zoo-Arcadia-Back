@@ -1,16 +1,16 @@
-<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+<nav class="navbar navbar-expand-xl bg-dark" data-bs-theme="dark">
     <div class="container-fluid d-flex flex-nowrap">
         <div style="width: 400px;">
-            <a class="navbar-brand d-lg-none" href="{{path('app_admin_dashboard')}}">
-                <img src="{{asset('images/ARCADIA.png')}}" class="w-15" alt="log-parc-animalier-arcadia">
-            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <a class="navbar-brand d-xl-none" href="{{path('app_admin_dashboard')}}">
+                <img src="{{asset('images/ARCADIA.png')}}" class="w-15" alt="log-parc-animalier-arcadia">
+            </a>
         </div>
         {% if app.user and (is_granted('ROLE_ADMIN') or is_granted('ROLE_VETERINARY') or is_granted('ROLE_WORKER')) %}
         <div class="d-flex ms-lg-auto">
-            <a class="nav-link text-white me-3 mt-2 text-nowrap" href="/">Accueil Public</a>
+            <a class="nav-link me-3 mt-2 text-nowrap" href="/">Accueil Public</a>
             <img src="{{ app.user.avatar ? uploaderHelper.asset(app.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" alt="User Avatar" width="40" height="40" class="rounded-circle me-3">
             <span class="text-white me-3 mt-2">{{ app.user.userIdentifier }}</span>
             <a type="button" class="btn btn-gradiant" href="{{ path('app_logout') }}">Déconnexion</a>
@@ -19,8 +19,8 @@
     </div>
 </nav>
 
-<div class="collapse navbar-collapse bg-dark" id="navbarContent">
-    <ul class="navbar-nav ms-3 mb-2 mb-lg-0 text-white">
+<div class="collapse navbar-collapse bg-dark text-white" id="navbarContent">
+    <ul class="navbar-nav ms-3 mb-2 mb-lg-0">
         {% include "_include/navbar/_components/_nav_links.html.twig" %}
     </ul>
 </div>

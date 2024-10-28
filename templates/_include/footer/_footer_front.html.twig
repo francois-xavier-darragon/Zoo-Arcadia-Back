@@ -9,47 +9,47 @@
                   <h3 class="text-primary">Navigation</h3>
                   <ul class="list-unstyled">
                       <li class="nav-item mb-2">
-                          <a class="nav-link text-white" href="/">Accueil</a>
+                          <a class="nav-link " href="/">Accueil</a>
                       </li>
                       <li class="nav-item dropdown">
-                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                             habitats
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             {% for habitat in habitats %}
-                                <li><a class="dropdown-item text-white" href="{{path('app_habitat_show', {'id': habitat.id})}}">{{ habitat.name }} </a></li>
+                                <li><a class="dropdown-item" href="{{path('app_habitat_show', {'id': habitat.id})}}">{{ habitat.name }} </a></li>
                             {% endfor %}
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                             Enclos
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             {% for enclosure in enclosures %}
-                                <li><a class="dropdown-item text-white" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }} </a></li>
+                                <li><a class="dropdown-item" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }} </a></li>
                             {% endfor %}
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{path('app_service_show')}}" role="button" aria-expanded="false">
+                        <a class="nav-link" href="{{path('app_service_show')}}" role="button" aria-expanded="false">
                             Services
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{{path('app_gallery')}}" role="button" aria-expanded="false">
+                        <a class="nav-link" href="{{path('app_gallery')}}" role="button" aria-expanded="false">
                             Gallerie
                         </a>
                     </li>
                       <li class="nav-item mb-2" data-show="connected">
-                          <a class="nav-link text-white" href="/contact">Nous contacter</a>
+                          <a class="nav-link" href="/contact">Nous contacter</a>
                       </li>
                   </ul>
               </div>
               <div class="col-12 col-md-3 mb-4 mb-md-0">
                   <h3 class="text-primary">Horaire d’ouverture</h3>
-                  <p class="text-footer text-white">Ouvert tous les jours, toute l’année</p>
-                  <p class="text-footer text-white">De 8h30 à 19h30</p>
+                  <p class="text-footer">Ouvert tous les jours, toute l’année</p>
+                  <p class="text-footer">De 8h30 à 19h30</p>
               </div>
               <div class="col-12 col-md-3">
                   <h3 class="text-primary">Suivez nous</h3>
@@ -84,10 +84,10 @@
   
           <div class="row text-center mt-5">
               <div class="col-12">
-                  <p class="text-white text-footer">Parc Animalier : Arcadia - chemin du Hameau du lac 35380 Brocéliande – France – 04 68 50 18 18</p>
+                  <p class="text-footer">Parc Animalier : Arcadia - chemin du Hameau du lac 35380 Brocéliande – France – 04 68 50 18 18</p>
               </div>
               <div class="col-12">
-                  <p class="text-white text-footer ">©2024 Parc Amimalier Arcadia Tous droits réservés</p>
+                  <p class="text-footer ">©2024 Parc Amimalier Arcadia Tous droits réservés</p>
               </div>
           </div>
       </div>
