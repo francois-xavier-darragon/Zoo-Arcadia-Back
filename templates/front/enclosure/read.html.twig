@@ -52,13 +52,12 @@
 <div class="animal-details">
     {% for animal in enclosure.animals  %}
     <article id="animal-{{ animal.id }}"  class="p-4 animal-detail d-none">
-        <div class="container p-4 d-flex">
-            <div class="row ">
+        <div class="container p-4">
+            <div class="row">
                 <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
                     <h2 class="text-dark mb-3">{{ animal.name }}</h2>
                     <div class="scrollable-text">
                         <p>Etat de santé : {{ animal.health|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }} au {{ animal.updatedAt|date('m-d-Y') }} </p>
-                        <p>{{ animal.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
                         {% for veterinaryreport in animal.veterinaryreports %}
                             {% if animal.veterinaryreports is not empty %}
                                 {% set lastReport = animal.veterinaryreports|last %}
@@ -90,34 +89,6 @@
 <script src="{{ asset('js/image/media-resize.js') }}"></script>
 <script>
     adjustCardSize();
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const buttons = document.querySelectorAll('.animal-button');
-        const details = document.querySelectorAll('.animal-detail');
-
-        buttons.forEach(button => {
-            button.addEventListener('click', function() {
-                const animalId = this.getAttribute('data-animal-id');
-
-                details.forEach(detail => {
-                    if (detail.id === `animal-${animalId}`) {
-                        detail.classList.remove('d-none');
-                        setTimeout(() => {
-                            const visibleImg = detail.querySelector('.media-container img');
-                            const visibleCard = detail.querySelector('.card-description');
-                            if (visibleImg && visibleCard) {
-                                visibleCard.style.height = `${visibleImg.offsetHeight}px`;
-                            }
-                        }, 0);
-                    } else {
-                        detail.classList.add('d-none');
-                    }
-                });
-
-                fetch(`/animal/${animalId}`, { method: 'POST' });
-            });
-        });
-
-    });
+    adjustElementSizes()
 </script>
 {% endblock %}
