@@ -3,13 +3,14 @@
 {% block title %}{% endblock %}
 
 {% block body %}
-<article class="bg-info py-5" >
-    <div class="container p-4 d-flex my-5">
-        <div class="dropdown " style="left: -50px; top: 0;">
+
+<article class="bg-info py-4">
+    <div class="container p-4 my-5">
+        <div class="dropdown mb-3">
             <button class="btn btn-gradiant dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                 Enclos de l'habitat
             </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <ul class="dropdown-menu dropdown-static" aria-labelledby="dropdownMenuLink">
                 {% for enclosure in habitat.enclosures %}
                     <li><a class="dropdown-item" href="{{path('app_enclosure_show', {'id': enclosure.id})}}">{{ enclosure.name }}</a></li>
                 {% endfor %}
@@ -33,6 +34,7 @@
         </div>
     </div>
 </article>
+
 {% endblock %}
 
 {% block javascripts %}

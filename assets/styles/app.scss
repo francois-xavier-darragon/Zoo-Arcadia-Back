@@ -323,6 +323,12 @@ p, .health {
     background-color: $dark; 
 }
 
+.dropdown-static {
+    position: relative !important;
+    transform: none !important;
+    width: fit-content !important;
+}
+
 .light-dropdown {
     background-color: #fff; 
     color: #000;
