@@ -469,6 +469,10 @@ p, .health {
     height: auto;
 }
 
+.contact {
+    width: 60%;
+}
+
 //Reponsive
 
 //Sidebar
@@ -617,5 +621,12 @@ p, .health {
 @media (max-width: 768px) { 
     .media-container {
         padding: 0 !important;
+    }
+}
+
+//Contact
+@media (max-width: 400px) {
+    .contact {
+        width: 95%;
     }
 }
