@@ -182,7 +182,7 @@ class AnimalController extends AbstractController
             $animal->setDeletedAt(new \DateTimeImmutable());
             $animalRepository->saveAnimal($animal, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$animal->getName().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'L\'animal "'.$animal->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_animal_index');
         }
 

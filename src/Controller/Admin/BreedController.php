@@ -69,7 +69,7 @@ class BreedController extends AbstractController
         if ($this->isCsrfTokenValid('delete-breed'.$breed->getId(), $submittedToken)) {
             $breedRepository->removeBreed($breed, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$breed->getName().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'La race "'.$breed->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_breed_index');
         }
 

@@ -20,7 +20,8 @@ class ServiceController extends AbstractController
     #[Route('/', name: 'app_admin_service_index', methods: ['GET'])]
     public function index(ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager, ): Response
     {
-        $services = $serviceRepository->findAllservice(['deleted_At'=> null]);
+        $services = $serviceRepository->findServiceBy(['deleted_At'=> null]);
+      
         $csrfTokens = [];
 
         foreach ($services as $service) {
@@ -28,7 +29,7 @@ class ServiceController extends AbstractController
         }
 
         return $this->render('admin/service/index.html.twig', [
-            'services' => $serviceRepository->findAllService(),
+            'services' => $services,
             'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
 
@@ -119,9 +120,10 @@ class ServiceController extends AbstractController
         $submittedToken = $request->request->get('token');
         
         if ($this->isCsrfTokenValid('delete-service'.$service->getId(), $submittedToken)) {
+            // $service->setDeletedAt(new \DateTimeImmutable);
             $serviceRepository->removeService($service, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$service->getName().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'Le service"'.$service->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_service_index');
         }
 
