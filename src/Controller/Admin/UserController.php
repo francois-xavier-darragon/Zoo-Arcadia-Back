@@ -137,7 +137,7 @@ class UserController extends AbstractController
         if ($this->isCsrfTokenValid('delete-user' .$user->getId(), $submittedToken)) {
             $userRepository->removeUser($user, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$user->getLastName().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'L\'utilisateur "'.$user->getLastName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_user_index');
         }
 

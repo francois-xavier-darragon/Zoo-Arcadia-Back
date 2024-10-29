@@ -126,7 +126,7 @@ class HabitatController extends AbstractController
         if ($this->isCsrfTokenValid('delete-habitat'.$habitat->getId(), $submittedToken)) {
             $habitatRepository->removeHabitat($habitat, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$habitat->getName().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'L\'habitat "'.$habitat->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_habitat_index');
         }
 

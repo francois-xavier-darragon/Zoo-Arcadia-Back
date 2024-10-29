@@ -29,7 +29,9 @@ class NoticeController extends AbstractController
               
             $noticeRepository->saveNotice($notice, true);
 
-            return $this->redirectToRoute('app_admin_notice_index', [], Response::HTTP_SEE_OTHER);
+            $this->addFlash('success', "Merci d'avoir laissé un avis !");
+
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('front/notice/new.html.twig', [

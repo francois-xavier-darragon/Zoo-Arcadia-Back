@@ -107,7 +107,7 @@ class NoticeController extends AbstractController
         if ($this->isCsrfTokenValid('delete-notice'.$notice->getId(), $submittedToken)) {
             $noticeRepository->removeNotice($notice, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$notice->getNickname().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'L\'avis "'.$notice->getNickname().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_notice_index');
         }
 
