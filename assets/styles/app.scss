@@ -105,6 +105,7 @@ body {
     opacity: 0;
 }
 
+
 .nav-link, 
 .dropdown-item,
 .navbar-brand {
@@ -267,7 +268,6 @@ p, .health {
     border-color: $secondary;
     border-radius: 5px;     
     box-shadow: 0 8px 10px $dark;
-    margin: 0 12px;
 }
 
 .defaut-img {
@@ -401,7 +401,7 @@ p, .health {
 }
 
 .custom-carousel-control-notice {
-    top: 84%
+    top: 82%
 }
 
 .custom-carousel-control,
@@ -495,15 +495,43 @@ p, .health {
     }
 }
 
-//Container
-@media (min-width: 1400px) {
-    .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-        max-width: 1800px;
+//navbar
+@media (max-width: 1200px) {
+    .my-custom-nav .navbar-collapse {
+        display: none;
+    }
+    
+    .my-custom-nav .d-xl-block {
+        display: none;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .my-custom-nav .custom-toggler {
+        display: block;
+        margin-right: 10px;
+    }
+
+    .my-custom-nav .custom-collapse {
+        display: block;
+    }
+
+    .my-custom-nav .menu-back {
+        width: 400px;
+        display: flex;
     }
 }
 
-//Link
-@media (max-width: 750px) {
+@media (min-width: 1201px) {
+    .hide-desktop {
+        display: none;
+    }
+}
+ 
+//Connexion hidden for mobile
+@media (max-width: 900px), (max-height: 400px)  {
     .connection-link {
         display: none;
     }
@@ -512,7 +540,7 @@ p, .health {
 //Carousel
 @media (max-width: 1199px) {
     .custom-carousel-control-notice {
-        top:85% !Important;
+        top:83% !Important;
     }
 } 
 
@@ -524,7 +552,7 @@ p, .health {
 
 @media (max-width: 991px) {
     .custom-carousel-control-notice {
-        top:86% !Important;
+        top:85% !Important;
     }
 } 
 
@@ -536,10 +564,10 @@ p, .health {
 
 @media (max-width: 767px) {
     .custom-carousel-control-notice {
-        top:81% !Important;
+        top:80% !Important;
     }
     .custom-carousel-control {
-        top:53% !Important;
+        top:52% !Important;
     }
 }
 

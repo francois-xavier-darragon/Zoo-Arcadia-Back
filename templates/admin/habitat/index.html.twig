@@ -6,8 +6,7 @@
             <h1>Liste des Habitats</h1>
             <a type="button" class='btn btn-primary pb-0 mb-3' href="{{ path('app_admin_habitat_new') }}" title="Ajouter un habitat">Ajouter un habitat</a>
         </div>
-        <div class="table-responsive">
-            <table class="table custom-table table-fixed">
+            <table class="table table-responsive">
                 <thead>
                     <tr>
                         <th class="w-15 text-start">Images</th>
@@ -19,60 +18,59 @@
                 </thead>
                 <tbody>
                 {% for habitat in habitats %}
-                    <tr>
-                        <td class="text-start">
-                            <img src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="première image de la liste" width="70" height="50">
-                        </td>
-                        <td class="text-start">{{ habitat.name }}</td>
-                        <td class="text-center">
-                            {% if habitat.enclosures|length > 0 %}
-                                <select class="form-select-sm custom-select habitat-select" aria-label="Liste des enclos">
-                                    <option selected disabled hidden>voir la liste</option>
-                                    {% for enclosure in habitat.enclosures %}
-                                        <option value="{{ path('app_admin_enclosure_edit', {'enclosure': enclosure.id}) }}">
-                                            {{ enclosure.name }}
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <span>Aucun enclos</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-center">
-                            {% if habitat.animals|length > 0 %}
-                                <select class="form-select-sm custom-select habitat-select" aria-label="Liste des animaux">
-                                    <option selected hidden>voir la liste</option>
-                                    {% for animal in habitat.animals %}
-                                        <option title="éditer" value="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
-                                            {{ animal.name }} 
-                                        </option>
-                                    {% endfor %}
-                                </select>
-                            {% else %}
-                                <span>Aucun animal</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-end">
-                            <a type='button' class='text-primary me-2' href="{{ path('app_admin_habitat_show', {'id': habitat.id}) }}" title="voir">
-                                {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
-                            </a>
-                            <a type='button' class='text-secondary me-2' href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}" title="éditer">
-                                {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
-                            </a>
-                            <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[habitat.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{habitat.id}}" title="Supprimer">
-                                {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
-                            </a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="text-start">
+                        <img src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="première image de la liste" width="70" height="50">
+                    </td>
+                    <td class="text-start">{{ habitat.name }}</td>
+                    <td class="text-center">
+                        {% if habitat.enclosures|length > 0 %}
+                            <select class="form-select-sm custom-select habitat-select" aria-label="Liste des enclos">
+                                <option selected disabled hidden>voir la liste</option>
+                                {% for enclosure in habitat.enclosures %}
+                                    <option value="{{ path('app_admin_enclosure_edit', {'enclosure': enclosure.id}) }}">
+                                        {{ enclosure.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <span>Aucun enclos</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if habitat.animals|length > 0 %}
+                            <select class="form-select-sm custom-select habitat-select" aria-label="Liste des animaux">
+                                <option selected hidden>voir la liste</option>
+                                {% for animal in habitat.animals %}
+                                    <option title="éditer" value="{{ path('app_admin_animal_edit', {'id': animal.id}) }}">
+                                        {{ animal.name }} 
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <span>Aucun animal</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a type='button' class='text-primary me-2' href="{{ path('app_admin_habitat_show', {'id': habitat.id}) }}" title="voir">
+                            {% include "_include/_components/_icons/_show_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class='text-secondary me-2' href="{{ path('app_admin_habitat_edit', {'id': habitat.id}) }}" title="éditer">
+                            {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
+                        </a>
+                        <a type='button' class="text-danger me-3 mb-2"  data-token="{{ csrf_tokens[habitat.id] }}" data-bs-toggle="modal" data-bs-target="#deleteModal{{habitat.id}}" title="Supprimer">
+                            {% include "_include/_components/_icons/_delete_icon_svg.html.twig" %}
+                        </a>
+                    </td>
+                </tr>
 
-                    {% if delete_btn is defined %}
-                        {% include '/admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'csrf_tokens': csrf_tokens[habitat.id], 'habitat': habitat } %}
-                    {% endif %}
+                {% if delete_btn is defined %}
+                    {% include '/admin/habitat/_delete_modal.html.twig' with {'path_form' : path('app_admin_habitat_delete', {'id': habitat.id}), 'csrf_tokens': csrf_tokens[habitat.id], 'habitat': habitat } %}
+                {% endif %}
 
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock %}
