@@ -109,7 +109,7 @@ class EnclosureController extends AbstractController
         if ($this->isCsrfTokenValid('delete-enclosure'.$enclosure->getId(), $submittedToken)) {
             $enclosureRepository->removeEnclosure($enclosure, true);
 
-            $this->addFlash('success', 'Le utilisateur "'.$enclosure->getName().'" a été supprimé avec succès.');
+            $this->addFlash('success', 'L\'enclos "'.$enclosure->getName().'" a été supprimé avec succès.');
             return $this->redirectToRoute('app_admin_habitat_edit',['id'=> $enclosure->getHabitat()->getId()]);
         }
 

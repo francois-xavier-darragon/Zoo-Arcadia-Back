@@ -1,4 +1,4 @@
-<div class="modal fade p-5" id="deleteModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+<div class="modal fade p-5" id="deleteModal{{ service.id }}" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                Attention êtes-vous sur de vouloir supprimer l' service : {{ service.name }} ?
+                Attention êtes-vous sur de vouloir supprimer le service : {{ service.name }} ?
             </div>
             <div class="modal-footer-modal d-flex m-4">
                 <button type="button" class="btn btn-secondary btn-modal me-3" data-bs-dismiss="modal" title="Annuler">Annuler</button>

@@ -3,8 +3,17 @@
 {% block title %}DashBoard{% endblock %}
 
 {% block body %}
+<div class='row mt-5 mb-3'>
 
-   <div class='row mt-5 mb-3'>
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endfor %}
+
     <div class='col-sm-12 p-3 custom-border card'> 
         {% if topAnimal %}
             <div class="d-flex align-items-center">

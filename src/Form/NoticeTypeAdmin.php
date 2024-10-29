@@ -21,9 +21,10 @@ class NoticeTypeAdmin extends AbstractType
                     'mapped' => false,
                     'label' => false,
                     'choices' => array_flip(NOTICE::STATUT),
-                        'label_attr' => [
-                            'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
-                        ],
+                    'data' => $builder->getData()->status(),
+                    'label_attr' => [
+                        'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
+                    ],
                         'attr' => [
                             'class' => 'form-control form-control-solid',
                             'data-placeholder' => 'Choisir une race existante'
