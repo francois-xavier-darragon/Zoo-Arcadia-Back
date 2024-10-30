@@ -264,6 +264,10 @@ p, .health {
 }
 
 .custom-border {
+    width: 400px;
+}
+
+.custom-border {
     border: 1px solid;
     border-color: $secondary;
     border-radius: 5px;     
@@ -348,10 +352,6 @@ p, .health {
     margin-right:10px ;
     width: 40px;
     height: 40px;
-}
-
-.card-habitat {
-    width: 400px;
 }
 
 .card-notice {
