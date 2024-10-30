@@ -5,6 +5,7 @@
 {% block body %}
 
 <article class="bg-info py-4">
+<h2 class="text-dark mb-3 text-center">Habitat : {{habitat.name}}</h2>
     <div class="container p-4 my-5">
         <div class="dropdown mb-3">
             <button class="btn btn-gradiant dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,8 +18,7 @@
             </ul>
         </div>
         <div class="row">
-            <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
-                <h2 class="text-dark mb-3">Habitat - {{habitat.name}}</h2>
+            <div class="col-12 col-md-6 mb-4 mb-md-0 pt-2 card card-description">
                 <div class="scrollable-text">
                     <p>{{ habitat.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
                 </div>

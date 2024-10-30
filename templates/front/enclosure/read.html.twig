@@ -4,10 +4,10 @@
 
 {% block body %}
 <article class="bg-info py-5">
+    <h2 class="text-dark text-center mb-3">{{enclosure.name}}</h2>
     <div class="container p-4 d-flex my-5">
         <div class="row">
-            <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description">
-                <h2 class="text-dark mb-3">{{enclosure.name}}</h2>
+            <div class="col-12 col-md-6 mb-4 mb-md-0 card card-description pt-2">
                 <div class="scrollable-text">
                     <p>{{ enclosure.description|replace({'. ': ".\n\n", '! ': "!\n\n", '? ': "?\n\n"})|nl2br|raw }}</p>
                 </div>
