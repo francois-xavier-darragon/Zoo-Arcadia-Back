@@ -46,7 +46,7 @@
         <div class="row justify-content-center">    
         {% for habitat in habitats %}    
             <div class="col-12 col-md-4 mb-4 d-flex">
-                <div class="card card-habitat custom-border h-100 d-flex flex-column">
+                <div class="card custom-border h-100 d-flex flex-column">
                     <img class="card-img-top" src="{{ habitat.images|first ? uploaderHelper.asset(habitat.images|first, 'habitatFile') : asset('images/default/default.png') }}" alt="{{habitat.name}}">
                      <div class="card-body d-flex flex-column">
                         <h5 class="card-title">Habitat {{habitat.name}}</h5>
@@ -59,6 +59,7 @@
             </div>  
         {% endfor %}    
         </div>
+    </div>    
 </article>
 
 <article class="bg-info p-4">
