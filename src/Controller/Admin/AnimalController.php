@@ -45,7 +45,7 @@ class AnimalController extends AbstractController
     #[Route('/new', name: 'app_admin_animal_new', methods: ['GET', 'POST'])]
     public function new(Request $request, AnimalRepository $animalRepository, BreedRepository $breedRepository): Response
     {
-        $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
+        $breeds = $breedRepository->findBreedBy(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
        
         $animal = new Animal();
@@ -111,14 +111,17 @@ class AnimalController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_admin_animal_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, TokenStorageInterface $tokenStorage, BreedRepository $breedRepository, UploaderHelper $uploaderHelper): Response
+    public function edit(Request $request, Animal $animal, AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager, BreedRepository $breedRepository, UploaderHelper $uploaderHelper): Response
     {
+        //Recovery of the CSRF token for secure deletion
         $csrfToken = $csrfTokenManager->getToken('delete-animal' . $animal->getId())->getValue();
     
-        $breeds = $breedRepository->findAllBreed(['deleted_At'=> null]);
+        //Animal Breed Management
+        $breeds = $breedRepository->findBreedBy(['deleted_At'=> null]);
         $countBreeds = count($breeds) === 0;
         $images = $animal->getImages();
 
+        //Managing existing images
         $existingImages = [];
 
         $reflectionClass = new \ReflectionClass($animal);
@@ -144,6 +147,7 @@ class AnimalController extends AbstractController
 
             $formBreddData = $form->get('addbreed')->getData();
 
+            // Création d'une nouvelle race si nécessaire
             if($formBreddData != null){
                 $breed = new Breed;
                 $breed->setName(ucfirst($formBreddData));
