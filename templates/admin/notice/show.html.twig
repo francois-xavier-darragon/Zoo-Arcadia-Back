@@ -15,23 +15,29 @@
                 </div>
             </div>
         </div>
+        
         <div class="d-flex justify-content-start mb-2">
-            <div "d-flex me-3">
-                <img src="{{ notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default.png') }}" class="card-img-top rounded-circle" alt="User-Image" style="width: 75px; height: 75px;">
+            <div class="d-flex me-3">
+                <img src="{{ notice.user is not null ? (notice.user.avatar ? uploaderHelper.asset(notice.user.avatar, 'userAvatarFile') : asset('images/default/default-avatar.jpg')) : asset('images/default/default-avatar.jpg') }}" 
+                    class="card-img-top rounded-circle" 
+                    alt="User-Image" 
+                    style="width: 75px; height: 75px;">
             </div>
             <div class="d-flex mb-2 ms-3 me-3">
                 <h4 class="">Pseudo :</h4>
                 <h4 class="ms-1">{{ notice.nickname }}</h4>
             </div>
+        {% if notice.user is not null %}
             <div class="d-flex mb-2">
                 <h4 class="">Utilisateur :</h4>
                 <h4 class="ms-1">{{ notice.user }}</h4>
             </div>
+        {% endif %}
         </div>
         {{ form_start(form, {'attr': {'id': 'form-id'}}) }}
         <div class="d-flex mt-1 mb-2">
             <h5 class="mt-1">Staut :</h5>
-            {% if  is_granted('ROLE_ADMIN') %}
+            {% if  is_granted('ROLE_ADMIN') or is_granted('ROLE_WORKER') %}
                 <h5 class="ms-1"> {{ form_row(form.status) }}</h5>
             {% else %}
                 {% if arrayStatut[notice.status] is defined %}
@@ -44,7 +50,7 @@
             <div class="card p-4 mb-2" >
                 <p class="text-muted mb-0" >{{ notice.comment }}</p>
             </div>
-            {% if  is_granted('ROLE_ADMIN') %}
+            {% if  is_granted('ROLE_ADMIN') or is_granted('ROLE_WORKER') %}
             <div class="d-flex justify-content-end">
                 <button class="btn btn-secondary mt-2" href="{{ path('app_admin_notice_index') }}" title="valider">Valider</button>
             </div>
