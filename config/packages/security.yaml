@@ -1,7 +1,9 @@
 security:
   # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
+  # Configuring password hashing
   password_hashers:
     Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: "auto"
+  # User provider configuration  
   # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
   providers:
     # used to reload user from session & other features (e.g. switch_user)
@@ -9,6 +11,8 @@ security:
       entity:
         class: App\Entity\User
         property: email
+
+  # Configuration of the main firewall      
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -16,15 +20,19 @@ security:
     main:
       lazy: true
       provider: app_user_provider
+
+      # Form login configuration
       form_login:
         login_path: app_login
         check_path: app_login
         enable_csrf: true
+        default_target_path: app_admin_dashboard
+        always_use_default_target_path: true
+  
+      # Disconnect configuration
       logout:
         path: app_logout
         target: app_home
-        # where to redirect after logout
-        # target: app_any_route
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -34,8 +42,15 @@ security:
 
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
+  
   access_control:
+      # Protect all routes starting with /admin
     - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_VETERINARY, "ROLE_WORKER"] }
+
+  role_hierarchy:
+    ROLE_VETERINARY: [ROLE_USER]
+    ROLE_WORKER: [ROLE_USER]
+    ROLE_ADMIN: [ROLE_VETERINARY, ROLE_WORKER]
 
 when@test:
   security:

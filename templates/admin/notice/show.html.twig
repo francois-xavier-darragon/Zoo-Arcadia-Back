@@ -40,9 +40,7 @@
             {% if  is_granted('ROLE_ADMIN') or is_granted('ROLE_WORKER') %}
                 <h5 class="ms-1"> {{ form_row(form.status) }}</h5>
             {% else %}
-                {% if arrayStatut[notice.status] is defined %}
-                    <h5 class="mt-1 ms-1">{{ arrayStatut[notice.status] }}</h5>
-                {% endif %}  
+                <h5 class="mt-1 ms-1">{{ arrayStatut[notice.status] }}</h5>
             {% endif %}
         </div>
         <div class="mb-2">

@@ -13,18 +13,16 @@ class ManageMongoDBCommand extends Command
 {
     protected static $defaultName = 'app:manage:mongodb';
     private $documentManager;
-    private $managerRegistry;
 
     public function __construct(DocumentManager $documentManager,  ManagerRegistry $managerRegistry)
     {
         parent::__construct();
         $this->documentManager = $documentManager;
-        $this->managerRegistry = $managerRegistry;
     }
 
     protected function configure()
     {
-        $this->setDescription('Importe une base de données de MongoDB.');
+        $this->setDescription('Import a database from MongoDB.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
