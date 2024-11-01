@@ -1,43 +1,71 @@
-# Zoo-Arcadia-Back
-Changer de branch et basculé sur develope
+# Prérequis
 
-Avoir d'installé Node.js
+Node.js
+Php 8.2
+Serveur web (Apache ou Nginx)
+MySQL
+MongoDB
 
-lancer : 
+# Installation
+
+1.Installez MySQL
+2.Installez MongoDB
+3.Clonez le dépôt du projet
+
+# 4.Installation les dépendances
+
 composer install
-
 npm install
+
+# 5.Configurez les variables d'environnement
+
+Copiez le fichier .env en .env.local et modifiez les variables d'environnement selon la configuration locale,
+notamment les informations de connexion à MySQL et MongoDB.
+
+# 6.Initialisation de la base de données mysql avec la commande personnalisée
+
+php bin/console app:manage:database
+[1] create
+php bin/console app:manage:database imports
+[3] imports
+
+# 7.Initialisation de la base de données mongodb avec la commande personnalisée
+
+php bin/console doctrine:mongodb:schema:create
+
+# 8.Tester la connections mongodb
+
+php bin/console app:test-mongodb
+
+# 9.importer les données mongodb
+
+php bin/console app:manage:mongodb
+[1] animal_views
+choisir le dernier fichier
+
+# 10.Compilez les assets
+
 npm run build
 
-bin/console app:manage-database create
-bin/console app:manage-database update
+# Déploiement en production
 
-# Deploiment sur heroku
-avoir un compte heroku
-se connecté  : heroku login
-heroku create "nom-d-application"
-heroku git:remote -a "nom-d-application"
-heroku addons:create jawsdb:kitefin --app arcadia-ecf
-# Verification JAWSDB_URL
-heroku config:get JAWSDB_URL --app "nom-d-application"
-heroku addons:create ormongo --app "nom-de-votre-application"
-# Verification ORMONGO_URL
-heroku config:get ORMONGO_URL --app "nom-d-application"
-heroku config:get ORMONGO_RS_URL --app "nom-d-application"
-heroku config:set MONGODB_URL="mongodb://iad2-c18-2.mongo.objectrocket.com:52338,iad2-c18-1.mongo.objectrocket.com:52338,iad2-c18-0.mongo.objectrocket.com:52338/?replicaSet=2ef4e8f636ba4cfb86d99f6d45886237&ssl=true" --app arcadia-ecf
-heroku config:set MONGODB_DB="votre_nom_de_base" --app "nom-d-application"
+1.Configurez le serveur web
+Configurez le serveur web (Apache ou Nginx) pour pointer vers le répertoire public/ de votre projet Symfony.
 
-heroku config:set DATABASE_DRIVER=pdo_mysql --app "nom-d-application"
-heroku buildpacks:add --index 1 heroku/nodejs --app "nom-d-application"
-heroku buildpacks:add --index 2 heroku/php --app "nom-d-application"
-heroku config:set APP_ENV=prod --app "nom-d-application"
-git push heroku main
+2.Configurez les variables d'environnement de production
+Configurez les variables d'environnement spécifiques à la production dans le fichier .env.local.php ou via des variables d'environnement système.
 
-une fois le projet compiler est déployé sur heroku 
-heroku run php bin/console app:manage:mongodb
-heroku run php bin/console app:manage:database choix 2
-heroku run php bin/console app:manage:database choix 3 avec à la question : arcadia.sql 
+3.Installez les dépendances de production
+composer install --no-dev --optimize-autoloader
 
+4.Initialisez les bases de données en production
+Exécutez les commandes d'initialisation de la base de données MySQL et MongoDB (étapes 6, 7 et 9 de la section Installation) en production.
 
-(Optionnel)
-heroku domains:add www.votredomaine.com
+5.Videz le cache de production
+php bin/console cache:clear
+
+6.Régénérez les hydrators Doctrine MongoDB
+php bin/console doctrine:mongodb:generate:hydrators
+
+7.Configurez les permissions des répertoires
+Assurez-vous que les répertoires var/ et public/uploads/ ont les permissions d'écriture appropriées.

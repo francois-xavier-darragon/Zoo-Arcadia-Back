@@ -18,7 +18,7 @@ class UserType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $showRoleField = $options['show_role_field'];
+        $isAdmin = $options['isAdmin'];
 
         $builder
             ->add('avatar', AvatarType::class ,[
@@ -48,22 +48,6 @@ class UserType extends AbstractType
                     'class' => 'form-control form-control-solid',
                 ]
             ])
-            // ->add('roles', ChoiceType::class, [
-            //     'mapped' => false,
-            
-            //     'label' => 'Role de l\'utilasteur',
-            //     'choices' => array_diff_key(
-            //         array_flip(User::ROLES),
-            //         ['Administrateur' => 'ROLE_ADMIN']
-            //     ),
-            //     'label_attr' => [
-            //         'class' => 'col-lg-4 col-form-label fw-semibold fs-6'
-            //     ],
-            //     'attr' => [
-            //         'class' => 'form-control form-control-solid',
-            //         'data-placeholder' => 'Choisir un role existant'
-            //     ],
-            // ])
             ->add('email', EmailType::class, [
                 'required' => true,
                 'label' => 'Adresse email',
@@ -120,7 +104,7 @@ class UserType extends AbstractType
                 );
         }
 
-        if ($showRoleField) {
+        if ($isAdmin) {
             $builder->add('roles', ChoiceType::class, [
                 'mapped' => false,
                 'label' => 'Role de l\'utilisateur',
@@ -145,7 +129,7 @@ class UserType extends AbstractType
             'data_class' => User::class,
             'is_new'     => false,
             'is_edit'    => false,
-            'show_role_field' => true,
+            'isAdmin' => true,
         ]);
     }
 }

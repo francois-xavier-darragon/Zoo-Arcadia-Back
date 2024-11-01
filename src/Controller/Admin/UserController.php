@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
-use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/users')]
 class UserController extends AbstractController
@@ -42,6 +42,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_user_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
@@ -79,15 +80,19 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_admin_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, UserRepository $userRepository, Security  $security, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordHasherInterface $passwordHasher): Response
     {
+        if (!$this->isGranted('ROLE_ADMIN') && $user !== $this->getUser()) {
+            throw $this->createAccessDeniedException('Accès non autorisé');
+        }
+
         $currentUser = $security->getUser();
-        $showRoleField = !($currentUser === $user && in_array('ROLE_ADMIN', $currentUser->getRoles()));
+        $isAdmin = in_array('ROLE_ADMIN', $currentUser->getRoles());
 
         $csrfToken = $csrfTokenManager->getToken('delete-user' . $user->getId())->getValue();
       
         $form = $this->createForm(UserType::class, $user, [
             'is_new' => false,
             'is_edit' => true,
-            'show_role_field' => $showRoleField,
+            'isAdmin' => $isAdmin,
         ]);
 
         $form->handleRequest($request);

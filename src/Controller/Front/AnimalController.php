@@ -16,9 +16,7 @@ class AnimalController extends AbstractController
     #[Route('/animal/{id}', name: 'app_animal_views_count', methods: ['POST'])]
     public function index(int $id,  DocumentManager $dm): JsonResponse
     {
-        
         $animalViews = $dm->getRepository(AnimalViews::class)->findOneBy(['animalId' => $id]);
-
 
         if (!$animalViews) {
             $animalViews = new AnimalViews();
@@ -27,7 +25,6 @@ class AnimalController extends AbstractController
 
         $animalViews->incrementViews();
 
-       
         $dm->persist($animalViews);
         $dm->flush();
 

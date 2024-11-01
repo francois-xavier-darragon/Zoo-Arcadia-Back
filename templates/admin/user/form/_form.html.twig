@@ -20,10 +20,10 @@
             imgId : imgId,
         } %}
 
-        {{ form_row(form.firstname) }}
         {{ form_row(form.lastname) }}
-
-         {% if form.roles is defined %}
+        {{ form_row(form.firstname) }}
+        
+        {% if form.roles is defined %}
             {{ form_row(form.roles) }}
         {% endif %}
 
