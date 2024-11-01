@@ -49,7 +49,7 @@ class UserController extends AbstractController
         $form = $this->createForm(UserType::class, $user, [
             'is_new'  => true,
             'is_edit' => false,
-            'show_role_field' => true
+            'isAdmin' => true
         ]);
         
         $form->handleRequest($request);
