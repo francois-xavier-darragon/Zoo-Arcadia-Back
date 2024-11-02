@@ -21,6 +21,7 @@ npm install
 
 Copiez le fichier .env en .env.local et modifiez les variables d'environnement selon la configuration locale,
 notamment les informations de connexion à MySQL et MongoDB.
+cp .env .env.local
 
 # 6.Initialisation de la base de données mysql avec la commande personnalisée
 
