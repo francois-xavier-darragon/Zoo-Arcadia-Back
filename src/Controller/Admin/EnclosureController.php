@@ -100,10 +100,6 @@ class EnclosureController extends AbstractController
     #[Route('/enclosure/delete/{enclosure}/', name: 'app_admin_enclosure_delete', methods: ['POST'])]
     public function delete(Request $request, Enclosure $enclosure, EnclosureRepository $enclosureRepository): Response
     {
-        // if($enclosure->getDeletedAt()){
-        //     return $this->redirectToRoute('app_admin_enclosure_index');
-        // }
-
         $submittedToken = $request->request->get('token');
         
         if ($this->isCsrfTokenValid('delete-enclosure'.$enclosure->getId(), $submittedToken)) {

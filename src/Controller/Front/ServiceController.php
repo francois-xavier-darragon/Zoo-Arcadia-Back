@@ -5,7 +5,6 @@ namespace App\Controller\Front;
 use App\Repository\ServiceRepository;
 use App\Service\PaginationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -15,7 +14,7 @@ class ServiceController extends AbstractController
     public function index(ServiceRepository $serviceRepository, PaginationService $paginationService,  int $page = 1): Response
     {
         $itemsPerPage = 3;
-        $services = $serviceRepository->findAllService(['deleted_At'=> null]);
+        $services = $serviceRepository->findServiceBy(['deleted_At'=> null]);
         $paginationData = $paginationService->paginate($services, $page, $itemsPerPage);
      
         return $this->render('front/service/index.html.twig', [

@@ -23,7 +23,7 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_admin_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $users = $userRepository->findAllUser(['deleted_At'=> null]);
+        $users = $userRepository->findUserBy(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($users as $user) {

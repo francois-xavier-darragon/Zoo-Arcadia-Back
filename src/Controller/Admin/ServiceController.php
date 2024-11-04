@@ -120,7 +120,7 @@ class ServiceController extends AbstractController
         $submittedToken = $request->request->get('token');
         
         if ($this->isCsrfTokenValid('delete-service'.$service->getId(), $submittedToken)) {
-            // $service->setDeletedAt(new \DateTimeImmutable);
+
             $serviceRepository->removeService($service, true);
 
             $this->addFlash('success', 'Le service"'.$service->getName().'" a été supprimé avec succès.');

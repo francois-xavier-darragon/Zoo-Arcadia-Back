@@ -22,7 +22,7 @@ class HabitatController extends AbstractController
     #[Route('/', name: 'app_admin_habitat_index', methods: ['GET'])]
     public function index(HabitatRepository $habitatRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $habitats = $habitatRepository->findAllhabitat();
+        $habitats = $habitatRepository->findHabitatBy(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($habitats as $habitat) {
