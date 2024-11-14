@@ -57,18 +57,6 @@ class ServiceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_admin_service_show', methods: ['GET'])]
-    public function read(Service $service, CsrfTokenManagerInterface $csrfTokenManager, ): Response
-    {
-        $csrfToken = $csrfTokenManager->getToken('delete-service' . $service->getId())->getValue();
-
-        return $this->render('admin/service/show.html.twig', [
-            'csrf_token'  => $csrfToken,
-            'service' => $service,
-            'delete_btn' => true,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_admin_service_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Service $service, ServiceRepository $serviceRepository, CsrfTokenManagerInterface $csrfTokenManager, ): Response
     {
