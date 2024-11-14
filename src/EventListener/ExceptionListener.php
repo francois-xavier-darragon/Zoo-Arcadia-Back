@@ -2,21 +2,23 @@
 
 namespace App\EventListener;
 
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
 use Twig\Environment;
 
 class ExceptionListener implements EventSubscriberInterface
 {
-    private $twig;
-
-    public function __construct(Environment $twig)
-    {
-        $this->twig = $twig;
-    }
+    public function __construct(
+        private Environment $twig,
+        private Security $security
+    )
+    {}
 
     public static function getSubscribedEvents(): array
     {
@@ -31,12 +33,14 @@ class ExceptionListener implements EventSubscriberInterface
         
         if ($exception instanceof NotFoundHttpException) {
             $request = $event->getRequest();
+
+            $isAuthorized = $this->security->isGranted('ROLE_ADMIN') ||
+                   $this->security->isGranted('ROLE_VETERINARY') ||
+                   $this->security->isGranted('ROLE_WORKER') || str_contains($request->getPathInfo(), '/admin');
             
-            if (str_starts_with($request->getPathInfo(), '/admin')) {
-                $content = $this->twig->render('bundles/TwigBundle/Exception/admin/error404.html.twig');
-            } else {
-                $content = $this->twig->render('bundles/TwigBundle/Exception/front/error404.html.twig');
-            }
+            $content = $this->twig->render('bundles/TwigBundle/Exception/error404.html.twig', [
+                'layout' => $isAuthorized ? 'base.html.twig' : 'base_front.html.twig'
+            ]);
             
             $response = new Response($content, 404);
             $event->setResponse($response);
