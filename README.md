@@ -57,7 +57,7 @@ Configurez le serveur web (Apache ou Nginx) pour pointer vers le répertoire pub
 Configurez les variables d'environnement spécifiques à la production dans le fichier .env.local.php ou via des variables d'environnement système.
 
 3.Installez les dépendances de production
-composer install --no-dev --optimize-autoloader
+composer install --optimize-autoloader
 
 4.Initialisez les bases de données en production
 Exécutez les commandes d'initialisation de la base de données MySQL et MongoDB (étapes 6, 7 et 9 de la section Installation) en production.
