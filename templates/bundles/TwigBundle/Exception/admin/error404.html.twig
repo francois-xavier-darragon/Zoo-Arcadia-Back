@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée - 404{% endblock %}
+
+{% block body %}
+     <div class="bg-info p-4">
+        <div class="container p-4">
+            <h1>Page non trouvée - 404</h1>
+            <p class="pt-4 pb-3">La page que vous recherchez n'existe pas.</p>
+            <div class="text-start pt-4">
+                <a href="{{path('app_admin_dashboard')}}" class="btn btn-gradiant">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
