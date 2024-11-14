@@ -7,4 +7,5 @@ twig:
         
 when@test:
     twig:
+        autoescape: true
         strict_variables: true

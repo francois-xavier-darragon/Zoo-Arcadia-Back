@@ -20,11 +20,14 @@
                 </tr>
             </thead>
             <tbody>
+          
             {% for user in users %}
                 <tr>
                     <td class="text-start">
+                        {# Chemins d'images sécurisés avec UploaderHelper #}
                         <img class="rounded-circle" src="{{ user.avatar ? uploaderHelper.asset(user.avatar, 'userAvatarFile') : asset('images/default/default-avatar.jpg') }}" alt="Avatar de l'utilisateur" width="50" height="50">
                     </td>
+                    {# Variables échappées automatiquement #}
                     <td class="text-center">{{ user.lastName }}</td>
                     <td class="text-center">{{ user.firstName }}</td>
                     {% for role in user.roles %}
@@ -36,6 +39,7 @@
                     <td class="text-center">{{ user.email }}</td>
                     {% if is_granted("ROLE_ADMIN") or app.user.id == user.id %}
                         <td class="text-end">
+                            {# URLs sécurisées #}
                             <a type='button' class='text-secondary me-2' href="{{ path('app_admin_user_edit', {'id': user.id}) }}" title="editer">
                                 {% include "_include/_components/_icons/_edit_icon_svg.html.twig" %}
                             </a>

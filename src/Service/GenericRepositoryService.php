@@ -24,8 +24,13 @@ class GenericRepositoryService
         $sql = 'SELECT * FROM ' . $this->getTableName($entityClass) . ' alias WHERE ';
         $params = [];
         foreach ($criteria as $key => $value) {
-            $params[] = sprintf('alias.%s = :%s', $key, $key);
+            if ($value === null) {
+                $params[] = sprintf('alias.%s IS NULL', $key);
+            } else {
+                $params[] = sprintf('alias.%s = :%s', $key, $key);
+            }
         }
+
         $sql .= implode(' AND ', $params) . ' LIMIT 1';
 
         // Creating the native query with the ResultSetMappingBuilder
@@ -33,7 +38,9 @@ class GenericRepositoryService
 
         // Setting parameters
         foreach ($criteria as $key => $value) {
-            $query->setParameter($key, $value);
+            if ($value !== null) {
+                $query->setParameter($key, $value);
+            }
         }
 
         // Executing the query and retrieving the result

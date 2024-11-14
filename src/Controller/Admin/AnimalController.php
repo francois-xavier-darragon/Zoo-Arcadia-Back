@@ -28,7 +28,7 @@ class AnimalController extends AbstractController
     #[Route('/', name: 'app_admin_animal_index', methods: ['GET'])]
     public function index(AnimalRepository $animalRepository, CsrfTokenManagerInterface $csrfTokenManager): Response
     {
-        $animals = $animalRepository->findAllanimal();
+        $animals = $animalRepository->findAnimalBy(['deleted_At'=> null]);
         $csrfTokens = [];
 
         foreach ($animals as $animal) {
@@ -36,7 +36,7 @@ class AnimalController extends AbstractController
         }
 
         return $this->render('admin/animal/index.html.twig', [
-            'animals' => $animalRepository->findAllAnimal(),
+            'animals' => $animals,
             'csrf_tokens'    => $csrfTokens,
             'delete_btn'    => true,
         ]);
