@@ -36,7 +36,6 @@ class FoodAdministration
      * @var Collection<int, Food>
      */
     #[ORM\ManyToMany(targetEntity: Food::class, mappedBy: 'foodAdministrations')]
-    #[ORM\JoinTable(name: 'food_administration_link')]
     private Collection $food;
 
     public function __construct()

@@ -1,0 +1,16 @@
+services:
+  database:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: arcadia
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  phpmyadmin:
+      environment:
+        PMA_USER: user
+        PMA_PASSWORD: password
+
+  mongodb:
+    environment:
+      MONGO_INITDB_DATABASE: animal_views

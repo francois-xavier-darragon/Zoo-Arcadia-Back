@@ -1,10 +1,56 @@
+# Zoo Arcadia
+
+## Déploiement (2 méthodes possibles)
+
+### 1. Avec Docker (Recommandé)
+
+#### Prérequis
+
+- Docker
+- Docker Compose
+
+#### Installation avec Docker
+
+# 1.Clonez le projet
+
+# 2.Configurez les variables d'environnement
+
+Copiez le fichier .env en .env.local et modifiez les variables d'environnement selon la configuration locale,
+notamment les informations de connexion à MySQL et MongoDB.
+cp .env .env.local
+
+# 3.Configurez Docker
+
+Copiez le fichier compose.override.yaml.dist Ce fichier contient les informations sensibles pour les bases de données modifiez les information utilisateur
+cp compose.override.yaml.dist compose.override.yaml
+
+# 4.Lancez les conteneurs
+
+docker compose up -d
+
+# 5.Initialisez MySQL
+
+docker compose exec app php bin/console app:manage:database
+
+# [3] imports puis choisir le dernier fichier
+
+# 6.Initialisez MongoDB
+
+docker compose exec app php bin/console doctrine:mongodb:schema:create
+docker compose exec app php bin/console app:test-mongodb
+docker compose exec app php bin/console app:manage:mongodb
+
+# Choisir [1] animal_views puis le dernier fichier
+
+### 2. Sans Docker
+
 # 1.Prérequis
 
-Node.js
-Php 8.2
-Serveur web (Apache ou Nginx)
-MySQL
-MongoDB
+- Node.js
+- Php 8.2
+- Serveur web (Apache ou Nginx)
+- MySQL
+- MongoDB
 
 # 2.Installation
 
@@ -12,7 +58,7 @@ MongoDB
 2.Installez MongoDB
 3.Clonez le dépôt du projet
 
-# 3.Installation les dépendances
+# 3.Installation des dépendances
 
 composer install
 npm install
