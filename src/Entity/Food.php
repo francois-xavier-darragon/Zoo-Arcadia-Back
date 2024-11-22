@@ -43,6 +43,7 @@ class Food
      * @var Collection<int, FoodAdministration>
      */
     #[ORM\ManyToMany(targetEntity: FoodAdministration::class, inversedBy: 'food')]
+    #[ORM\JoinTable(name: 'food_administration_link')]
     private Collection $foodAdministrations;
 
     public function __construct()

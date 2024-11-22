@@ -185,7 +185,7 @@ class ManageDatabaseCommand extends Command
             
             foreach ($tables as $table) {
 
-                if($table == "doctrine_migration_version") {
+                if($table == "doctrine_migration_versions") {
                     continue;
                 }
 
@@ -271,7 +271,7 @@ class ManageDatabaseCommand extends Command
         }
 
         if ($method === 'createTable' && !$this->existsTableOrColumn('doctrine_migration_version')) {
-            $this->createDoctrineMigrationVersionTable();
+            $this->createDoctrineMigrationsVersionTable();
         }
 
         if ($method === 'createTable' && !$this->existsTableOrColumn('messenger_messages')) {
@@ -310,10 +310,10 @@ class ManageDatabaseCommand extends Command
     }
 
     // Create obligatory doctrine migration version table  
-    private function createDoctrineMigrationVersionTable(): void
+    private function createDoctrineMigrationsVersionTable(): void
     {
         $this->databaseService->query('
-            CREATE TABLE doctrine_migration_version (
+            CREATE TABLE doctrine_migration_versions (
                 version VARCHAR(191) NOT NULL,
                 executed_at DATETIME NULL,
                 executed_time INT NULL,
